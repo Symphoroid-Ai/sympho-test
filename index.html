@@ -142,7 +142,7 @@ function startLoop() {
       },
       events: {
         'onReady': function (event) {
-          event.target.mute();
+          event.target.unMute();
           event.target.playVideo();
         },
         'onStateChange': function (evt) {
