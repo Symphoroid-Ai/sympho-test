@@ -8,14 +8,40 @@
   <style>
     body { margin: 0; font-family: 'Helvetica Neue', sans-serif; background: linear-gradient(#0f2027, #203a43, #2c5364); color: white; }
 
-    header, section { padding: 2em; text-align: center; }
-    h1 { font-size: clamp(1.5rem, 5vw, 3rem); }
-    .btn { background: #00bcd4; border: none; padding: 0.8em 1.5em; margin: 0.5em; color: white; font-size: 1em; border-radius: 5px; cursor: pointer; }
-    iframe { display: block; border: none; }
-    #videoArea_loop { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+    header, section { 
+      padding: 2em; text-align: center; 
+    }
+    
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 3rem); 
+    }
+
+    .btn { 
+      background: #00bcd4; 
+      border: none; 
+      padding: 0.8em 1.5em; 
+      margin: 0.5em; 
+      color: white; 
+      font-size: 1em; 
+      border-radius: 5px; 
+      cursor: pointer; 
+    }
+    
+    iframe { 
+      display: block; 
+      border: none; 
+    }
+    
+    #videoArea_loop { 
+      position: relative; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      flex-direction: column; 
+    }
 
     section h2 {
-        font-size: clamp(1.5rem, 5vw, 3rem);
+        font-size: clamp(1rem, 5vw, 1.5rem);
         margin-bottom: 20px;
     }
     .section-button {
@@ -82,33 +108,41 @@
 <button id="langToggle" class="btn">English</button>
 
 <header>
-  <img src="Symphotune.PNG" alt="sympho tune logo" style="max-width:100%; height:auto;"/>
+  <img src="Symphotune.PNG" alt="sympho tune logo" style="max-width:50%; height:auto;"/>
   <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
+  <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
+  <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>
 <!--<button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>-->
 <!--<button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>-->
 </header>
 
+<!--
 <section id="sympho-choice">
     <h2 data-jp="今日の気分にぴったりの音楽を。"data-en="Music that fits your mood today."></h2>
     <p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。"data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>
-    <img src="Symphochoice.PNG" alt="気分で音楽を選ぶイメージ" style="max-width:100%; height:auto;">
+    <img src="Symphochoice.PNG" alt="気分で音楽を選ぶイメージ" style="max-width:100%; height:auto;"> -->
     <br><br>
-    <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
+<!-- <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button> -->
 <!-- <a class="section-button" href="#">sympho choice を試す</a> -->
 </section>
 
+<!--
 <section id="sympho-loop">
     <h2 data-jp="好きな動画を、集中タイムに。"data-en="Turn your favorite videos into focus time."></h2>
     <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。"data-en="Customize your work videos with a timer and loop playback."></p>
-    <img src="Sympholoop.PNG" alt="タイマー付き動画の例" style="max-width:100%; height:auto;">
+    <img src="Sympholoop.PNG" alt="タイマー付き動画の例" style="max-width:100%; height:auto;"> -->
     <br><br>
-    <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>
+<!-- <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button> -->
 <!-- <a class="section-button" href="#">sympho loop を試す</a> -->
 </section>
 
 <section id="choice" style="display:none;">
-  <h2 data-jp="sympho choice" data-en="sympho choice"></h2>
+<!--  <h2 data-jp="sympho choice" data-en="sympho choice"></h2> -->
+  <img src="Symphochoice.PNG" alt="気分で音楽を選ぶイメージ" style="max-width:80%; height:auto;">
+  <h2 data-jp="今日の気分にぴったりの音楽を。"data-en="Music that fits your mood today."></h2>
+  <p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。"data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>
+  <br><br>  
   <p data-jp="今日の気分は？" data-en="How do you feel today?"></p>
   <div>
      <button class="btn "onclick="playRandomVideo()" data-mood="元気" data-jp="元気" data-en="Energetic"></button>
@@ -120,14 +154,19 @@
 </section>
 
 <section id="loop" style="display:none;">
-  <h2 data-jp="sympho loop" data-en="sympho loop"></h2>
+<!--  <h2 data-jp="sympho loop" data-en="sympho loop"></h2> -->
+
+  <img src="Sympholoop.PNG" alt="タイマー付き動画の例" style="max-width:100%; height:auto;">
+  <h2 data-jp="好きな動画を、集中タイムに。"data-en="Turn your favorite videos into focus time."></h2>
+  <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。"data-en="Customize your work videos with a timer and loop playback."></p>
+  <br><br>
   <input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;"/>
   <input type="number" id="duration" placeholder="時間" min="0" style="padding:0.5em; width:100px;"/>
   <span data-jp="分" data-en="min"></span>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
   <button class="btn" onclick="startLoop()" data-jp="スタート" data-en="Start"></button>
   <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
-  <button class="btn" onclick="resetLoop()"data-jp="リセット" data-en="Reset"></button>
+  <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
 
   <div class="video-wrapper">
     <div id="ytPlayer"></div>
