@@ -50,7 +50,7 @@
 <script>
 let moodVideos = {};
 
-fetch('videos1.json')
+fetch('videos.json')
   .then(response => {
     if (!response.ok) throw new Error("読み込み失敗: " + response.status);
     return response.json();
