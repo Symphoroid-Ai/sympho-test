@@ -51,9 +51,18 @@
 let moodVideos = {};
 
 fetch('videos1.json')
-  .then(response => response.json())
-  .then(data => moodVideos = data)
-  .catch(err => console.error("動画リストの読み込みに失敗しました", err));
+  .then(response => {
+    if (!response.ok) throw new Error("読み込み失敗: " + response.status);
+    return response.json();
+  })
+  .then(data => {
+    console.log("動画データ:", data);
+    moodVideos = data;
+  })
+  .catch(err => {
+    alert("動画リストの読み込みに失敗しました\\n" + err.message);
+    console.error(err);
+  });
 
 function playRandomVideo(mood) {
   const options = moodVideos[mood];
