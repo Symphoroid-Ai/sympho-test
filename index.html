@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sympho choice</title>
+  <title>sympho loop - 修正済み</title>
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
@@ -14,67 +13,52 @@
       margin: 0;
       padding: 2em;
     }
-    .btn {
-      background: #00bcd4;
-      border: none;
-      padding: 0.8em 1.5em;
-      margin: 0.5em;
-      color: white;
+    input, button {
+      padding: 0.6em;
       font-size: 1em;
-      border-radius: 5px;
-      cursor: pointer;
+      margin: 0.5em;
     }
     iframe {
-      margin-top: 2em;
       width: 90%;
       max-width: 560px;
       height: 315px;
       border: none;
+      margin-top: 1em;
     }
   </style>
 </head>
 <body>
 
-<h1>sympho choice</h1>
-<p>今日の気分は？</p>
+<h1>sympho loop</h1>
+<p>任意のYouTube動画にタイマーを付けて繰り返し再生</p>
 
-<div>
-  <button class="btn" onclick="playRandomVideo('元気')">元気</button>
-  <button class="btn" onclick="playRandomVideo('癒し')">癒し</button>
-  <button class="btn" onclick="playRandomVideo('集中')">集中</button>
-  <button class="btn" onclick="playRandomVideo('切ない')">切ない</button>
-</div>
+<input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" size="40">
+<button onclick="startLoop()">スタート</button>
 
 <div id="videoArea"></div>
 
 <script>
-let moodVideos = {};
-
-fetch('videos.json')
-  .then(response => {
-    if (!response.ok) throw new Error("読み込み失敗: " + response.status);
-    return response.json();
-  })
-  .then(data => {
-    console.log("動画データ:", data);
-    moodVideos = data;
-  })
-  .catch(err => {
-    alert("動画リストの読み込みに失敗しました\\n" + err.message);
-    console.error(err);
-  });
-
-function playRandomVideo(mood) {
-  const options = moodVideos[mood];
-  if (!options || options.length === 0) {
-    alert("動画が見つかりません");
-    return;
+  // 安全なYouTube動画ID抽出関数
+  function extractVideoId(url) {
+    const match = url.match(/(?:youtu\\.be\\/|youtube\\.com.*(?:v=|\\/embed\\/))([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : null;
   }
-  const chosen = options[Math.floor(Math.random() * options.length)];
-  document.getElementById("videoArea").innerHTML = `
-    <iframe src="${chosen}" allowfullscreen playsinline></iframe>
-    <p>URL: ${chosen}</p>`;
-}
+
+  // 動画再生処理
+  function startLoop() {
+    const url = document.getElementById("ytUrl").value.trim();
+    const videoId = extractVideoId(url);
+
+    if (!videoId) {
+      alert("正しいYouTubeのURLを入力してください。");
+      return;
+    }
+
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`;
+    document.getElementById("videoArea").innerHTML = `
+      <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
+      <p>動画ID: ${videoId}</p>`;
+  }
 </script>
 
 </body>
