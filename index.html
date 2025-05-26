@@ -1,64 +1,93 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sympho loop - 修正済み</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>sympho choice - JSON対応</title>
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
-      background: linear-gradient(#0f2027, #203a43, #2c5364);
+      background: #1c1c2b;
       color: white;
       text-align: center;
-      margin: 0;
       padding: 2em;
     }
-    input, button {
-      padding: 0.6em;
-      font-size: 1em;
+    .btn {
+      background: #00bcd4;
+      border: none;
+      padding: 0.8em 1.5em;
       margin: 0.5em;
+      color: white;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
     }
     iframe {
+      margin-top: 1em;
       width: 90%;
       max-width: 560px;
       height: 315px;
       border: none;
-      margin-top: 1em;
     }
   </style>
 </head>
 <body>
 
-<h1>sympho loop</h1>
-<p>任意のYouTube動画にタイマーを付けて繰り返し再生</p>
+<h1>sympho choice</h1>
+<p>気分を選んで、あなたに合った音楽を見つけよう</p>
 
-<input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" size="40">
-<button onclick="startLoop()">スタート</button>
+<div>
+  <button class="btn" onclick="playRandomVideo('元気')">元気</button>
+  <button class="btn" onclick="playRandomVideo('癒し')">癒し</button>
+  <button class="btn" onclick="playRandomVideo('集中')">集中</button>
+  <button class="btn" onclick="playRandomVideo('切ない')">切ない</button>
+</div>
 
 <div id="videoArea"></div>
 
 <script>
-  // 安全なYouTube動画ID抽出関数
-  function extractVideoId(url) {
-    const match = url.match(/(?:youtu\\.be\\/|youtube\\.com.*(?:v=|\\/embed\\/))([a-zA-Z0-9_-]+)/);
-    return match ? match[1] : null;
-  }
+let moodVideos = {};
 
-  // 動画再生処理
-  function startLoop() {
-    const url = document.getElementById("ytUrl").value.trim();
-    const videoId = extractVideoId(url);
-
-    if (!videoId) {
-      alert("正しいYouTubeのURLを入力してください。");
-      return;
+fetch("videos.json")
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("JSONファイルの読み込みに失敗しました: " + response.status);
     }
+    return response.json();
+  })
+  .then(data => {
+    moodVideos = data;
+  })
+  .catch(err => {
+    alert("動画リストの読み込みに失敗しました\n" + err.message);
+    console.error(err);
+  });
 
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`;
-    document.getElementById("videoArea").innerHTML = `
-      <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
-      <p>動画ID: ${videoId}</p>`;
+function extractVideoId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+function playRandomVideo(mood) {
+  if (!moodVideos[mood] || moodVideos[mood].length === 0) {
+    alert("その気分に合った動画が見つかりません");
+    return;
   }
+  const urls = moodVideos[mood];
+  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+  const videoId = extractVideoId(randomUrl);
+
+  if (!videoId) {
+    alert("動画URLの形式が不正です");
+    return;
+  }
+
+  const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+  document.getElementById("videoArea").innerHTML = \`
+    <iframe src="\${embedUrl}" allowfullscreen playsinline></iframe>
+    <p>URL: \${embedUrl}</p>\`;
+}
 </script>
 
 </body>
