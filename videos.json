@@ -1,18 +1,6 @@
 {
-  "元気": [
-    "https://youtu.be/ujkFHrBHpJo",
-
-  ],
-  "癒し": [
-    "https://youtu.be/uibtXLOllUg",
-
-  ],
-  "集中": [
-    "https://youtu.be/HSUlSZNgBjg",
-
-  ],
-  "切ない": [
-    "https://youtu.be/BaYraiX13P4",
-
-  ]
+  "元気": ["https://youtu.be/ujkFHrBHpJo"],
+  "癒し": ["https://youtu.be/uibtXLOllUg"],
+  "集中": ["https://youtu.be/HSUlSZNgBjg"],
+  "切ない": ["https://youtu.be/BaYraiX13P4"]
 }
