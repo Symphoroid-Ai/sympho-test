@@ -58,9 +58,10 @@ fetch("videos.json")
   })
   .then(data => {
     moodVideos = data;
+    alert("動画リストの読み込みに成功しました！");
   })
   .catch(err => {
-    alert("動画リストの読み込みに失敗しました\n" + err.message);
+    alert("動画リストの読み込みに失敗しました\\n" + err.message);
     console.error(err);
   });
 
