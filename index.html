@@ -1,22 +1,121 @@
+
 <!DOCTYPE html>
 <html lang="ja">
-<head><meta charset="UTF-8"><title>Test</title></head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sympho choice - 完全版</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background: linear-gradient(to bottom, #1e2a38, #0f1c2e);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 2em;
+    }
+    h1 {
+      font-size: 2.4em;
+      margin-bottom: 0.2em;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 1em;
+    }
+    .btn {
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      padding: 0.8em 1.5em;
+      margin: 0.5em;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background-color: #008fa1;
+    }
+    .video-area {
+      margin-top: 2em;
+    }
+    iframe {
+      width: 90%;
+      max-width: 560px;
+      height: 315px;
+      border: none;
+    }
+    #footer {
+      margin-top: 4em;
+      font-size: 0.8em;
+      color: #ccc;
+    }
+  </style>
+</head>
 <body>
-<h1>sympho choice test</h1>
+
+<h1>sympho choice</h1>
+<p>今日の気分を選んで、ぴったりの音楽に出会おう</p>
+
+<div>
+  <button class="btn" onclick="playRandomVideo('元気')">元気</button>
+  <button class="btn" onclick="playRandomVideo('癒し')">癒し</button>
+  <button class="btn" onclick="playRandomVideo('集中')">集中</button>
+  <button class="btn" onclick="playRandomVideo('切ない')">切ない</button>
+</div>
+
+<div class="video-area" id="videoArea"></div>
+
+<div id="footer">
+  © 2025 sympho tune - powered by symphoroid Ai
+</div>
+
 <script>
-alert("JS動作テスト");
+let moodVideos = {};
 
 fetch("videos.json")
-  .then(res => {
-    if (!res.ok) throw new Error("読み込み失敗");
-    return res.json();
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("JSONファイルの読み込みに失敗しました: " + response.status);
+    }
+    return response.json();
   })
   .then(data => {
-    alert("読み込み成功: " + JSON.stringify(data));
+    moodVideos = data;
+    console.log("動画データ読み込み完了", moodVideos);
   })
   .catch(err => {
-    alert("読み込みエラー: " + err.message);
+    alert("動画リストの読み込みに失敗しました\n" + err.message);
+    console.error(err);
   });
+
+function extractVideoId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+function playRandomVideo(mood) {
+  const urls = moodVideos[mood];
+  if (!urls || urls.length === 0) {
+    alert("その気分の動画が見つかりません");
+    return;
+  }
+
+  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+  const videoId = extractVideoId(randomUrl);
+
+  if (!videoId) {
+    alert("無効な動画URLです");
+    return;
+  }
+
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
+  document.getElementById("videoArea").innerHTML = \`
+    <iframe src="\${embedUrl}" allowfullscreen playsinline></iframe>
+    <p>URL: \${embedUrl}</p>
+  \`;
+}
 </script>
+
 </body>
 </html>
