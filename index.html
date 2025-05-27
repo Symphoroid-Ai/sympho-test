@@ -81,6 +81,7 @@ fetch("videos.json")
     return response.json();
   })
   .then(data => {
+    alert("読み込み成功: " + JSON.stringify(data));
     moodVideos = data;
     console.log("動画データ読み込み完了", moodVideos);
   })
