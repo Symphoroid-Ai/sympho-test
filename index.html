@@ -79,6 +79,7 @@ fetch("videos.json")
   .then(data => {
     moodVideos = data;
     alert("読み込み成功: " + JSON.stringify(data));
+    console.log("動画データ読み込み完了", moodVideos);
   })
   .catch(err => {
     alert("読み込みエラー: " + err.message);
