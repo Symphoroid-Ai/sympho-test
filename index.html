@@ -68,6 +68,8 @@
   © 2025 sympho tune - powered by symphoroid Ai
 </div>
 <script>
+let moodVideos = {}
+  
 alert("JS動作テスト");
 fetch("videos.json")
   .then(res => {
@@ -75,11 +77,27 @@ fetch("videos.json")
     return res.json();
   })
   .then(data => {
+    moodVideos = data;
     alert("読み込み成功: " + JSON.stringify(data));
   })
   .catch(err => {
     alert("読み込みエラー: " + err.message);
-  })
+  });
+  function extractVideoId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+function playRandomVideo(mood) {
+  const urls = moodVideos[mood];
+  if (!urls || urls.length === 0) {
+    alert("その気分の動画が見つかりません");
+    return;
+  }
+
+  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+  const videoId = extractVideoId(randomUrl);
+
 </script>
 </body>
 </html>
