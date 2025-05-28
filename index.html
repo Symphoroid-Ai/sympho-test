@@ -73,6 +73,8 @@
 <script>
 let moodVideos = {};
 
+alert("JS動作テスト");
+
 fetch("videos.json")
   .then(res => {
     if (!res.ok) throw new Error("読み込み失敗");
@@ -84,6 +86,7 @@ fetch("videos.json")
   .catch(err => {
     alert("読み込みエラー: " + err.message);
   });
+
 
 
 function extractVideoId(url) {
