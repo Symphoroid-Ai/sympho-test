@@ -2,10 +2,71 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>sympho choice - 完全版</title > 
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background: linear-gradient(to bottom, #1e2a38, #0f1c2e);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 2em;
+    }
+    h1 {
+      font-size: 2.4em;
+      margin-bottom: 0.2em;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 1em;
+    }
+    .btn {
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      padding: 0.8em 1.5em;
+      margin: 0.5em;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background-color: #008fa1;
+    }
+    .video-area {
+      margin-top: 2em;
+    }
+    iframe {
+      width: 90%;
+      max-width: 560px;
+      height: 315px;
+      border: none;
+    }
+    #footer {
+      margin-top: 4em;
+      font-size: 0.8em;
+      color: #ccc;
+    }
+  </style>
 </head>
 <body>
 <h1>sympho choice</h1>
+<p>今日の気分を選んで、ぴったりの音楽に出会おう</p>
+
+<div>
+  <button class="btn" onclick="playRandomVideo('元気')">元気</button>
+  <button class="btn" onclick="playRandomVideo('癒し')">癒し</button>
+  <button class="btn" onclick="playRandomVideo('集中')">集中</button>
+  <button class="btn" onclick="playRandomVideo('切ない')">切ない</button>
+</div>
+
+<div class="video-area" id="videoArea"></div>
+
+<div id="footer">
+  © 2025 sympho tune - powered by symphoroid Ai
+</div>
 <script>
 alert("JS動作テスト");
 fetch("videos.json")
