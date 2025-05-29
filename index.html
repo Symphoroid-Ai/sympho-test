@@ -101,7 +101,7 @@ fetch("videos.json")
       alert("無効な動画URLです");
       return;
     }
-  const randomUrl = options[Math.floor(Math.random() * options.length)];
+  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
   document.getElementById("videoArea").innerHTML = `
     <iframe src="${randomUrl}" allowfullscreen playsinline></iframe>
     <p>URL: ${randomUrl}</p>`;
