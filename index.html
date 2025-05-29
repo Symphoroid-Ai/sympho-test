@@ -103,8 +103,8 @@ fetch("videos.json")
     }
   const randomUrl = options[Math.floor(Math.random() * options.length)];
   document.getElementById("videoArea").innerHTML = `
-    <iframe src="${chosen}" allowfullscreen playsinline></iframe>
-    <p>URL: ${chosen}</p>`;
+    <iframe src="${randomUrl}" allowfullscreen playsinline></iframe>
+    <p>URL: ${randomUrl}</p>`;
     
   }
   
