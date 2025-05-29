@@ -103,7 +103,11 @@ fetch("videos.json")
     alert("無効な動画URLです");
     return;
   }
-    
+const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
+document.getElementById("videoArea").innerHTML = \`
+  <iframe src="\${embedUrl}" allowfullscreen playsinline></iframe>
+  <p>URL: \${embedUrl}</p>\`;
+  
   }
   
   
