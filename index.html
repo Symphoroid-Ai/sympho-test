@@ -86,6 +86,7 @@ fetch("videos.json")
   })
   function extractVideoId(url) {
   const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
+　console.log("抽出されたvideoId:", videoId);
   return match ? match[1] : null;
   }
   function playRandomVideo(mood) {
