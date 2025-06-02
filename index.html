@@ -67,10 +67,10 @@
 <div id="footer">
   © 2025 sympho tune - powered by symphoroid Ai
 </div>
+
 <script>
 let moodVideos = {}
-  
-alert("JS動作テスト");
+
 fetch("videos.json")
   .then(res => {
     if (!res.ok) throw new Error("読み込み失敗");
@@ -78,33 +78,34 @@ fetch("videos.json")
   })
   .then(data => {
     moodVideos = data;
-    alert("読み込み成功: " + JSON.stringify(data));
     console.log("動画データ読み込み完了", moodVideos);
   })
   .catch(err => {
     alert("読み込みエラー: " + err.message);
   })
-  function extractVideoId(url) {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
-    console.log("抽出されたvideoId:", match);
-    return match ? match[1] : null;
-  }
-  function playRandomVideo(mood) {
-    const urls = moodVideos[mood];
-    if (!urls || urls.length === 0) {
-      alert("その気分の動画が見つかりません");
-      return;
-    }
-    const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-    const videoId = extractVideoId(randomUrl);
-    if (!videoId) {
-      alert("無効な動画URLです");
-      return;
-    }
 
-    
+function extractVideoId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+function playRandomVideo(mood) {
+  const urls = moodVideos[mood];
+  if (!urls || urls.length === 0) {
+    alert("その気分の動画が見つかりません");
+    return;
   }
-  
+  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+  const videoId = extractVideoId(randomUrl);
+  if (!videoId) {
+    alert("無効な動画URLです");
+    return;
+  }
+
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
+  const iframe = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  document.getElementById("videoArea").innerHTML = iframe;
+}
 </script>
 </body>
 </html>
