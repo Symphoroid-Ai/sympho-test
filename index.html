@@ -218,9 +218,10 @@ let moodVideos = {};
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
 
-document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", () => {  
   updateLanguage();
-  document.querySelectorAll('.mood-btn').forEach(btn => {
+ /* document.querySelectorAll('.mood-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const mood = btn.dataset.mood;
       const videos = {
@@ -237,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <p>URL: ${chosen}</p>`;
     });
-  });
+  });*/
 });
 
 document.getElementById("langToggle").addEventListener("click", () => {
@@ -395,7 +396,12 @@ function playRandomVideo(mood) {
 
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
   const iframe = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-  document.getElementById("videoArea").innerHTML = iframe;
+  //document.getElementById("videoArea").innerHTML = iframe;
+  document.getElementById("videoArea_choice").innerHTML = `
+    <div class="video-wrapper">
+      <iframe src="${chosen}" allowfullscreen playsinline></iframe>
+    </div>
+    <p>URL: ${chosen}</p>`;
 
 /*
   const resultArea = document.getElementById("videoArea_choice");
