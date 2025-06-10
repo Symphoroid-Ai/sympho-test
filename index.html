@@ -382,8 +382,8 @@ function extractVideoId(url) {
   return match ? match[1] : null;
 }
 
-function playRandomVideo(data-mood) {
-  const urls = moodVideos[data-mood];
+function playRandomVideo(mood) {
+  const urls = moodVideos[mood];
   if (!urls || urls.length === 0) {
     alert("その気分の動画が見つかりません");
     return;
