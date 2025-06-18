@@ -384,6 +384,9 @@ function extractVideoId(url) {
 }
 
 function playRandomVideo(mood) {
+  const options = videos[mood];
+  const chosen = options[Math.floor(Math.random() * options.length)];
+  
   const urls = moodVideos[mood];
   if (!urls || urls.length === 0) {
     alert("その気分の動画が見つかりません");
@@ -401,7 +404,7 @@ function playRandomVideo(mood) {
  // document.getElementById("videoArea_choice").innerHTML = iframe;
  
  
-   document.getElementById("videoArea_choice").innerHTML = \`
+   document.getElementById("videoArea_choice").innerHTML = `
     <div class="video-wrapper">
       <iframe src="${chosen}" allowfullscreen playsinline></iframe>
     </div>
