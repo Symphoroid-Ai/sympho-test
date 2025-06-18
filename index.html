@@ -21,6 +21,7 @@
     }
 
     .btn { 
+      font-family:'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
       background: #00bcd4; 
       border: none; 
       padding: 0.8em 1.5em; 
@@ -397,15 +398,15 @@ function playRandomVideo(mood) {
 
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
   const iframe = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-  document.getElementById("videoArea_choice").innerHTML = iframe;
+  //document.getElementById("videoArea_choice").innerHTML = iframe;
  
  
-/*   document.getElementById("videoArea_choice").innerHTML = `
+   document.getElementById("videoArea_choice").innerHTML = `
     <div class="video-wrapper">
       <iframe src="${chosen}" allowfullscreen playsinline></iframe>
     </div>
     <p>URL: ${chosen}</p>`;
-*/
+
 /*
   const resultArea = document.getElementById("videoArea_choice");
   resultArea.innerHTML = "<p>あなたにぴったりの音楽を占っています...</p>";
