@@ -405,9 +405,15 @@ function playRandomVideo(mood) {
  
  
    document.getElementById("videoArea_choice").innerHTML = `
+  <div class="video-wrapper">
+    <div id="ytPlayer"></div>
+    <div id="timerDisplay" class="top-left" style="display:none;"></div>
+  </div>
+  /*
     <div class="video-wrapper">
       <iframe src="${chosen}" allowfullscreen playsinline></iframe>
     </div>
+ */   
     <p>URL: ${chosen}</p>`;
 
 /*
