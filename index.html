@@ -384,8 +384,8 @@ function extractVideoId(url) {
 }
 
 function playRandomVideo(mood) {
-  const options = videos[mood];
-  const chosen = options[Math.floor(Math.random() * options.length)];
+//  const options = videos[mood];
+//  const chosen = options[Math.floor(Math.random() * options.length)];
   
   const urls = moodVideos[mood];
   if (!urls || urls.length === 0) {
