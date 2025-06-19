@@ -392,8 +392,6 @@ function extractVideoId(url) {
 }
 
 function playRandomVideo(mood) {
-//  const options = videos[mood];
-//  const chosen = options[Math.floor(Math.random() * options.length)];
   
   const urls = moodVideos[mood];
   if (!urls || urls.length === 0) {
@@ -409,21 +407,17 @@ function playRandomVideo(mood) {
 
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
   const iframe = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-//  document.getElementById("videoArea_choice").innerHTML = iframe;
- 
-
+  
    document.getElementById("videoArea_choice").innerHTML = `
   <div class="video-wrapper2">
     <div id="ytPlayer"></div>
-    <div id="timerDisplay" class="top-left" style="display:none;"></div>
+//    <div id="timerDisplay" class="top-left" style="display:none;"></div>
   </div>
-
-    <div class="video-wrapper">
+    <div class="video-wrapper2">
       <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
-    </div>
-    
+    </div>  
     <p>URL: ${randomUrl}</p>`;
-  /* */
+
 /*
   const resultArea = document.getElementById("videoArea_choice");
   resultArea.innerHTML = "<p>あなたにぴったりの音楽を占っています...</p>";
