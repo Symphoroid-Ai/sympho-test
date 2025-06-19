@@ -150,17 +150,17 @@
   <br><br>  
   <p data-jp="今日の気分は？" data-en="How do you feel today?"></p>
   <div>
-   
+ <!--    
     <button class="btn" onclick="playRandomVideo('元気')">元気</button>
     <button class="btn" onclick="playRandomVideo('癒し')">癒し</button>
     <button class="btn" onclick="playRandomVideo('集中')">集中</button>
     <button class="btn" onclick="playRandomVideo('切ない')">切ない</button>
- <!--  
-    <button class="btn " onclick="playRandomVideo()"data-mood="元気" data-jp="元気" data-en="Energetic">元気</button>
-    <button class="btn " onclick="playRandomVideo()"data-mood="癒し" data-jp="癒し" data-en="Healing">癒し</button>
-    <button class="btn " onclick="playRandomVideo()"data-mood="集中" data-jp="集中" data-en="Focus">集中</button>
-    <button class="btn " onclick="playRandomVideo()"data-mood="切ない" data-jp="切ない" data-en="Melancholy">切ない</button>
    -->  
+    <button class="btn " onclick="playRandomVideo('元気')"data-mood="元気" data-jp="元気" data-en="Energetic">元気</button>
+    <button class="btn " onclick="playRandomVideo('癒し')"data-mood="癒し" data-jp="癒し" data-en="Healing">癒し</button>
+    <button class="btn " onclick="playRandomVideo('集中')"data-mood="集中" data-jp="集中" data-en="Focus">集中</button>
+    <button class="btn " onclick="playRandomVideo('切ない')"data-mood="切ない" data-jp="切ない" data-en="Melancholy">切ない</button>
+ 
   </div>
   <div id="videoArea_choice"></div>
 </section>
@@ -401,9 +401,9 @@ function playRandomVideo(mood) {
 
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
   const iframe = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-  document.getElementById("videoArea_choice").innerHTML = iframe;
+//  document.getElementById("videoArea_choice").innerHTML = iframe;
  
-  /* 
+
    document.getElementById("videoArea_choice").innerHTML = `
   <div class="video-wrapper">
     <div id="ytPlayer"></div>
@@ -411,11 +411,11 @@ function playRandomVideo(mood) {
   </div>
 
     <div class="video-wrapper">
-      <iframe src="${chosen}" allowfullscreen playsinline></iframe>
+      <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
     </div>
     
-    <p>URL: ${chosen}</p>`;
-*/
+    <p>URL: ${randomUrl}</p>`;
+  /* */
 /*
   const resultArea = document.getElementById("videoArea_choice");
   resultArea.innerHTML = "<p>あなたにぴったりの音楽を占っています...</p>";
