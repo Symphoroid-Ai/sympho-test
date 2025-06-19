@@ -84,7 +84,15 @@
       height: 0;
       overflow: hidden;
     }
-
+    .video-wrapper2 {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 2em auto;
+      padding-bottom: 56.25%; /* 16:9 アスペクト比 */
+      height: 0;
+      overflow: hidden;
+    }
     .video-wrapper iframe {
       position: absolute;
       top: 0;
@@ -405,7 +413,7 @@ function playRandomVideo(mood) {
  
 
    document.getElementById("videoArea_choice").innerHTML = `
-  <div class="video-wrapper">
+  <div class="video-wrapper2">
     <div id="ytPlayer"></div>
     <div id="timerDisplay" class="top-left" style="display:none;"></div>
   </div>
