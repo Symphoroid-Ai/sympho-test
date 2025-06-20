@@ -414,18 +414,18 @@ function playRandomVideo(mood) {
     </div>  
     <p>URL: ${randomUrl}</p>`;
 
-/*
+
   const resultArea = document.getElementById("videoArea_choice");
   resultArea.innerHTML = "<p>あなたにぴったりの音楽を占っています...</p>";
 
   setTimeout(() => {
-    const chosen = options[Math.floor(Math.random() * options.length)];
+    const randomUrl = urls[Math.floor(Math.random() * urls.length)];
     resultArea.innerHTML = `
-      <iframe src="${chosen}" allowfullscreen playsinline></iframe>
+      <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
       <p>あなたの今日の音楽は：「${mood}」</p>
-      <p>URL: ${chosen}</p>`;
+      <p>URL: ${randomUrl}</p>`;
   }, 2000); // 2秒後に表示
- */
+
 }
 
 
