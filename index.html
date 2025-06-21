@@ -339,7 +339,7 @@ if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
       timerDisplay.textContent = `${mins}:${secs}`;
       if (--remainingTime < 0) {
         clearInterval(timerInterval);
-        timerDisplay.textContent = "時間終了";
+        timerDisplay.textContent = (currentLang === 'jp' ? "時間終了：" : "Time Up: ");
         if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
         isPlaying = false;
       }
@@ -395,13 +395,13 @@ function playRandomVideo(mood) {
   
   const urls = moodVideos[mood];
   if (!urls || urls.length === 0) {
-    alert("その気分の動画が見つかりません");
+    alert(currentLang === 'jp' ? "その気分の動画が見つかりません。" : "No videos found for that mood.");
     return;
   }
   const randomUrl = urls[Math.floor(Math.random() * urls.length)];
   const videoId = extractVideoId(randomUrl);
   if (!videoId) {
-    alert("無効な動画URLです");
+    alert(currentLang === 'jp' ? "無効な動画URLです。" : "Invalid video URL.");
     return;
   }
 
