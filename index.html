@@ -421,7 +421,9 @@ function playRandomVideo(mood) {
   setTimeout(() => {
     const randomUrl = urls[Math.floor(Math.random() * urls.length)];
     resultArea.innerHTML = `
+    <div class="video-wrapper">
       <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
+    </div> 
       <p>あなたの今日の音楽は：「${mood}」</p>
       <p>URL: ${randomUrl}</p>`;
   }, 2000); // 2秒後に表示
