@@ -405,8 +405,8 @@ function playRandomVideo(mood) {
 
 
   const resultArea = document.getElementById("videoArea_choice");
-  resultArea.innerHTML = "<p data-jp="あなたにぴったりの音楽を占っています..."data-en="Finding the perfect healing music for you..."></p>";
-  setTimeout(() => {
+  resultArea.innerHTML = "<p>あなたにぴったりの音楽を占っています...</p>";
+
     const randomUrl = urls[Math.floor(Math.random() * urls.length)];
     resultArea.innerHTML = `
     <div class="video-wrapper">
