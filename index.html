@@ -329,9 +329,13 @@ function extractVideoId(url) {
   const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
   return match ? match[1] : null;
 }
-
+function copyToLoop(url) {
+  // sympho loop の URL欄にコピー
+  document.getElementById("ytUrl").value = url;
+  // loopセクションに切り替えてスクロール
+  showSection('loop');
+}
 function playRandomVideo(mood) {
-  
   const urls = moodVideos[mood];
   if (!urls || urls.length === 0) {
     alert(currentLang === 'jp' ? "その気分の動画が見つかりません。" : "No videos found for that mood.");
@@ -370,7 +374,7 @@ function playRandomVideo(mood) {
       </p>
       <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
       <button class="btn" onclick="copyToLoop('${randomUrl}')"
-        data-jp="この動画をタイマーで使う" data-en="Use this video with timer">
+        data-jp="この動画をSympho loopで使う" data-en="Use this video with Sympho loop">
         ${currentLang === 'jp' ? "この動画をSympho loopで使う" : "Use this video with Sympho loop"}
       </button>
     `;
@@ -378,13 +382,7 @@ function playRandomVideo(mood) {
   }, 2000);
    // 2秒後に表示
     
-  function copyToLoop(url) {
-    // sympho loop の URL欄にコピー
-    document.getElementById("ytUrl").value = url;
-  
-    // loopセクションに切り替えてスクロール
-    showSection('loop');
-  }
+
 
 }
 </script>
