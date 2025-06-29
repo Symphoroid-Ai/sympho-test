@@ -355,6 +355,7 @@ function playRandomVideo(mood) {
 
 
   const resultArea = document.getElementById("videoArea_choice");
+  resultArea.innerHTML = "<p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。"data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>";  
 //  resultArea.innerHTML = "<p>あなたにぴったりの音楽を占っています...</p>";
  setTimeout(() => {
     const randomUrl = urls[Math.floor(Math.random() * urls.length)];
