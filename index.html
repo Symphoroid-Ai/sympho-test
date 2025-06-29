@@ -361,7 +361,7 @@ function playRandomVideo(mood) {
   </p>`;
 
  setTimeout(() => {
-//   const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+const randomUrl = urls[Math.floor(Math.random() * urls.length)];
   resultArea.innerHTML = `
     <div class="video-wrapper">
       <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
