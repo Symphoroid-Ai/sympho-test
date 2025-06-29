@@ -329,6 +329,14 @@ function extractVideoId(url) {
   const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
   return match ? match[1] : null;
 }
+  
+function copyToLoop(url) {
+  // sympho loop の URL欄にコピー
+  document.getElementById("ytUrl").value = url;
+
+  // loopセクションに切り替えてスクロール
+  showSection('loop');
+}
 
 function playRandomVideo(mood) {
   const urls = moodVideos[mood];
