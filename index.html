@@ -146,8 +146,18 @@
   <h2 data-jp="好きな動画を、集中タイムに。"data-en="Turn your favorite videos into focus time."></h2>
   <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。"data-en="Customize your work videos with a timer and loop playback."></p>
   <br><br>
-  <input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;"/>
-  <input type="number" id="duration" placeholder="時間" min="0" style="padding:0.5em; width:100px;"/>
+  <input type="text" id="ytUrl"
+  data-jp="YouTube動画のURLを入力"
+  data-en="Enter YouTube video URL"
+  placeholder="YouTube動画のURLを入力"
+  style="width:80%; padding:0.5em;" />
+  
+  <input type="number" id="duration"
+  data-jp="時間"
+  data-en="Duration"
+  placeholder="時間"
+  min="0" style="padding:0.5em; width:100px;" />
+  
   <span data-jp="分" data-en="min"></span>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
   <button class="btn" onclick="startLoop()" data-jp="スタート" data-en="Start"></button>
@@ -197,10 +207,17 @@ document.getElementById("langToggle").addEventListener("click", () => {
 
 function updateLanguage() {
   document.querySelectorAll("[data-jp]").forEach(el => {
-    el.textContent = el.getAttribute(`data-${currentLang}`);
+    if (el.placeholder !== undefined) {
+      el.placeholder = el.getAttribute(`data-${currentLang}`);
+    } else {
+      el.textContent = el.getAttribute(`data-${currentLang}`);
+    }
   });
+
+  // 言語切り替えボタンの表示名
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
 }
+
 
 function showSection(section) {
   document.getElementById("choice").style.display = (section === "choice") ? "block" : "none";
@@ -334,6 +351,7 @@ function startLoop() {
   if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
   isPaused = false;
 }
+  
 function startTimer(totalTime) {
   if (isPlaying) return;
 
