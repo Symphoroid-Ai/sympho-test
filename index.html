@@ -229,7 +229,7 @@ window.onYouTubeIframeAPIReady = function () {
   playerReady = true;
 }
 
-
+/*
 function startLoop() {
    if (isPlaying) return;
 
@@ -285,6 +285,75 @@ if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
     }, 1000);
 
 }
+*/
+function startLoop() {
+  if (isPlaying) return;
+
+  const url = document.getElementById("ytUrl").value;
+  const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
+  if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
+
+  const minutes = parseInt(document.getElementById("duration").value) || 0;
+  const totalTime = minutes * 60;
+  const timerDisplay = document.getElementById("timerDisplay");
+  timerDisplay.className = positions[positionIndex];
+  timerDisplay.style.display = minutes > 0 ? "block" : "none";
+
+  if (!ytPlayer && playerReady) {
+    ytPlayer = new YT.Player('ytPlayer', {
+      videoId: videoId,
+      playerVars: {
+        playsinline: 1,
+        fs: 0
+      },
+      events: {
+        'onReady': function (event) {
+          event.target.unMute();
+          event.target.playVideo();
+        },
+        'onStateChange': function (evt) {
+          //  再生開始されたらタイマーを開始
+          if (evt.data === YT.PlayerState.PLAYING) {
+            if (!isPlaying) {
+              startTimer(totalTime);
+            }
+          }
+          // 繰り返し再生対応
+          if (evt.data === YT.PlayerState.ENDED) {
+            evt.target.seekTo(0);
+            evt.target.playVideo();
+          }
+        }
+      }
+    });
+  } else if (ytPlayer && playerReady) {
+    ytPlayer.unMute();
+    ytPlayer.playVideo();
+  }
+
+  if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
+  isPaused = false;
+}
+function startTimer(totalTime) {
+  if (isPlaying) return;
+
+  const timerDisplay = document.getElementById("timerDisplay");
+  isPlaying = true;
+  clearInterval(timerInterval);
+
+  timerInterval = setInterval(() => {
+    const mins = Math.floor(remainingTime / 60).toString().padStart(2, '0');
+    const secs = (remainingTime % 60).toString().padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+    if (--remainingTime < 0) {
+      clearInterval(timerInterval);
+      timerDisplay.textContent = (currentLang === 'jp' ? "時間終了：" : "Time Up: ");
+      if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
+      isPlaying = false;
+    }
+  }, 1000);
+}
+
 function stopLoop() {
   if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
   isPaused = true;
