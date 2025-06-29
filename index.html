@@ -360,31 +360,31 @@ function playRandomVideo(mood) {
     ${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}
   </p>`;
 
-setTimeout(() => {
-  resultArea.innerHTML = `
-    <div class="video-wrapper">
-      <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
-    </div>
-    <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">
-      ${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}
-    </p>
-    <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
-    <button class="btn" onclick="copyToLoop('${randomUrl}')"
-      data-jp="この動画をタイマーで使う" data-en="Use this video with timer">
-      ${currentLang === 'jp' ? "この動画をタイマーで使う" : "Use this video with timer"}
-    </button>
-  `;
-  updateLanguage();
-}, 2000);
- // 2秒後に表示
+  setTimeout(() => {
+    resultArea.innerHTML = `
+      <div class="video-wrapper">
+        <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
+      </div>
+      <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">
+        ${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}
+      </p>
+      <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
+      <button class="btn" onclick="copyToLoop('${randomUrl}')"
+        data-jp="この動画をタイマーで使う" data-en="Use this video with timer">
+        ${currentLang === 'jp' ? "この動画をSympho loopで使う" : "Use this video with Sympho loop"}
+      </button>
+    `;
+    updateLanguage();
+  }, 2000);
+   // 2秒後に表示
+    
+  function copyToLoop(url) {
+    // sympho loop の URL欄にコピー
+    document.getElementById("ytUrl").value = url;
   
-function copyToLoop(url) {
-  // sympho loop の URL欄にコピー
-  document.getElementById("ytUrl").value = url;
-
-  // loopセクションに切り替えてスクロール
-  showSection('loop');
-}
+    // loopセクションに切り替えてスクロール
+    showSection('loop');
+  }
 
 }
 </script>
