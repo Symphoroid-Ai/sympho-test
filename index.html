@@ -355,15 +355,23 @@ function playRandomVideo(mood) {
 
 
   const resultArea = document.getElementById("videoArea_choice");
- resultArea.innerHTML = "<p>あなたにぴったりの音楽を占っています...</p>";
+ resultArea.innerHTML = `
+  <p data-jp="あなたにぴったりの音楽を占っています…" data-en="Fortune-telling your perfect music...">
+    ${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}
+  </p>`;
+
  setTimeout(() => {
-    const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-    resultArea.innerHTML = `
+  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+  resultArea.innerHTML = `
     <div class="video-wrapper">
       <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
-      </div>  <p>あなたの今日の音楽はこちら！</p>
-      <p>URL: ${randomUrl}</p>`;
-  }, 2000); // 2秒後に表示
+    </div>
+    <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">
+      ${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}
+    </p>
+    <p>URL: ${randomUrl}</p>`;
+  updateLanguage(); // ここで言語切り替え反映
+}, 2000); // 2秒後に表示
 
 }
 
