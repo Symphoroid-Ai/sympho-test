@@ -7,91 +7,96 @@
   <script src="https://www.youtube.com/iframe_api"></script>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
   <style>
-    body { margin: 0; font-family:'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
-      background:  linear-gradient(#0f2027, #203a43, #2c5364);
-      color: white; 
+    body {
+      margin: 0;
+      font-family: 'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
+      background: linear-gradient(#0f2027, #203a43, #2c5364);
+      color: white;
     }
 
-    header, section { 
-      padding: 2em; text-align: center; 
-    }
-    
-    h1 {
-      font-size: clamp(1.5rem, 5vw, 3rem); 
-    }
-
-    .btn { 
-      font-family:'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
-      background: #00bcd4; 
-      border: none; 
-      padding: 0.8em 1.5em; 
-      margin: 0.5em; 
-      color: white; 
-      font-size: 1em; 
-      border-radius: 5px; 
-      cursor: pointer; 
-    }
-    
-    iframe { 
-      display: block; 
-      border: none; 
-    }
-    
-    #videoArea_loop { 
-      position: relative; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      flex-direction: column; 
-    }
-
-    section h2 {
-        font-size: clamp(1rem, 5vw, 1.5rem);
-        margin-bottom: 20px;
-    }
-    .section-button {
-        padding: 12px 25px;
-        font-weight: bold;
-        color: white;
-        background-color: #FF0000;
-        text-decoration: none;
-        border-radius: 6px;
-    }
-    header {
-      background-color: #EAEEF6;
-      color: #01BEE3;
+    header, section {
       padding: 2em;
       text-align: center;
     }
+
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 3rem);
+    }
+
+    .btn {
+      background: #00bcd4;
+      border: none;
+      padding: 0.8em 1.5em;
+      margin: 0.5em;
+      color: white;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    iframe {
+      display: block;
+      border: none;
+    }
+
+    #videoArea_loop {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    section h2 {
+      font-size: clamp(1rem, 5vw, 1.5rem);
+      margin-bottom: 20px;
+    }
+
+    .section-button {
+      padding: 12px 25px;
+      font-weight: bold;
+      color: white;
+      background-color: #FF0000;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    header {
+      background-color: #EAEEF6;
+      color: #01BEE3;
+    }
+
     footer {
-        background-color: #001f3f;
-        color: white;
-        text-align: center;
-        padding: 40px 20px;
+      background-color: #001f3f;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
     }
+
     .footer-links a {
-        color: #7FDBFF;
-        margin: 0 10px;
-        text-decoration: none;
+      color: #7FDBFF;
+      margin: 0 10px;
+      text-decoration: none;
     }
-    
+
     .video-wrapper {
       position: relative;
       width: 100%;
       max-width: 800px;
       margin: 2em auto;
-      padding-bottom: 56.25%; /* 16:9 アスペクト比 */
+      padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
     }
+
     .video-wrapper iframe {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      border: none;
     }
+
     #timerDisplay {
       position: absolute;
       background: rgba(0,0,0,0.6);
@@ -100,11 +105,12 @@
       z-index: 10;
       pointer-events: none;
     }
+
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
     .bottom-left { bottom: 10px; left: 10px; }
     .bottom-right { bottom: 10px; right: 10px; }
-    .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }    
+    .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
   </style>
 </head>
 <body>
@@ -112,52 +118,35 @@
 <button id="langToggle" class="btn">English</button>
 
 <header>
-  <img src="Symphotune.png" alt="sympho tune logo" style="max-width:100%; height:auto;"/>
+  <img src="Symphotune.png" alt="sympho tune logo" style="max-width:100%; height:auto;" />
   <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
   <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
   <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>
 </header>
 
-</section>
-
-</section>
-
 <section id="choice" style="display:none;">
-
   <img src="Symphochoice.png" alt="気分で音楽を選ぶイメージ" style="max-width:80%; height:auto;">
-  <h2 data-jp="今日の気分にぴったりの音楽を。"data-en="Music that fits your mood today."></h2>
-  <p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。"data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>
-  <br><br>  
+  <h2 data-jp="今日の気分にぴったりの音楽を。" data-en="Music that fits your mood today."></h2>
+  <p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。" data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>
+  <br><br>
   <p data-jp="今日の気分は？" data-en="How do you feel today?"></p>
   <div>
-    <button class="btn " onclick="playRandomVideo('元気')"data-mood="元気" data-jp="元気" data-en="Energetic">元気</button>
-    <button class="btn " onclick="playRandomVideo('癒し')"data-mood="癒し" data-jp="癒し" data-en="Healing">癒し</button>
-    <button class="btn " onclick="playRandomVideo('集中')"data-mood="集中" data-jp="集中" data-en="Focus">集中</button>
-    <button class="btn " onclick="playRandomVideo('切ない')"data-mood="切ない" data-jp="切ない" data-en="Melancholy">切ない</button>
- 
+    <button class="btn" onclick="playRandomVideo('元気')" data-mood="元気" data-jp="元気" data-en="Energetic">元気</button>
+    <button class="btn" onclick="playRandomVideo('癒し')" data-mood="癒し" data-jp="癒し" data-en="Healing">癒し</button>
+    <button class="btn" onclick="playRandomVideo('集中')" data-mood="集中" data-jp="集中" data-en="Focus">集中</button>
+    <button class="btn" onclick="playRandomVideo('切ない')" data-mood="切ない" data-jp="切ない" data-en="Melancholy">切ない</button>
   </div>
   <div id="videoArea_choice"></div>
 </section>
 
 <section id="loop" style="display:none;">
-
   <img src="Sympholoop.png" alt="タイマー付き動画の例" style="max-width:80%; height:auto;">
-  <h2 data-jp="好きな動画を、集中タイムに。"data-en="Turn your favorite videos into focus time."></h2>
-  <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。"data-en="Customize your work videos with a timer and loop playback."></p>
+  <h2 data-jp="好きな動画を、集中タイムに。" data-en="Turn your favorite videos into focus time."></h2>
+  <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。" data-en="Customize your work videos with a timer and loop playback."></p>
   <br><br>
-  <input type="text" id="ytUrl"
-  data-jp="YouTube動画のURLを入力"
-  data-en="Enter YouTube video URL"
-  placeholder="YouTube動画のURLを入力"
-  style="width:80%; padding:0.5em;" />
-  
-  <input type="number" id="duration"
-  data-jp="時間"
-  data-en="Duration"
-  placeholder="時間"
-  min="0" style="padding:0.5em; width:100px;" />
-  
+  <input type="text" id="ytUrl" data-jp="YouTube動画のURLを入力" data-en="Enter YouTube video URL" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;" />
+  <input type="number" id="duration" data-jp="時間" data-en="Duration" placeholder="時間" min="0" style="padding:0.5em; width:100px;" />
   <span data-jp="分" data-en="min"></span>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
   <button class="btn" onclick="startLoop()" data-jp="スタート" data-en="Start"></button>
@@ -171,34 +160,29 @@
 </section>
 
 <footer>
-    <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
-    <div class="footer-links">
-        <a href="https://www.youtube.com/@symphoroidai">YouTube</a>
-        <a href="https://www.instagram.com/symphoroid_ai">Instagram</a>
-        <a href="https://www.tiktok.com/@symphoroid.ai">TikTok</a>
-        <a href="https://www.x.com/@SymphoroidAi">X</a>
-    </div>
-    <br>
-    <a href="terms.html" class="footer-links">利用規約 / Terms of Use</a> | <a href="privacy.html" class="footer-links">プライバシーポリシー / Privacy Policy</a>
+  <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
+  <div class="footer-links">
+    <a href="https://www.youtube.com/@symphoroidai">YouTube</a>
+    <a href="https://www.instagram.com/symphoroid_ai">Instagram</a>
+    <a href="https://www.tiktok.com/@symphoroid.ai">TikTok</a>
+    <a href="https://www.x.com/@SymphoroidAi">X</a>
+  </div>
+  <br>
+  <a href="terms.html" class="footer-links">利用規約 / Terms of Use</a> |
+  <a href="privacy.html" class="footer-links">プライバシーポリシー / Privacy Policy</a>
 </footer>
 
 <script>
-let ytPlayer;
-let playerReady = false;
-let timerInterval;
+let ytPlayer, timerInterval;
 let remainingTime = 0;
-let isPaused = false;
-let isPlaying = false;
+let isPaused = false, isPlaying = false;
+let playerReady = false;
 let currentLang = 'jp';
-let videoId = "";
-let moodVideos = {};
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
+let moodVideos = {};
 
-
-document.addEventListener("DOMContentLoaded", () => {  
-  updateLanguage();
-});
+document.addEventListener("DOMContentLoaded", updateLanguage);
 
 document.getElementById("langToggle").addEventListener("click", () => {
   currentLang = currentLang === 'jp' ? 'en' : 'jp';
@@ -207,105 +191,37 @@ document.getElementById("langToggle").addEventListener("click", () => {
 
 function updateLanguage() {
   document.querySelectorAll("[data-jp]").forEach(el => {
-    if (el.placeholder !== undefined) {
+    if ('placeholder' in el) {
       el.placeholder = el.getAttribute(`data-${currentLang}`);
     } else {
       el.textContent = el.getAttribute(`data-${currentLang}`);
     }
   });
-
-  // 言語切り替えボタンの表示名
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
 }
 
-
 function showSection(section) {
-  document.getElementById("choice").style.display = (section === "choice") ? "block" : "none";
-  document.getElementById("loop").style.display = (section === "loop") ? "block" : "none";
-
-  // 選択したセクションにスクロール（スムースに）
-  const target = document.getElementById(section);
-  if (target) {
-    setTimeout(() => {
-      target.scrollIntoView({ behavior: "smooth" });
-    }, 100); // 表示反映のため少し遅らせる
-  }
+  document.getElementById("choice").style.display = section === "choice" ? "block" : "none";
+  document.getElementById("loop").style.display = section === "loop" ? "block" : "none";
+  setTimeout(() => {
+    document.getElementById(section).scrollIntoView({ behavior: "smooth" });
+  }, 100);
 }
 
 function toggleTimerPosition() {
   positionIndex = (positionIndex + 1) % positions.length;
   const timer = document.getElementById("timerDisplay");
   timer.className = positions[positionIndex];
-  const posText = currentLang === 'jp'
-    ? ["左上","右上","左下","右下","中央"][positionIndex]
-    : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"][positionIndex];
-  document.getElementById("positionBtn").textContent = (currentLang === 'jp' ? "表示位置：" : "Position: ") + posText;
+  const posLabels = currentLang === 'jp'
+    ? ["左上","右上","左下","右下","中央"]
+    : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"];
+  document.getElementById("positionBtn").textContent = (currentLang === 'jp' ? "表示位置：" : "Position: ") + posLabels[positionIndex];
 }
 
-window.onYouTubeIframeAPIReady = function () {
-  playerReady = true;
-}
+window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 
-/*
-function startLoop() {
-   if (isPlaying) return;
-
-  const url = document.getElementById("ytUrl").value;
-  const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
-  if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
-
-  const minutes = parseInt(document.getElementById("duration").value) || 0;
-  const totalTime = minutes * 60;
-  const timerDisplay = document.getElementById("timerDisplay");
-  timerDisplay.className = positions[positionIndex];
-  timerDisplay.style.display = minutes > 0 ? "block" : "none";
-
-  if (!ytPlayer && playerReady) {
-    ytPlayer = new YT.Player('ytPlayer', {
-      videoId: videoId,
-      playerVars: {
-        playsinline: 1,
-        fs: 0
-      },
-      events: {
-        'onReady': function (event) {
-          event.target.unMute();
-          event.target.playVideo();
-        },
-        'onStateChange': function (evt) {
-          if (evt.data === YT.PlayerState.ENDED) {
-            evt.target.seekTo(0);
-            evt.target.playVideo();
-          }
-        }
-      }
-    });
-  } else if (ytPlayer && playerReady) {
-//    ytPlayer.loadVideoById(videoId);
-    ytPlayer.unMute();
-    ytPlayer.playVideo();
-  }
-if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
-  isPaused = false;
-  isPlaying = true;
-  clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      const mins = Math.floor(remainingTime / 60).toString().padStart(2, '0');
-      const secs = (remainingTime % 60).toString().padStart(2, '0');
-      timerDisplay.textContent = `${mins}:${secs}`;
-      if (--remainingTime < 0) {
-        clearInterval(timerInterval);
-        timerDisplay.textContent = (currentLang === 'jp' ? "時間終了：" : "Time Up: ");
-        if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
-        isPlaying = false;
-      }
-    }, 1000);
-
-}
-*/
 function startLoop() {
   if (isPlaying) return;
-
   const url = document.getElementById("ytUrl").value;
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
   if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
@@ -318,24 +234,15 @@ function startLoop() {
 
   if (!ytPlayer && playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
-      videoId: videoId,
-      playerVars: {
-        playsinline: 1,
-        fs: 0
-      },
+      videoId,
+      playerVars: { playsinline: 1, fs: 0 },
       events: {
-        'onReady': function (event) {
+        onReady: event => {
           event.target.unMute();
           event.target.playVideo();
         },
-        'onStateChange': function (evt) {
-          //  再生開始されたらタイマーを開始
-          if (evt.data === YT.PlayerState.PLAYING) {
-            if (!isPlaying) {
-              startTimer(totalTime);
-            }
-          }
-          // 繰り返し再生対応
+        onStateChange: evt => {
+          if (evt.data === YT.PlayerState.PLAYING && !isPlaying) startTimer(totalTime);
           if (evt.data === YT.PlayerState.ENDED) {
             evt.target.seekTo(0);
             evt.target.playVideo();
@@ -351,77 +258,59 @@ function startLoop() {
   if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
   isPaused = false;
 }
-  
+
 function startTimer(totalTime) {
   if (isPlaying) return;
-
-  const timerDisplay = document.getElementById("timerDisplay");
   isPlaying = true;
   clearInterval(timerInterval);
 
+  const timerDisplay = document.getElementById("timerDisplay");
   timerInterval = setInterval(() => {
-    const mins = Math.floor(remainingTime / 60).toString().padStart(2, '0');
-    const secs = (remainingTime % 60).toString().padStart(2, '0');
+    const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
+    const secs = String(remainingTime % 60).padStart(2, '0');
     timerDisplay.textContent = `${mins}:${secs}`;
     if (--remainingTime < 0) {
       clearInterval(timerInterval);
-      timerDisplay.textContent = (currentLang === 'jp' ? "時間終了：" : "Time Up: ");
-      if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
+      timerDisplay.textContent = currentLang === 'jp' ? "時間終了：" : "Time Up: ";
+      if (ytPlayer?.stopVideo) ytPlayer.stopVideo();
       isPlaying = false;
     }
   }, 1000);
 }
 
 function stopLoop() {
-  if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+  ytPlayer?.pauseVideo();
   isPaused = true;
   isPlaying = false;
   clearInterval(timerInterval);
 }
+
 function resetLoop() {
-  if (ytPlayer && ytPlayer.destroy) {
-    ytPlayer.destroy();
-    ytPlayer = null;
-  }
+  ytPlayer?.destroy();
+  ytPlayer = null;
   clearInterval(timerInterval);
   remainingTime = 0;
   isPaused = false;
   isPlaying = false;
-  lastVideoId = "";
-
-  // 入力フォームをクリア
   document.getElementById("ytUrl").value = "";
   document.getElementById("duration").value = "";
-
-  // 表示をクリア
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
 }
 
 fetch("videos.json")
-  .then(res => {
-    if (!res.ok) throw new Error("読み込み失敗");
-    return res.json();
-  })
-  .then(data => {
-    moodVideos = data;
-    console.log("動画データ読み込み完了", moodVideos);
-  })
-  .catch(err => {
-    alert("読み込みエラー: " + err.message);
-  })
+  .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
+  .then(data => { moodVideos = data; console.log("動画データ読み込み完了", moodVideos); })
+  .catch(err => alert("読み込みエラー: " + err.message));
 
 function extractVideoId(url) {
   const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
   return match ? match[1] : null;
 }
-  
-function copyToLoop(url) {
-  // sympho loop の URL欄にコピー
-  document.getElementById("ytUrl").value = url;
 
-  // loopセクションに切り替えてスクロール
+function copyToLoop(url) {
+  document.getElementById("ytUrl").value = url;
   showSection('loop');
 }
 
@@ -437,43 +326,24 @@ function playRandomVideo(mood) {
     alert(currentLang === 'jp' ? "無効な動画URLです。" : "Invalid video URL.");
     return;
   }
-
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
-  const iframe = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-  
-   document.getElementById("videoArea_choice").innerHTML = `
-    <div class="video-wrapper">
-      <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
-    </div>  
-    <p>URL: ${randomUrl}</p>`;
-
-
   const resultArea = document.getElementById("videoArea_choice");
- resultArea.innerHTML = `
-  <p data-jp="あなたにぴったりの音楽を占っています…" data-en="Fortune-telling your perfect music...">
-    ${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}
-  </p>`;
+
+  resultArea.innerHTML = `<p data-jp="あなたにぴったりの音楽を占っています…" data-en="Fortune-telling your perfect music...">${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}</p>`;
 
   setTimeout(() => {
     resultArea.innerHTML = `
       <div class="video-wrapper">
         <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
       </div>
-      <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">
-        ${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}
-      </p>
+      <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}</p>
       <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
-      <button class="btn" onclick="copyToLoop('${randomUrl}')"
-        data-jp="この動画をSympho loopで使う" data-en="Use this video with Sympho loop">
+      <button class="btn" onclick="copyToLoop('${randomUrl}')" data-jp="この動画をSympho loopで使う" data-en="Use this video with Sympho loop">
         ${currentLang === 'jp' ? "この動画をSympho loopで使う" : "Use this video with Sympho loop"}
       </button>
     `;
     updateLanguage();
   }, 2000);
-   // 2秒後に表示
-    
-
-
 }
 </script>
 </body>
