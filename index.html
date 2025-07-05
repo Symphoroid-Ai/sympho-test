@@ -70,9 +70,9 @@
     .header-content p {
       text-shadow: 0 0 10px black;
     }
-    .header-content h1 {
+   .header-content h1 {
       width: 100%;
-      font-size: 8vw; /* ビューポートに応じてサイズ自動調整 */
+      font-size: 6vw;
       text-align: center;
       letter-spacing: 0.1em;
       margin: 0 auto;
@@ -128,13 +128,19 @@
       font-size: 0.9rem;
       background: rgba(0,0,0,0.6);
     }
-
+    @media (max-width: 768px) {
+      .header-content h1 {
+        font-size: 8vw;
+      }
+    }
+    /*
     @media (max-width: 768px) {
       header {
         height: 50vh;
       }
       h1 { font-size: 2rem; }
     }
+    */
   </style>
 </head>
 <body>
