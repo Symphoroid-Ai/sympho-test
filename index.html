@@ -228,7 +228,7 @@
     &copy; 2025 Symphoroid Ai. All rights reserved.
   </footer>
 
-  <!-- 言語切替スクリプト -->
+  <!-- 言語切替スクリプト
   <script>
     const langToggle = document.getElementById("langToggle");
     const langTexts = document.querySelectorAll(".lang-text");
@@ -242,6 +242,26 @@
       });
     });
   </script>
+  -->
+<script>
+  const langToggle = document.getElementById("langToggle");
+  const langTexts = document.querySelectorAll(".lang-text");
+  let currentLang = localStorage.getItem('lang') || "jp";
 
+  function applyLang() {
+    langToggle.textContent = langToggle.getAttribute(`data-${currentLang}`);
+    langTexts.forEach(el => {
+      el.textContent = el.getAttribute(`data-${currentLang}`);
+    });
+  }
+
+  langToggle.addEventListener("click", () => {
+    currentLang = currentLang === "jp" ? "en" : "jp";
+    localStorage.setItem('lang', currentLang);
+    applyLang();
+  });
+
+  applyLang();
+</script>
 </body>
 </html>
