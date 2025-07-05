@@ -41,9 +41,10 @@
       font-size: 1rem;
     }
 
-    header {
+     header {
       position: relative;
       height: 60vh;
+      min-height: 400px;
       overflow: hidden;
     }
 
@@ -127,9 +128,12 @@
       background: rgba(0,0,0,0.6);
     }
 
-    @media (max-width: 768px) {
+    @media (max-height: 500px) and (orientation: landscape) {
       header {
-        height: 50vh;
+        height: auto;
+        min-height: 400px;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
       }
      /* h1 { font-size: 2rem; }*/
      .header-content h1 {
