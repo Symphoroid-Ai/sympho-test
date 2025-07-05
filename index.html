@@ -27,7 +27,7 @@
     }
 
     #langToggle {
-      position: fixed;
+      position: absolute;
       top: 1rem;
       right: 1rem; 
       background: #00bcd4;
@@ -36,6 +36,7 @@
       border-radius: 5px;
       padding: 0.5rem 1rem;
       z-index: 10;
+      z-index: 2;
       cursor: pointer;
       font-size: 1rem;
     }
@@ -63,27 +64,28 @@
       text-align: center;
       z-index: 1;
       color: white;
-      background: rgba(0, 0, 0, 0.0); /* 半透明の背景で文字が見やすく */
+      background: rgba(0, 0, 0, 0.40); /* 半透明の背景で文字が見やすく */
       padding: 2rem;
       border-radius: 10px;
     }
     .header-content p {
       text-shadow: 0 0 10px black;
     }
-/*   .header-content h1 {
+    .header-content h1 {
       width: 100%;
-      font-size: 6vw;
+      font-size: clamp(2rem, 6vw, 5rem);
       text-align: center;
       letter-spacing: 0.1em;
       margin: 0 auto;
       text-shadow: 0 0 10px black;
+      white-space: nowrap;
     }
-    */
+/*
     h1 {
       font-size: 3rem;
       text-shadow: 0 0 10px black;
     }
-
+*/
     .btn-group {
       margin-top: 2rem;
       display: flex;
@@ -124,28 +126,31 @@
       font-size: 0.9rem;
       background: rgba(0,0,0,0.6);
     }
-    /*    @media (max-width: 768px) {
-      .header-content h1 {
-        font-size: 8vw;
-      }
-    }
-    */
+
     @media (max-width: 768px) {
       header {
         height: 50vh;
       }
-      h1 { font-size: 2rem; }
+     /* h1 { font-size: 2rem; }*/
+     .header-content h1 {
+      font-size: 8vw;
+      }
     }
-
   </style>
 </head>
 <body>
 
-  <!-- 言語切り替えボタン（左上固定） -->
-  <button id="langToggle" class="btn" data-jp="English" data-en="日本語">English</button>
+
+    <!-- 背景動画
+  <video class="video-background" autoplay muted loop playsinline>
+    <source src="bg.mp4" type="video/mp4">
+  </video> -->
 
   <!-- ヘッダー -->
 <header>
+  <!-- 言語切り替えボタン（左上固定） -->
+  <button id="langToggle" class="btn" data-jp="English" data-en="日本語">English</button>
+
   <!-- 背景動画 -->
   <video class="header-video" autoplay muted loop playsinline>
     <source src="bg.mp4" type="video/mp4">
@@ -158,14 +163,14 @@
       癒しの音楽と物語を、あなたへ。
     </p>
     <div class="btn-group">
-      <a href="tune/" class="btn lang-text" data-jp="🎧 Sympho tune を体験する" data-en="🎧 Try Sympho tune">🎧 Sympho tune を体験する</a>
+      <a href="/tune" class="btn lang-text" data-jp="🎧 Sympho tune を体験する" data-en="🎧 Try Sympho tune">🎧 Sympho tune を体験する</a>
     </div>
   </div>
 </header>
 
   <!-- ナビゲーション -->
   <nav>
-    <a href="tune/" class="lang-text" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
+    <a href="/tune" class="lang-text" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
     <a href="/privacy.html" class="lang-text" data-jp="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
     <a href="/terms.html" class="lang-text" data-jp="利用規約" data-en="Terms">利用規約</a>
     <a href="/contact.html" class="lang-text" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
@@ -174,7 +179,7 @@
   <!-- 紹介 -->
   <section>
     <h2 class="lang-text" data-jp="Symphoroid Ai について" data-en="About Symphoroid Ai">Symphoroid Ai について</h2>
-    <p class="lang-text" data-jp="Symphoroid Ai は、癒しの音楽をテーマに活動するバーチャルアーティストです。ピアノとバイオリンの音色を中心に、星空のように静かで優しい音楽を届けています。Instagram・YouTube・TikTokなどで活動中。" data-en="Symphoroid Ai is a virtual artist focused on healing music. Delivering gentle piano and violin melodies inspired by the night sky. Active on Instagram, YouTube, and TikTok.">
+    <p class="lang-text" data-jp="Symphoroid Ai は、癒しの音楽をテーマに活動するバーチャルアーティストです。ピアノとバイオリンの音色を中心に、星空のように静かで優しい音楽を届けています。Instagram・YouTube・TikTokなどで活動中。" data-en="symphoroid Ai is a virtual artist focused on healing music. Delivering gentle piano and violin melodies inspired by the night sky. Active on Instagram, YouTube, and TikTok.">
       Symphoroid Ai は、癒しの音楽をテーマに活動するバーチャルアーティストです。ピアノとバイオリンの音色を中心に、星空のように静かで優しい音楽を届けています。Instagram・YouTube・TikTokなどで活動中。
     </p>
   </section>
