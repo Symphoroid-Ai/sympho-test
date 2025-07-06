@@ -12,7 +12,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
-      background-color: black;
+      background-color: #0d1b2a;
       color: white;
     }
 
@@ -228,21 +228,7 @@
     &copy; 2025 Symphoroid Ai. All rights reserved.
   </footer>
 
-  <!-- 言語切替スクリプト
-  <script>
-    const langToggle = document.getElementById("langToggle");
-    const langTexts = document.querySelectorAll(".lang-text");
-    let currentLang = "jp";
-
-    langToggle.addEventListener("click", () => {
-      currentLang = currentLang === "jp" ? "en" : "jp";
-      langToggle.textContent = langToggle.getAttribute(`data-${currentLang}`);
-      langTexts.forEach(el => {
-        el.textContent = el.getAttribute(`data-${currentLang}`);
-      });
-    });
-  </script>
-  -->
+  <!-- 言語切替スクリプト -->
 <script>
   const langToggle = document.getElementById("langToggle");
   const langTexts = document.querySelectorAll(".lang-text");
@@ -263,5 +249,6 @@
 
   applyLang();
 </script>
+
 </body>
 </html>
