@@ -10,7 +10,7 @@
     body {
       margin: 0;
       font-family: 'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
-      background-color: black;
+      background-color:  #0d1b2a;
       color: white;
     }
 
@@ -81,7 +81,7 @@
     }
 
     footer {
-      background-color: rgba(0, 30, 60, 0.5);
+      background-color: #001f3f;
       color: white;
       text-align: center;
       padding: 40px 20px;
@@ -195,16 +195,23 @@ let ytPlayer, timerInterval;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
 let playerReady = false;
-let currentLang = 'jp';
+
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
 let moodVideos = {};
 
-document.addEventListener("DOMContentLoaded", updateLanguage);
+let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateLanguage(); // 初期表示
+  document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
+});
 
 document.getElementById("langToggle").addEventListener("click", () => {
   currentLang = currentLang === 'jp' ? 'en' : 'jp';
+  localStorage.setItem('lang', currentLang); // ← 言語を保存
   updateLanguage();
+  document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
 });
 
 function updateLanguage() {
@@ -215,8 +222,8 @@ function updateLanguage() {
       el.textContent = el.getAttribute(`data-${currentLang}`);
     }
   });
-  document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
 }
+
 
 function showSection(section) {
   document.getElementById("choice").style.display = section === "choice" ? "block" : "none";
