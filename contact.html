@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問い合わせ | Contact</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Comfortaa', sans-serif;
+      background-color: black;
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .lang-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input, textarea {
+      padding: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    input[type="submit"] {
+      background: #00bcd4;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="lang-toggle" id="langToggle" data-jp="English" data-en="日本語">English</button>
+
+  <h1 class="lang-text" data-jp="お問い合わせ" data-en="Contact Us">お問い合わせ</h1>
+
+  <p class="lang-text" data-jp="ご質問・ご要望などがございましたら、以下のフォームよりお気軽にご連絡ください。" 
+     data-en="If you have any questions or requests, please feel free to contact us using the form below.">
+    ご質問・ご要望などがございましたら、以下のフォームよりお気軽にご連絡ください。
+  </p>
+
+  <!-- お問い合わせフォーム -->
+  <form action="mailto:your-email@example.com" method="post" enctype="text/plain">
+    <input type="text" name="name" placeholder="お名前 / Name" required>
+    <input type="email" name="email" placeholder="メールアドレス / Email" required>
+    <textarea name="message" rows="6" placeholder="メッセージ / Message" required></textarea>
+    <input type="submit" value="送信 / Send">
+  </form>
+
+  <footer>
+    &copy; 2025 Symphoroid Ai
+  </footer>
+
+  <script>
+    const langToggle = document.getElementById("langToggle");
+    const langTexts = document.querySelectorAll(".lang-text");
+    let currentLang = "jp";
+
+    langToggle.addEventListener("click", () => {
+      currentLang = currentLang === "jp" ? "en" : "jp";
+      langToggle.textContent = langToggle.getAttribute(`data-${currentLang}`);
+      langTexts.forEach(el => {
+        el.textContent = el.getAttribute(`data-${currentLang}`);
+      });
+    });
+  </script>
+
+</body>
+</html>
