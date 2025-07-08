@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>お問い合わせ / Contact</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-xX2I3syftJvLdO7RX2QJ0vBNkY4CzGKboLsU1Kuhm3HdFfKn6FFiy+/WZT0FV5CWc/08+JAk2DPuCEh8Uzqdlw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
       margin: 0;
       font-family: 'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
-      background-color: #0d1b2a;
+      background-color: black;
       color: white;
-      padding: 2rem;
+      padding: 2rem 1rem;
     }
 
     h1 {
@@ -29,30 +28,40 @@
       line-height: 1.6;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      max-width: 600px;
+    .sns-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      max-width: 800px;
       margin: 0 auto;
     }
 
-    li {
-      margin: 1.2rem 0;
+    .sns-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #00bcd4;
+      border-radius: 10px;
+      padding: 1.5rem;
       text-align: center;
+      transition: background 0.3s, transform 0.3s;
     }
 
-    a {
+    .sns-card:hover {
+      background: rgba(0, 188, 212, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .sns-card a {
       color: #7FDBFF;
-      text-decoration: none;
       font-size: 1.2rem;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 0.5rem;
     }
 
-    a:hover {
+    .sns-card i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
       color: #00bcd4;
-    }
-
-    i {
-      margin-right: 0.5em;
     }
 
     footer {
@@ -73,12 +82,24 @@
       For inquiries, please contact us via one of the following SNS accounts. Responses may take some time.
     </p>
 
-    <ul>
-      <li><a href="https://www.instagram.com/symphoroid_ai" target="_blank"><i class="fab fa-instagram"></i>Instagram（@symphoroid_ai）</a></li>
-      <li><a href="https://www.youtube.com/@symphoroidai" target="_blank"><i class="fab fa-youtube"></i>YouTube（@symphoroidai）</a></li>
-      <li><a href="https://www.tiktok.com/@symphoroid.ai" target="_blank"><i class="fab fa-tiktok"></i>TikTok（@symphoroid.ai）</a></li>
-      <li><a href="https://www.x.com/@SymphoroidAi" target="_blank"><i class="fab fa-x-twitter"></i>X（@SymphoroidAi）</a></li>
-    </ul>
+    <div class="sns-grid">
+      <div class="sns-card">
+        <i class="fab fa-instagram"></i>
+        <div><a href="https://www.instagram.com/symphoroid_ai" target="_blank">@symphoroid_ai</a></div>
+      </div>
+      <div class="sns-card">
+        <i class="fab fa-youtube"></i>
+        <div><a href="https://www.youtube.com/@symphoroidai" target="_blank">@symphoroidai</a></div>
+      </div>
+      <div class="sns-card">
+        <i class="fab fa-tiktok"></i>
+        <div><a href="https://www.tiktok.com/@symphoroid.ai" target="_blank">@symphoroid.ai</a></div>
+      </div>
+      <div class="sns-card">
+        <i class="fab fa-x-twitter"></i>
+        <div><a href="https://www.x.com/@SymphoroidAi" target="_blank">@SymphoroidAi</a></div>
+      </div>
+    </div>
   </main>
 
   <footer>
