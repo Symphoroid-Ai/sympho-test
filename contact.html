@@ -8,19 +8,22 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
-      margin: 0;
-      font-family: 'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
+       font-family: 'Comfortaa', 'Helvetica Neue', sans-serif;
       background-color: #0d1b2a;
-      color: white;
-      padding: 2rem 1rem;
+      color: #fff;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.8;
     }
 
     h1 {
       text-align: center;
-      font-size: clamp(2rem, 5vw, 3rem);
-      margin-bottom: 1rem;
+      white-space: nowrap;
+      overflow-wrap: break-word;
+      text-shadow: 0 0 5px black;
       color: #00bcd4;
-    }
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      margin-bottom: 2rem;    }
 
     p {
       text-align: center;
@@ -71,6 +74,15 @@
       color: #aaa;
       font-size: 0.9rem;
     }
+     @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      h1, h2 {
+        font-size: 1rem;
+      }
+    }   
   </style>
 </head>
 <body>
