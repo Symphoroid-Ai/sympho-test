@@ -6,6 +6,8 @@
   <title>sympho tune</title>
   <script src="https://www.youtube.com/iframe_api"></script>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     body {
       margin: 0;
@@ -79,7 +81,7 @@
       background-color: #EAEEF6;
       color: #01BEE3;
     }
-
+/*
     footer {
       background-color: #001f3f;
       color: white;
@@ -93,9 +95,35 @@
       text-decoration: none;
     }
     .footer-links a:hover {
+      color: #00bcd4; /* ホバー時に少し強めのシアンに
+    }
+ */
+    .sns-links a {
+      color: #7FDBFF;
+      text-decoration: none;
+      font-size: 32px;
+    }
+
+    .sns-links a:hover {
       color: #00bcd4; /* ホバー時に少し強めのシアンに */
     }
-    
+
+  .footer-links {
+    margin: 0 5px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.9rem;
+  }
+
+  .footer-links:hover {
+    text-decoration: underline;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+  }
+
     .video-wrapper {
       position: relative;
       width: 100%;
@@ -176,19 +204,38 @@
     <div id="timerDisplay" class="top-left" style="display:none;"></div>
   </div>
 </section>
-
+  <section>
+    <h2>Follow Us</h2>
+    <p class="sns-links">
+    <a href="https://www.youtube.com/@symphoroidai" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+      <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://www.instagram.com/symphoroid_ai" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+      <i class="fab fa-tiktok"></i>
+    </a>
+    <a href="https://www.x.com/SymphoroidAi" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+      <i class="fab fa-x-twitter"></i>
+    </a>
+    <p style="margin-top: 1rem; font-size: 0.9rem;">&copy; 2025 Symphoroid Ai</p>
+  </section>
 <footer>
   <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
+  
   <div class="footer-links">
     <a href="https://www.youtube.com/@symphoroidai">YouTube</a>
     <a href="https://www.instagram.com/symphoroid_ai">Instagram</a>
     <a href="https://www.tiktok.com/@symphoroid.ai">TikTok</a>
     <a href="https://www.x.com/@SymphoroidAi">X</a>
+  </div>
 
   <br>
+
   <a href="/sympho-test/terms.html" class="footer-links">利用規約 / Terms of Use</a> |
   <a href="/sympho-test/privacy.html" class="footer-links">プライバシーポリシー / Privacy Policy</a> |
-  <a href="/sympho-test" data-jp="トップページ" data-en="Home">トップページ</a>  
+  <a href="/sympho-test" data-jp="トップページ" data-en="Home" class="footer-links">トップページ</a>  
 </footer>
 
 <script>
