@@ -102,27 +102,28 @@
       color: #7FDBFF;
       text-decoration: none;
       font-size: 32px;
+      margin: 0 10px;      
     }
 
     .sns-links a:hover {
       color: #00bcd4; /* ホバー時に少し強めのシアンに */
     }
 
-  .footer-links {
-    margin: 0 5px;
-    text-decoration: none;
-    color: inherit;
-    font-size: 0.9rem;
-  }
+    .footer-links {
+      margin: 0 5px;
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.9rem;
+    }
 
-  .footer-links:hover {
-    text-decoration: underline;
-  }
+    .footer-links:hover {
+      text-decoration: underline;
+    }
 
-  footer {
-    text-align: center;
-    padding: 20px;
-  }
+    footer {
+      text-align: center;
+      padding: 20px;
+    }
 
     .video-wrapper {
       position: relative;
@@ -150,7 +151,13 @@
       z-index: 10;
       pointer-events: none;
     }
-
+    header img {
+      max-width: 600px;     /* 最大幅を指定 */
+      width: 80%;           /* 親要素に対して最大80%に縮小可 */
+      height: auto;         /* 縦横比を保持 */
+      display: block;       /* レイアウト安定化（必要に応じて） */
+      margin: 0 auto;       /* 中央寄せ */
+    }
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
     .bottom-left { bottom: 10px; left: 10px; }
@@ -164,7 +171,7 @@
 
 <header>
   <button id="langToggle" class="btn">English</button>
-  <img src="Symphotune.png" alt="sympho tune logo" style="max-width:100%; height:auto;" />
+  <img src="Symphotune.png" alt="sympho tune logo" />
   <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
   <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
@@ -206,16 +213,16 @@
 </section>
   <footer>
     <p class="sns-links">
-    <a href="https://www.youtube.com/@symphoroidai" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+    <a href="https://www.youtube.com/@symphoroidai" target="_blank">
       <i class="fab fa-youtube"></i>
     </a>
-    <a href="https://www.instagram.com/symphoroid_ai" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+    <a href="https://www.instagram.com/symphoroid_ai" target="_blank">
       <i class="fab fa-instagram"></i>
     </a>
-    <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+    <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank">
       <i class="fab fa-tiktok"></i>
     </a>
-    <a href="https://www.x.com/SymphoroidAi" target="_blank" style="margin: 0 10px; color: #00bcd4;">
+    <a href="https://www.x.com/@SymphoroidAi" target="_blank">
       <i class="fab fa-x-twitter"></i>
     </a>
   <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
