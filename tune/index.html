@@ -295,17 +295,30 @@ window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 
 function startLoop() {
   if (isPlaying) return;
+
+  // ① 現在の入力値を一時保存
   const url = document.getElementById("ytUrl").value;
+  const durationValue = document.getElementById("duration").value;
+
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
   if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
 
-  const minutes = parseInt(document.getElementById("duration").value) || 0;
+  const minutes = parseInt(durationValue) || 0;
   const totalTime = minutes * 60;
+
+  // ② 既存プレイヤーをリセットしてから再構築
+  resetLoop();
+
+  // ③ リセットにより消された値を復元
+  document.getElementById("ytUrl").value = url;
+  document.getElementById("duration").value = durationValue;
+
   const timerDisplay = document.getElementById("timerDisplay");
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = minutes > 0 ? "block" : "none";
 
-  if (!ytPlayer && playerReady) {
+  // ④ プレイヤーを再作成して再生
+  if (playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
       videoId,
       playerVars: { playsinline: 1, fs: 0 },
@@ -323,14 +336,12 @@ function startLoop() {
         }
       }
     });
-  } else if (ytPlayer && playerReady) {
-    ytPlayer.unMute();
-    ytPlayer.playVideo();
   }
 
-  if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
+  remainingTime = totalTime;
   isPaused = false;
 }
+
 
 function startTimer(totalTime) {
   if (isPlaying) return;
