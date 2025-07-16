@@ -295,34 +295,17 @@ window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 
 function startLoop() {
   if (isPlaying) return;
-
   const url = document.getElementById("ytUrl").value;
-  const durationValue = document.getElementById("duration").value;
-
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
   if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
 
-  const minutes = parseInt(durationValue) || 0;
+  const minutes = parseInt(document.getElementById("duration").value) || 0;
   const totalTime = minutes * 60;
-
-  // ① 一旦停止してリセット
-  resetLoop();
-
-  // ② 値を再セット（resetLoop で消えてしまうため）
-  document.getElementById("ytUrl").value = url;
-  document.getElementById("duration").value = durationValue;
-
   const timerDisplay = document.getElementById("timerDisplay");
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = minutes > 0 ? "block" : "none";
 
-  // ③ 再生ロジック（プレイヤーが読み込まれているかチェック）
-  const loadPlayer = () => {
-    if (typeof YT === "undefined" || typeof YT.Player === "undefined" || !playerReady) {
-      setTimeout(loadPlayer, 200); // API未準備なら再試行
-      return;
-    }
-
+  if (!ytPlayer && playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
       videoId,
       playerVars: { playsinline: 1, fs: 0 },
@@ -340,14 +323,14 @@ function startLoop() {
         }
       }
     });
+  } else if (ytPlayer && playerReady) {
+    ytPlayer.unMute();
+    ytPlayer.playVideo();
+  }
 
-    remainingTime = totalTime;
-    isPaused = false;
-  };
-
-  loadPlayer();
+  if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
+  isPaused = false;
 }
-
 
 
 function startTimer(totalTime) {
