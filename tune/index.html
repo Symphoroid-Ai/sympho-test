@@ -296,7 +296,6 @@ window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 function startLoop() {
   if (isPlaying) return;
 
-  // ① 現在の入力値を一時保存
   const url = document.getElementById("ytUrl").value;
   const durationValue = document.getElementById("duration").value;
 
@@ -306,10 +305,10 @@ function startLoop() {
   const minutes = parseInt(durationValue) || 0;
   const totalTime = minutes * 60;
 
-  // ② 既存プレイヤーをリセットしてから再構築
+  // ① 一旦停止してリセット
   resetLoop();
 
-  // ③ リセットにより消された値を復元
+  // ② 値を再セット（resetLoop で消えてしまうため）
   document.getElementById("ytUrl").value = url;
   document.getElementById("duration").value = durationValue;
 
@@ -317,8 +316,13 @@ function startLoop() {
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = minutes > 0 ? "block" : "none";
 
-  // ④ プレイヤーを再作成して再生
-  if (playerReady) {
+  // ③ 再生ロジック（プレイヤーが読み込まれているかチェック）
+  const loadPlayer = () => {
+    if (typeof YT === "undefined" || typeof YT.Player === "undefined" || !playerReady) {
+      setTimeout(loadPlayer, 200); // API未準備なら再試行
+      return;
+    }
+
     ytPlayer = new YT.Player('ytPlayer', {
       videoId,
       playerVars: { playsinline: 1, fs: 0 },
@@ -336,11 +340,14 @@ function startLoop() {
         }
       }
     });
-  }
 
-  remainingTime = totalTime;
-  isPaused = false;
+    remainingTime = totalTime;
+    isPaused = false;
+  };
+
+  loadPlayer();
 }
+
 
 
 function startTimer(totalTime) {
