@@ -384,7 +384,7 @@ function extractVideoId(url) {
 }
 
 function copyToLoop(url) {
-  stopLoop();
+  resetLoop();
   document.getElementById("ytUrl").value = url;
   showSection('loop');
 }
