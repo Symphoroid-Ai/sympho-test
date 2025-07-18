@@ -243,7 +243,6 @@ let ytPlayer, timerInterval;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
 let playerReady = false;
-let startRequested = false;
 
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
@@ -296,6 +295,7 @@ window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 
 function startLoop() {
   if (isPlaying) return;
+ 
   const url = document.getElementById("ytUrl").value;
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
   if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
@@ -303,6 +303,7 @@ function startLoop() {
   const minutes = parseInt(document.getElementById("duration").value) || 0;
   const totalTime = minutes * 60;
   const timerDisplay = document.getElementById("timerDisplay");
+  
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = minutes > 0 ? "block" : "none";
 
@@ -314,6 +315,7 @@ function startLoop() {
         onReady: event => {
           event.target.unMute();
           event.target.playVideo();
+          startTimer(totalTime);
         },
         onStateChange: evt => {
           if (evt.data === YT.PlayerState.PLAYING && !isPlaying) startTimer(totalTime);
@@ -327,12 +329,12 @@ function startLoop() {
   } else if (ytPlayer && playerReady) {
     ytPlayer.unMute();
     ytPlayer.playVideo();
+    startTimer(totalTime); 
   }
 
   if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
   isPaused = false;
 }
-
 
 function startTimer(totalTime) {
   if (isPlaying) return;
@@ -385,7 +387,7 @@ function extractVideoId(url) {
 }
 
 function copyToLoop(url) {
-  resetLoop();
+  stopLoop();
   document.getElementById("ytUrl").value = url;
   showSection('loop');
 }
