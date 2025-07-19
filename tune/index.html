@@ -194,7 +194,8 @@
   <span data-jp="分" data-en="min"></span>
   <br>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
-  <button class="btn" onclick="startLoop()" data-jp="スタート" data-en="Start"></button>
+  <button class="btn" onclick="loadVideo()" data-jp="読み込み" data-en="Load"></button>
+　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
   <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
 
@@ -284,23 +285,20 @@ function toggleTimerPosition() {
 
 window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 
-function startLoop() {
-  if (isPlaying) return;
+function loadVideo() {
+  console.log("=== loadVideo triggered ===");
 
-  console.log("=== startLoop triggered ===");
-  console.log("playerReady:", playerReady);
-  console.log("ytPlayer:", ytPlayer);
- 
   const url = document.getElementById("ytUrl").value;
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
   if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
 
   const minutes = parseInt(document.getElementById("duration").value) || 0;
-  const totalTime = minutes * 60;
+  remainingTime = minutes * 60;
+
   const timerDisplay = document.getElementById("timerDisplay");
-  
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = minutes > 0 ? "block" : "none";
+  timerDisplay.textContent = ""; // 初期化
 
   if (!ytPlayer && playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
@@ -308,11 +306,9 @@ function startLoop() {
       playerVars: { playsinline: 1, fs: 0 },
       events: {
         onReady: event => {
-          event.target.unMute();
-          event.target.playVideo();
+          console.log("Player ready");
         },
         onStateChange: evt => {
-          if (evt.data === YT.PlayerState.PLAYING && !isPlaying) startTimer(totalTime);
           if (evt.data === YT.PlayerState.ENDED) {
             evt.target.seekTo(0);
             evt.target.playVideo();
@@ -320,16 +316,24 @@ function startLoop() {
         }
       }
     });
-    console.log("YT.Player created:", ytPlayer);
-    
   } else if (ytPlayer && playerReady) {
-    ytPlayer.unMute();
-    ytPlayer.playVideo();
+    ytPlayer.loadVideoById(videoId);
   }
+  isPaused = false;
+  isPlaying = false;
+}
 
-  if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
+function playLoop() {
+  if (!ytPlayer || isPlaying) return;
+
+  console.log("=== playLoop triggered ===");
+  ytPlayer.unMute();
+  ytPlayer.playVideo();
+
+  startTimer(remainingTime || 0);
   isPaused = false;
 }
+
 
 function startTimer(totalTime) {
   if (isPlaying) return;
