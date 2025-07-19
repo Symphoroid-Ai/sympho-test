@@ -290,7 +290,10 @@ function loadVideo() {
 
   const url = document.getElementById("ytUrl").value;
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
-  if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
+  if (!videoId) {
+    alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
+    return;
+  }
 
   const minutes = parseInt(document.getElementById("duration").value) || 0;
   remainingTime = minutes * 60;
@@ -298,7 +301,7 @@ function loadVideo() {
   const timerDisplay = document.getElementById("timerDisplay");
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = minutes > 0 ? "block" : "none";
-  timerDisplay.textContent = ""; // 初期化
+  timerDisplay.textContent = ""; // タイマー初期化
 
   if (!ytPlayer && playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
@@ -306,7 +309,7 @@ function loadVideo() {
       playerVars: { playsinline: 1, fs: 0 },
       events: {
         onReady: event => {
-          console.log("Player ready");
+          event.target.cueVideoById(videoId); // cue（読み込み）だけ
         },
         onStateChange: evt => {
           if (evt.data === YT.PlayerState.ENDED) {
@@ -317,8 +320,9 @@ function loadVideo() {
       }
     });
   } else if (ytPlayer && playerReady) {
-    ytPlayer.loadVideoById(videoId);
+    ytPlayer.cueVideoById(videoId); // 既存プレイヤーにcue（再生はしない）
   }
+
   isPaused = false;
   isPlaying = false;
 }
