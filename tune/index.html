@@ -34,6 +34,7 @@
       border-radius: 5px;
       padding: 0.5rem 1rem;
       z-index: 10;
+      z-index: 2;
       cursor: pointer;
       font-size: 1rem;
     }
@@ -80,7 +81,23 @@
       background-color: #EAEEF6;
       color: #01BEE3;
     }
+/*
+    footer {
+      background-color: #001f3f;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
 
+    .footer-links a {
+      color: #7FDBFF;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+    .footer-links a:hover {
+      color: #00bcd4; /* ホバー時に少し強めのシアンに
+    }
+ */
     .sns-links a {
       color: #7FDBFF;
       text-decoration: none;
@@ -141,14 +158,6 @@
       display: block;       /* レイアウト安定化（必要に応じて） */
       margin: 0 auto;       /* 中央寄せ */
     }
-
-    .responsive-img {
-      max-width: 600px;
-      width: 80%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-    }    
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
     .bottom-left { bottom: 10px; left: 10px; }
@@ -162,7 +171,7 @@
 
 <header>
   <button id="langToggle" class="btn">English</button>
-  <img src="Symphotune.png" alt="sympho tune logo" class="responsive-img" />
+  <img src="Symphotune.png" alt="sympho tune logo" />
   <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
   <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
@@ -170,7 +179,7 @@
 </header>
 
 <section id="choice" style="display:none;">
-  <img src="Symphochoice.png" alt="気分で音楽を選ぶイメージ" " class="responsive-img" />
+  <img src="Symphochoice.png" alt="気分で音楽を選ぶイメージ" style="max-width:600px; width:80%; height:auto;">
   <h2 data-jp="今日の気分にぴったりの音楽を。" data-en="Music that fits your mood today."></h2>
   <p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。" data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>
   <br><br>
@@ -185,7 +194,7 @@
 </section>
 
 <section id="loop" style="display:none;">
-  <img src="Sympholoop.png" alt="タイマー付き動画の例" " class="responsive-img" />
+  <img src="Sympholoop.png" alt="タイマー付き動画の例" style="max-width:600px; width:80%; height:auto;">
   <h2 data-jp="好きな動画を、集中タイムに。" data-en="Turn your favorite videos into focus time."></h2>
   <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。" data-en="Customize your work videos with a timer and loop playback."></p>
   <br><br>
@@ -237,7 +246,7 @@ let playerReady = false;
 
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
-
+let moodVideos = {};
 
 let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
 
@@ -306,6 +315,7 @@ function startLoop() {
         onReady: event => {
           event.target.unMute();
           event.target.playVideo();
+          startTimer(totalTime);
         },
         onStateChange: evt => {
           if (evt.data === YT.PlayerState.PLAYING && !isPlaying) startTimer(totalTime);
@@ -319,6 +329,7 @@ function startLoop() {
   } else if (ytPlayer && playerReady) {
     ytPlayer.unMute();
     ytPlayer.playVideo();
+    startTimer(totalTime); 
   }
 
   if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
