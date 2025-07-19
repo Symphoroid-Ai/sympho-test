@@ -306,7 +306,7 @@ function startLoop() {
         onReady: event => {
           event.target.unMute();
           event.target.playVideo();
-
+          startTimer(totalTime);
         },
         onStateChange: evt => {
           if (evt.data === YT.PlayerState.PLAYING && !isPlaying) startTimer(totalTime);
@@ -320,7 +320,7 @@ function startLoop() {
   } else if (ytPlayer && playerReady) {
     ytPlayer.unMute();
     ytPlayer.playVideo();
-
+    startTimer(totalTime); 
   }
 
   if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
