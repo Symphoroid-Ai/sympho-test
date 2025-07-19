@@ -286,6 +286,10 @@ window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 
 function startLoop() {
   if (isPlaying) return;
+
+  console.log("=== startLoop triggered ===");
+  console.log("playerReady:", playerReady);
+  console.log("ytPlayer:", ytPlayer);
  
   const url = document.getElementById("ytUrl").value;
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
@@ -316,6 +320,8 @@ function startLoop() {
         }
       }
     });
+    console.log("YT.Player created:", ytPlayer);
+    
   } else if (ytPlayer && playerReady) {
     ytPlayer.unMute();
     ytPlayer.playVideo();
