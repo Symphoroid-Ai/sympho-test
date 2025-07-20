@@ -34,7 +34,6 @@
       border-radius: 5px;
       padding: 0.5rem 1rem;
       z-index: 10;
-      z-index: 2;
       cursor: pointer;
       font-size: 1rem;
     }
@@ -81,23 +80,7 @@
       background-color: #EAEEF6;
       color: #01BEE3;
     }
-/*
-    footer {
-      background-color: #001f3f;
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-    }
 
-    .footer-links a {
-      color: #7FDBFF;
-      margin: 0 10px;
-      text-decoration: none;
-    }
-    .footer-links a:hover {
-      color: #00bcd4; /* ホバー時に少し強めのシアンに
-    }
- */
     .sns-links a {
       color: #7FDBFF;
       text-decoration: none;
@@ -158,6 +141,14 @@
       display: block;       /* レイアウト安定化（必要に応じて） */
       margin: 0 auto;       /* 中央寄せ */
     }
+
+    .responsive-img {
+      max-width: 600px;
+      width: 80%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }    
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
     .bottom-left { bottom: 10px; left: 10px; }
@@ -171,7 +162,7 @@
 
 <header>
   <button id="langToggle" class="btn">English</button>
-  <img src="Symphotune.png" alt="sympho tune logo" />
+  <img src="Symphotune.png" alt="sympho tune logo" class="responsive-img" />
   <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
   <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
@@ -179,7 +170,7 @@
 </header>
 
 <section id="choice" style="display:none;">
-  <img src="Symphochoice.png" alt="気分で音楽を選ぶイメージ" style="max-width:600px; width:80%; height:auto;">
+  <img src="Symphochoice.png" alt="気分で音楽を選ぶイメージ" " class="responsive-img" />
   <h2 data-jp="今日の気分にぴったりの音楽を。" data-en="Music that fits your mood today."></h2>
   <p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。" data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>
   <br><br>
@@ -194,7 +185,7 @@
 </section>
 
 <section id="loop" style="display:none;">
-  <img src="Sympholoop.png" alt="タイマー付き動画の例" style="max-width:600px; width:80%; height:auto;">
+  <img src="Sympholoop.png" alt="タイマー付き動画の例" " class="responsive-img" />
   <h2 data-jp="好きな動画を、集中タイムに。" data-en="Turn your favorite videos into focus time."></h2>
   <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。" data-en="Customize your work videos with a timer and loop playback."></p>
   <br><br>
@@ -203,7 +194,8 @@
   <span data-jp="分" data-en="min"></span>
   <br>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
-  <button class="btn" onclick="startLoop()" data-jp="スタート" data-en="Start"></button>
+  <button class="btn" onclick="loadVideo()" data-jp="読み込み" data-en="Load"></button>
+　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
   <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
 
@@ -246,7 +238,7 @@ let playerReady = false;
 
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
-let moodVideos = {};
+
 
 let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
 
@@ -293,29 +285,45 @@ function toggleTimerPosition() {
 
 window.onYouTubeIframeAPIReady = () => { playerReady = true; };
 
-function startLoop() {
-  if (isPlaying) return;
+function loadVideo() {
+  console.log("=== loadVideo triggered ===");
+
   const url = document.getElementById("ytUrl").value;
   const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
-  if (!videoId) return alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
+  if (!videoId) {
+    alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
+    return;
+  }
 
-  const minutes = parseInt(document.getElementById("duration").value) || 0;
-  const totalTime = minutes * 60;
+  // 再生中でも動画は読み込むが、タイマーは初期化しない
+  if (!isPlaying) {
+    const minutes = parseInt(document.getElementById("duration").value) || 0;
+    remainingTime = minutes * 60;
+  }
+
+  // タイマーを止め、表示をリセット
+  clearInterval(timerInterval);
+  isCounting = false;
+
   const timerDisplay = document.getElementById("timerDisplay");
   timerDisplay.className = positions[positionIndex];
-  timerDisplay.style.display = minutes > 0 ? "block" : "none";
+  timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
 
+  // タイマー表示を「00:00」などに初期化
+  const mins = Math.floor(remainingTime / 60);
+  const secs = remainingTime % 60;
+  timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+  // プレイヤー初期化 or cue 動画
   if (!ytPlayer && playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
       videoId,
       playerVars: { playsinline: 1, fs: 0 },
       events: {
         onReady: event => {
-          event.target.unMute();
-          event.target.playVideo();
+          event.target.cueVideoById(videoId);
         },
         onStateChange: evt => {
-          if (evt.data === YT.PlayerState.PLAYING && !isPlaying) startTimer(totalTime);
           if (evt.data === YT.PlayerState.ENDED) {
             evt.target.seekTo(0);
             evt.target.playVideo();
@@ -324,13 +332,26 @@ function startLoop() {
       }
     });
   } else if (ytPlayer && playerReady) {
-    ytPlayer.unMute();
-    ytPlayer.playVideo();
+    ytPlayer.cueVideoById(videoId);
   }
 
-  if (!isPaused || remainingTime <= 0) remainingTime = totalTime;
+  isPaused = false;
+  isPlaying = false;
+
+}
+
+
+function playLoop() {
+  if (!ytPlayer || isPlaying) return;
+
+  console.log("=== playLoop triggered ===");
+  ytPlayer.unMute();
+  ytPlayer.playVideo();
+
+  startTimer(remainingTime || 0);
   isPaused = false;
 }
+
 
 function startTimer(totalTime) {
   if (isPlaying) return;
@@ -383,8 +404,10 @@ function extractVideoId(url) {
 }
 
 function copyToLoop(url) {
+  stopLoop();
   document.getElementById("ytUrl").value = url;
   showSection('loop');
+  loadVideo();
 }
 
 function playRandomVideo(mood) {
