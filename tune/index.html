@@ -194,7 +194,7 @@
   <span data-jp="分" data-en="min"></span>
   <br>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
-  <button class="btn" onclick="loadVideo()" data-jp="セット" data-en="Set"></button>
+  <button class="btn" onclick="loadVideo()" data-jp="読み込み" data-en="Load"></button>
 　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
   <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
@@ -411,22 +411,48 @@ function resetLoop() {
 fetch("videos.json")
   .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
   .then(data => { moodVideos = data; console.log("動画データ読み込み完了", moodVideos); })
-  .catch(e => console.error(e));
+  .catch(err => alert("読み込みエラー: " + err.message));
 
-let moodVideos = {};
+function extractVideoId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+function copyToLoop(url) {
+  document.getElementById("ytUrl").value = url;
+  showSection('loop');
+}
 
 function playRandomVideo(mood) {
-  if (!moodVideos[mood] || moodVideos[mood].length === 0) return;
+  const urls = moodVideos[mood];
+  if (!urls || urls.length === 0) {
+    alert(currentLang === 'jp' ? "その気分の動画が見つかりません。" : "No videos found for that mood.");
+    return;
+  }
+  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+  const videoId = extractVideoId(randomUrl);
+  if (!videoId) {
+    alert(currentLang === 'jp' ? "無効な動画URLです。" : "Invalid video URL.");
+    return;
+  }
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
+  const resultArea = document.getElementById("videoArea_choice");
 
-  const list = moodVideos[mood];
-  const randomVideo = list[Math.floor(Math.random() * list.length)];
+  resultArea.innerHTML = `<p data-jp="あなたにぴったりの音楽を占っています…" data-en="Fortune-telling your perfect music...">${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}</p>`;
 
-  const videoArea = document.getElementById("videoArea_choice");
-  videoArea.innerHTML = `
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/${randomVideo}?autoplay=1&playsinline=1&fs=0" frameborder="0" allowfullscreen allow="autoplay"></iframe>
-    </div>
-  `;
+  setTimeout(() => {
+    resultArea.innerHTML = `
+      <div class="video-wrapper">
+        <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
+      </div>
+      <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}</p>
+      <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
+      <button class="btn" onclick="copyToLoop('${randomUrl}')" data-jp="この動画をSympho loopで使う" data-en="Use this video with Sympho loop">
+        ${currentLang === 'jp' ? "この動画をSympho loopで使う" : "Use this video with Sympho loop"}
+      </button>
+    `;
+    updateLanguage();
+  }, 2000);
 }
 
 </script>
