@@ -231,7 +231,7 @@
 </footer>
 
 <script>
-let ytPlayer, timerInterval;
+let ytPlayer = null, timerInterval;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
 let playerReady = false;
@@ -239,17 +239,16 @@ let playerReady = false;
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
 
-
-let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
+let currentLang = localStorage.getItem('lang') || 'jp';
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateLanguage(); // 初期表示
+  updateLanguage();
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
 });
 
 document.getElementById("langToggle").addEventListener("click", () => {
   currentLang = currentLang === 'jp' ? 'en' : 'jp';
-  localStorage.setItem('lang', currentLang); // ← 言語を保存
+  localStorage.setItem('lang', currentLang);
   updateLanguage();
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
 });
@@ -263,7 +262,6 @@ function updateLanguage() {
     }
   });
 }
-
 
 function showSection(section) {
   document.getElementById("choice").style.display = section === "choice" ? "block" : "none";
@@ -283,8 +281,17 @@ function toggleTimerPosition() {
   document.getElementById("positionBtn").textContent = (currentLang === 'jp' ? "表示位置：" : "Position: ") + posLabels[positionIndex];
 }
 
-window.onYouTubeIframeAPIReady = () => { playerReady = true; };
+// -----------------------------
+// YouTube IFrame API初期化（修正済み）
+// -----------------------------
+window.onYouTubeIframeAPIReady = function() {
+  playerReady = true;
+  console.log("YouTube IFrame API ready.");
+};
 
+// -----------------------------
+// 動画読み込み
+// -----------------------------
 function loadVideo() {
   console.log("=== loadVideo triggered ===");
 
@@ -295,26 +302,21 @@ function loadVideo() {
     return;
   }
 
-  // 再生中でも動画は読み込むが、タイマーは初期化しない
   if (!isPlaying) {
     const minutes = parseInt(document.getElementById("duration").value) || 0;
     remainingTime = minutes * 60;
   }
 
-  // タイマーを止め、表示をリセット
   clearInterval(timerInterval);
-  isCounting = false;
 
   const timerDisplay = document.getElementById("timerDisplay");
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
 
-  // タイマー表示を「00:00」などに初期化
   const mins = Math.floor(remainingTime / 60);
   const secs = remainingTime % 60;
   timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-  // プレイヤー初期化 or cue 動画
   if (!ytPlayer && playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
       videoId,
@@ -333,13 +335,13 @@ function loadVideo() {
     });
   } else if (ytPlayer && playerReady) {
     ytPlayer.cueVideoById(videoId);
+  } else {
+    console.log("Player not ready yet.");
   }
 
   isPaused = false;
   isPlaying = false;
-
 }
-
 
 function playLoop() {
   if (!ytPlayer || isPlaying) return;
@@ -351,7 +353,6 @@ function playLoop() {
   startTimer(remainingTime || 0);
   isPaused = false;
 }
-
 
 function startTimer(totalTime) {
   if (isPlaying) return;
@@ -380,8 +381,10 @@ function stopLoop() {
 }
 
 function resetLoop() {
-  ytPlayer?.destroy();
-  ytPlayer = null;
+  if (ytPlayer) {
+    ytPlayer.destroy();
+    ytPlayer = null;
+  }
   clearInterval(timerInterval);
   remainingTime = 0;
   isPaused = false;
@@ -392,6 +395,7 @@ function resetLoop() {
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
 }
+
 
 fetch("videos.json")
   .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
