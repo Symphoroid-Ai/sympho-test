@@ -194,7 +194,7 @@
   <span data-jp="分" data-en="min"></span>
   <br>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
-  <button class="btn" onclick="loadVideo()" data-jp="セット" data-en="Set"></button>
+  <button class="btn" onclick="loadVideo()" data-jp="読み込み" data-en="Load"></button>
 　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
   <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
@@ -231,7 +231,7 @@
 </footer>
 
 <script>
-let ytPlayer = null, timerInterval;
+let ytPlayer, timerInterval;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
 let playerReady = false;
@@ -239,16 +239,17 @@ let playerReady = false;
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
 
-let currentLang = localStorage.getItem('lang') || 'jp';
+let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
 
 document.addEventListener("DOMContentLoaded", () => {
-  updateLanguage();
+  updateLanguage(); // 初期表示
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
+  checkYTApiReady();
 });
 
 document.getElementById("langToggle").addEventListener("click", () => {
   currentLang = currentLang === 'jp' ? 'en' : 'jp';
-  localStorage.setItem('lang', currentLang);
+  localStorage.setItem('lang', currentLang); // ← 言語を保存
   updateLanguage();
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
 });
@@ -281,17 +282,22 @@ function toggleTimerPosition() {
   document.getElementById("positionBtn").textContent = (currentLang === 'jp' ? "表示位置：" : "Position: ") + posLabels[positionIndex];
 }
 
-// -----------------------------
-// YouTube IFrame API初期化（修正済み）
-// -----------------------------
+// YouTube APIが既にロード済みかチェックし、playerReadyを設定
+function checkYTApiReady() {
+  if (window.YT && window.YT.Player) {
+    playerReady = true;
+    console.log("YouTube IFrame API is already loaded.");
+  } else {
+    setTimeout(checkYTApiReady, 200);
+  }
+}
+
+// YouTube API読み込み完了時に必ず呼ばれるコールバック
 window.onYouTubeIframeAPIReady = function() {
   playerReady = true;
-  console.log("YouTube IFrame API ready.");
+  console.log("YouTube IFrame API ready (callback).");
 };
 
-// -----------------------------
-// 動画読み込み
-// -----------------------------
 function loadVideo() {
   console.log("=== loadVideo triggered ===");
 
@@ -302,21 +308,26 @@ function loadVideo() {
     return;
   }
 
+  // 再生中でも動画は読み込むが、タイマーは初期化しない
   if (!isPlaying) {
     const minutes = parseInt(document.getElementById("duration").value) || 0;
     remainingTime = minutes * 60;
   }
 
+  // タイマーを止め、表示をリセット
   clearInterval(timerInterval);
+  isCounting = false;
 
   const timerDisplay = document.getElementById("timerDisplay");
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
 
+  // タイマー表示を「00:00」などに初期化
   const mins = Math.floor(remainingTime / 60);
   const secs = remainingTime % 60;
   timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
+  // プレイヤー初期化 or cue 動画
   if (!ytPlayer && playerReady) {
     ytPlayer = new YT.Player('ytPlayer', {
       videoId,
@@ -336,11 +347,13 @@ function loadVideo() {
   } else if (ytPlayer && playerReady) {
     ytPlayer.cueVideoById(videoId);
   } else {
-    console.log("Player not ready yet.");
+    // API未準備時にログ出力
+    console.log("YouTube Player not ready yet.");
   }
 
   isPaused = false;
   isPlaying = false;
+
 }
 
 function playLoop() {
@@ -353,6 +366,7 @@ function playLoop() {
   startTimer(remainingTime || 0);
   isPaused = false;
 }
+
 
 function startTimer(totalTime) {
   if (isPlaying) return;
@@ -381,10 +395,8 @@ function stopLoop() {
 }
 
 function resetLoop() {
-  if (ytPlayer) {
-    ytPlayer.destroy();
-    ytPlayer = null;
-  }
+  ytPlayer?.destroy();
+  ytPlayer = null;
   clearInterval(timerInterval);
   remainingTime = 0;
   isPaused = false;
@@ -396,55 +408,30 @@ function resetLoop() {
   document.getElementById("ytPlayer").innerHTML = "";
 }
 
-
 fetch("videos.json")
   .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
   .then(data => { moodVideos = data; console.log("動画データ読み込み完了", moodVideos); })
-  .catch(err => alert("読み込みエラー: " + err.message));
+  .catch(e => console.error(e));
 
-function extractVideoId(url) {
-  const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
-  return match ? match[1] : null;
-}
-
-function copyToLoop(url) {
-  stopLoop();
-  document.getElementById("ytUrl").value = url;
-  showSection('loop');
-  loadVideo();
-}
+let moodVideos = {};
 
 function playRandomVideo(mood) {
-  const urls = moodVideos[mood];
-  if (!urls || urls.length === 0) {
-    alert(currentLang === 'jp' ? "その気分の動画が見つかりません。" : "No videos found for that mood.");
-    return;
-  }
-  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-  const videoId = extractVideoId(randomUrl);
-  if (!videoId) {
-    alert(currentLang === 'jp' ? "無効な動画URLです。" : "Invalid video URL.");
-    return;
-  }
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
-  const resultArea = document.getElementById("videoArea_choice");
+  if (!moodVideos[mood] || moodVideos[mood].length === 0) return;
 
-  resultArea.innerHTML = `<p data-jp="あなたにぴったりの音楽を占っています…" data-en="Fortune-telling your perfect music...">${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}</p>`;
+  const list = moodVideos[mood];
+  const randomVideo = list[Math.floor(Math.random() * list.length)];
 
-  setTimeout(() => {
-    resultArea.innerHTML = `
-      <div class="video-wrapper">
-        <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
-      </div>
-      <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}</p>
-      <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
-      <button class="btn" onclick="copyToLoop('${randomUrl}')" data-jp="この動画をSympho loopで使う" data-en="Use this video with Sympho loop">
-        ${currentLang === 'jp' ? "この動画をSympho loopで使う" : "Use this video with Sympho loop"}
-      </button>
-    `;
-    updateLanguage();
-  }, 2000);
+  const videoArea = document.getElementById("videoArea_choice");
+  videoArea.innerHTML = `
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/${randomVideo}?autoplay=1&playsinline=1&fs=0" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+    </div>
+  `;
 }
+
+// 画面切り替えの初期値はchoice表示
+showSection("choice");
+
 </script>
 </body>
 </html>
