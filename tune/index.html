@@ -307,12 +307,14 @@ function loadVideo() {
     alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
     return;
   }
-
-  // 再生中でも動画は読み込むが、タイマーは初期化しない
   
   // 再生中でも動画は読み込むが、タイマーは初期化しない
 if (!isPlaying) {
-  const minutes = parseInt(document.getElementById("duration").value) || 0;
+  const minutes = parseInt(document.getElementById("duration").value);
+  if (isNaN(minutes) || minutes <= 0) {
+    alert(currentLang === 'jp' ? "タイマーの時間を1分以上に設定してください。" : "Please set the timer to 1 minute or more.");
+    return;
+  }
   remainingTime = minutes * 60;
 }
   // タイマーを止め、表示をリセット
