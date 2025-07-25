@@ -166,8 +166,6 @@
 </head>
 <body>
 
-
-
 <header>
   <button id="langToggle" class="btn">English</button>
   <img src="Symphotune.png" alt="sympho tune logo" class="responsive-img" />
@@ -204,7 +202,6 @@
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
   <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
-
 
   <div class="video-wrapper empty">
     <div id="ytPlayer"></div>
@@ -363,7 +360,7 @@ function loadVideo() {
     console.log("YouTube Player not ready yet.");
   }
 
-  document.querySelector(".video-wrapper")?.classList.remove("empty");
+//  document.querySelector(".video-wrapper")?.classList.remove("empty");
 
   isPaused = false;
   isPlaying = false;
@@ -469,6 +466,7 @@ function playRandomVideo(mood) {
       </button>
     `;
     updateLanguage();
+    document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" }); // ★ この行を追加    
   }, 2000);
 }
 
