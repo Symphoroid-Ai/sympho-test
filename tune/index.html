@@ -241,7 +241,6 @@
 
 <script>
 let ytPlayer, timerInterval;
-let choicePlayer = null;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
 let playerReady = false;
@@ -430,6 +429,7 @@ function resetLoop() {
   }
 }
 
+
 fetch("videos.json")
   .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
   .then(data => { moodVideos = data; console.log("動画データ読み込み完了", moodVideos); })
@@ -458,15 +458,15 @@ function playRandomVideo(mood) {
     alert(currentLang === 'jp' ? "無効な動画URLです。" : "Invalid video URL.");
     return;
   }
-
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
   const resultArea = document.getElementById("videoArea_choice");
 
   resultArea.innerHTML = `<p data-jp="あなたにぴったりの音楽を占っています…" data-en="Fortune-telling your perfect music...">${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}</p>`;
 
   setTimeout(() => {
     resultArea.innerHTML = `
-      <div class="video-wrapper">
-        <div id="ytChoicePlayer"></div>
+      <div class="video-wrapper empty">
+        <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
       </div>
       <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}</p>
       <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
@@ -474,19 +474,9 @@ function playRandomVideo(mood) {
         ${currentLang === 'jp' ? "この動画をSympho loopで使う" : "Use this video with Sympho loop"}
       </button>
     `;
-
-    // プレイヤーの初期化
-    if (choicePlayer) {
-      choicePlayer.loadVideoById(videoId);
-    } else {
-      choicePlayer = new YT.Player('ytChoicePlayer', {
-        videoId,
-        playerVars: { autoplay: 1, playsinline: 1 },
-      });
-    }
-
     updateLanguage();
-    document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" });
+    document.querySelector(".video-wrapper")?.classList.remove("empty");
+    document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" }); // ★ この行を追加
   }, 2000);
 }
 
