@@ -417,6 +417,8 @@ function resetLoop() {
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
+  document.querySelector(".video-wrapper")?.classList.add("empty");
+
 }
 
 fetch("videos.json")
