@@ -107,8 +107,8 @@
       text-align: center;
       padding: 20px;
     }
-
-/*    .video-wrapper {
+/*
+    .video-wrapper {
       position: relative;
       width: 100%;
       max-width: 800px;
@@ -229,7 +229,7 @@
   <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
   <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
-  <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>
+  <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける1" data-en="Attach timer to video"></button>
 </header>
 
 <section id="choice" style="display:none;">
@@ -268,7 +268,7 @@
 </div>
 
 
-    <div class="video-wrapper empty">
+    <div class="video-wrapper">
       <div id="ytPlayer"></div>
       <div id="timerDisplay" class="top-left" style="display:none;"></div>
     </div>
@@ -428,7 +428,6 @@ function loadVideo() {
   } else {
     console.log("YouTube Player not ready yet.");
   }
-  document.querySelector(".video-wrapper")?.classList.remove("empty");
 
   isPaused = false;
   isPlaying = false;
@@ -485,9 +484,7 @@ function resetLoop() {
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
-
-  const loopWrapper = document.querySelector("#loop .video-wrapper");
-  loopWrapper?.classList.add("empty");
+  
 }
 
 
