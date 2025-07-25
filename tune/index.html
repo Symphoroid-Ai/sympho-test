@@ -148,6 +148,12 @@
       height: auto;
       display: block;
       margin: 0 auto;
+    }
+    .video-wrapper.empty {
+      padding-bottom: 0;
+      height: 0;
+      min-height: 0;
+      margin: 0;
     }    
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
@@ -197,11 +203,11 @@
   <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
 
-  <div class="video-wrapper">
+  <div class="video-wrapper empty">
     <div id="ytPlayer"></div>
     <div id="timerDisplay" class="top-left" style="display:none;"></div>
-    
-  </div>　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
+  </div>
+  <button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
   <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
 
 </section>
