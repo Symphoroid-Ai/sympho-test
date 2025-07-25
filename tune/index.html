@@ -412,14 +412,13 @@ function resetLoop() {
   remainingTime = 0;
   isPaused = false;
   isPlaying = false;
-  document.querySelector(".video-wrapper")?.classList.add("empty");
+
   document.getElementById("ytUrl").value = "";
   document.getElementById("duration").value = "";
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
-
-
+  document.querySelector(".video-wrapper")?.classList.add("empty");
 }
 
 fetch("videos.json")
@@ -457,7 +456,7 @@ function playRandomVideo(mood) {
 
   setTimeout(() => {
     resultArea.innerHTML = `
-      <div class="video-wrapper">
+      <div class="video-wrapper empty">
         <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
       </div>
       <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}</p>
@@ -467,6 +466,7 @@ function playRandomVideo(mood) {
       </button>
     `;
     updateLanguage();
+    document.querySelector(".video-wrapper")?.classList.remove("empty");
     document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" }); // ★ この行を追加
   }, 2000);
 }
