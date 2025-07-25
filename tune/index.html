@@ -485,8 +485,11 @@ function resetLoop() {
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
-  document.querySelector(".video-wrapper")?.classList.add("empty");  
+
+  const loopWrapper = document.querySelector("#loop .video-wrapper");
+  loopWrapper?.classList.add("empty");
 }
+
 
 fetch("videos.json")
   .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
@@ -501,7 +504,7 @@ function extractVideoId(url) {
 function copyToLoop(url) {
   document.getElementById("ytUrl").value = url;
   showSection('loop');
-  loadVideo();
+//  loadVideo();
 }
 
 function playRandomVideo(mood) {
