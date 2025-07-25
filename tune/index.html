@@ -203,7 +203,7 @@
   <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
 
-  <div class="video-wrapper empty">
+  <div class="video-wrapper">
     <div id="ytPlayer"></div>
     <div id="timerDisplay" class="top-left" style="display:none;"></div>
   </div>
@@ -359,8 +359,6 @@ function loadVideo() {
   } else {
     console.log("YouTube Player not ready yet.");
   }
-
-  document.querySelector(".video-wrapper")?.classList.remove("empty");
 
   isPaused = false;
   isPlaying = false;
