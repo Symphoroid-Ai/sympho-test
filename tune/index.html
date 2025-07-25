@@ -148,7 +148,15 @@
       height: auto;
       display: block;
       margin: 0 auto;
-    }    
+    }
+
+    .video-wrapper.empty {
+      padding-bottom: 0;
+      height: 0;
+      min-height: 0;
+      margin: 0;
+    }
+   
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
     .bottom-left { bottom: 10px; left: 10px; }
@@ -195,14 +203,16 @@
   <br>
   <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
   <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
-　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
-  <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
   <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
 
-  <div class="video-wrapper">
+
+  <div class="video-wrapper empty">
     <div id="ytPlayer"></div>
     <div id="timerDisplay" class="top-left" style="display:none;"></div>
   </div>
+
+  　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
+  <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
 </section>
   <footer>
     <p class="sns-links">
@@ -353,6 +363,8 @@ function loadVideo() {
     console.log("YouTube Player not ready yet.");
   }
 
+  document.querySelector(".video-wrapper")?.classList.remove("empty");
+
   isPaused = false;
   isPlaying = false;
 }
@@ -408,6 +420,8 @@ function resetLoop() {
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
+  document.querySelector(".video-wrapper")?.classList.add("empty");
+
 }
 
 fetch("videos.json")
@@ -455,7 +469,6 @@ function playRandomVideo(mood) {
       </button>
     `;
     updateLanguage();
-    document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" }); // ★ この行を追加
   }, 2000);
 }
 
