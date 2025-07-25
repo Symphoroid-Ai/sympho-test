@@ -108,7 +108,7 @@
       padding: 20px;
     }
 
-/*    .video-wrapper {
+    .video-wrapper {
       position: relative;
       width: 100%;
       max-width: 800px;
@@ -117,7 +117,7 @@
       height: 0;
       overflow: hidden;
     }
-*/
+
     .video-wrapper iframe {
       position: absolute;
       top: 0;
@@ -154,69 +154,6 @@
     .bottom-left { bottom: 10px; left: 10px; }
     .bottom-right { bottom: 10px; right: 10px; }
     .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-
-    .loop-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1em;
-    }
-
-    .upper-controls {
-      display: flex;
-      flex-direction: column; /* 縦並び */
-      align-items: center;
-      gap: 0.5em;
-    }
-
-    .lower-controls {
-      display: flex;
-      flex-direction: row;    /* 横並び！ */
-      justify-content: center;
-      align-items: center;
-      gap: 0.5em;
-      margin-top: 1em;
-    }
-
-    .btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5em;
-      margin-top: 0.5em;
-    }
-
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      padding-bottom: 56.25%;
-      margin: 1em auto 0;
-      height: 0;
-      overflow: hidden;
-    }
-
-    .lower-controls {
-      margin-top: 1em;
-    }
-    .video-wrapper.empty {
-      padding-bottom: 0;
-      height: 0;
-      min-height: 0;
-      margin: 0;
-    }
-
-    .time-input {
-      display: flex;
-      align-items: center;
-      gap: 0.5em; /* 入力と「分」の間隔 */
-    }
-
-    .time-input input {
-      padding: 0.5em;
-      width: 100px;
-    }
-   
   </style>
 </head>
 <body>
@@ -248,38 +185,25 @@
 </section>
 
 <section id="loop" style="display:none;">
-  <img src="Sympholoop.png" alt="タイマー付き動画の例" class="responsive-img" />
+  <img src="Sympholoop.png" alt="タイマー付き動画の例" " class="responsive-img" />
   <h2 data-jp="好きな動画を、集中タイムに。" data-en="Turn your favorite videos into focus time."></h2>
   <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。" data-en="Customize your work videos with a timer and loop playback."></p>
+  <br><br>
+  <input type="text" id="ytUrl" data-jp="YouTube動画のURLを入力" data-en="Enter YouTube video URL" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;" />
+  <input type="number" id="duration" data-jp="時間" data-en="Duration" placeholder="時間" min="0" style="padding:0.5em; width:100px;" />
+  <span data-jp="分" data-en="min"></span>
+  <br>
+  <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
+  <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
+　<button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
+  <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
+  <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
 
-<div class="upper-controls">
-  <input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;" data-jp="YouTube動画のURLを入力" data-en="Enter YouTube video URL">
-  
-  <div class="time-input">
-    <input type="number" id="duration" placeholder="時間" min="0" data-jp="時間" data-en="Duration">
-    <span data-jp="分" data-en="min">分</span>
-  </div>
-  
-  <div class="btn-group">
-    <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
-    <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
-    <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
-  </div>
-</div>
-
-
-    <div class="video-wrapper empty">
-      <div id="ytPlayer"></div>
-      <div id="timerDisplay" class="top-left" style="display:none;"></div>
-    </div>
-
-    <div class="lower-controls">
-      <button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
-      <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
-    </div>
+  <div class="video-wrapper">
+    <div id="ytPlayer"></div>
+    <div id="timerDisplay" class="top-left" style="display:none;"></div>
   </div>
 </section>
-
   <footer>
     <p class="sns-links">
     <a href="https://www.youtube.com/@symphoroidai" target="_blank">
@@ -428,7 +352,6 @@ function loadVideo() {
   } else {
     console.log("YouTube Player not ready yet.");
   }
-  document.querySelector(".video-wrapper")?.classList.remove("empty");
 
   isPaused = false;
   isPlaying = false;
@@ -485,11 +408,7 @@ function resetLoop() {
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
-
-  const loopWrapper = document.querySelector("#loop .video-wrapper");
-  loopWrapper?.classList.add("empty");
 }
-
 
 fetch("videos.json")
   .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
@@ -504,7 +423,7 @@ function extractVideoId(url) {
 function copyToLoop(url) {
   document.getElementById("ytUrl").value = url;
   showSection('loop');
-//  loadVideo();
+  loadVideo();
 }
 
 function playRandomVideo(mood) {
@@ -536,7 +455,7 @@ function playRandomVideo(mood) {
       </button>
     `;
     updateLanguage();
-    document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" });
+    document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" }); // ★ この行を追加
   }, 2000);
 }
 
