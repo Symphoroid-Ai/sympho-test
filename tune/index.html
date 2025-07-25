@@ -406,8 +406,11 @@ function stopLoop() {
 }
 
 function resetLoop() {
-  ytPlayer?.destroy();
-  ytPlayer = null;
+  if (ytPlayer) {
+    ytPlayer.destroy();
+    ytPlayer = null;
+  }
+
   clearInterval(timerInterval);
   remainingTime = 0;
   isPaused = false;
@@ -417,8 +420,13 @@ function resetLoop() {
   document.getElementById("duration").value = "";
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
-  document.getElementById("ytPlayer").innerHTML = "";
-  document.querySelector(".video-wrapper")?.classList.add("empty");
+
+  // iframeを含めて完全初期化
+  const wrapper = document.querySelector(".video-wrapper");
+  if (wrapper) {
+    wrapper.classList.add("empty");
+    wrapper.innerHTML = '<div id="ytPlayer"></div><div id="timerDisplay" class="top-left" style="display:none;"></div>';
+  }
 }
 
 fetch("videos.json")
