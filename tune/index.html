@@ -421,12 +421,8 @@ function resetLoop() {
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
 
-  // iframeを含めて完全初期化
-  const wrapper = document.querySelector(".video-wrapper");
-  if (wrapper) {
-    wrapper.classList.add("empty");
-    wrapper.innerHTML = '<div id="ytPlayer"></div><div id="timerDisplay" class="top-left" style="display:none;"></div>';
-  }
+  const loopWrapper = document.querySelector("#loop .video-wrapper");
+  loopWrapper?.classList.add("empty");
 }
 
 
