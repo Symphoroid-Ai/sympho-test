@@ -316,13 +316,30 @@ const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "cent
 let positionIndex = 0;
 
 let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
-
+/*
 document.addEventListener("DOMContentLoaded", () => {
   updateLanguage(); // 初期表示
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
   checkYTApiReady();
 });
+*/
+document.addEventListener("DOMContentLoaded", () => {
+  // 保存されていた時間を復元
+  const saved = localStorage.getItem("savedDuration");
+  if (saved) {
+    document.getElementById("duration").value = saved;
+  }
 
+  // 言語処理
+  updateLanguage();
+  document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
+  checkYTApiReady();
+
+  // 時間入力時に保存する
+  document.getElementById("duration").addEventListener("input", function () {
+    localStorage.setItem("savedDuration", this.value);
+  });
+});
 document.getElementById("langToggle").addEventListener("click", () => {
   currentLang = currentLang === 'jp' ? 'en' : 'jp';
   localStorage.setItem('lang', currentLang); // ← 言語を保存
