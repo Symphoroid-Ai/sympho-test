@@ -229,7 +229,7 @@
   <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
   <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
-  <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける1" data-en="Attach timer to video"></button>
+  <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>
 </header>
 
 <section id="choice" style="display:none;">
@@ -316,13 +316,13 @@ const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "cent
 let positionIndex = 0;
 
 let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
-/*
+
 document.addEventListener("DOMContentLoaded", () => {
   updateLanguage(); // 初期表示
   document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
   checkYTApiReady();
 });
-*/
+/*
 document.addEventListener("DOMContentLoaded", () => {
   // 保存されていた時間を復元
   const saved = localStorage.getItem("savedDuration");
@@ -340,6 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("savedDuration", this.value);
   });
 });
+*/  
 document.getElementById("langToggle").addEventListener("click", () => {
   currentLang = currentLang === 'jp' ? 'en' : 'jp';
   localStorage.setItem('lang', currentLang); // ← 言語を保存
