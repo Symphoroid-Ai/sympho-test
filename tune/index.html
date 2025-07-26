@@ -401,7 +401,7 @@ function loadVideo() {
     alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
     return;
   }
-
+/*
 // 分数入力のチェック
   const minutesInput = document.getElementById("duration").value;
   const minutes = parseInt(minutesInput);
@@ -409,7 +409,25 @@ function loadVideo() {
     alert(currentLang === 'jp' ? "タイマーの時間を1分以上に設定してください。" : "Please set the timer to 1 minute or more.");
     return;
   }
+*/
+const minutesInput = document.getElementById("duration").value.trim();
 
+// 数値かどうか、整数かどうか、1以上かどうかをすべてチェック
+if (!/^\d+$/.test(minutesInput)) {
+  alert(currentLang === 'jp'
+    ? "タイマーには1以上の整数を入力してください。"
+    : "Please enter a whole number greater than 0 for the timer.");
+  return;
+}
+
+const minutes = parseInt(minutesInput, 10);
+if (minutes <= 0) {
+  alert(currentLang === 'jp'
+    ? "タイマーには1以上の整数を入力してください。"
+    : "Please enter a whole number greater than 0 for the timer.");
+  return;
+}
+  
   // タイマー初期化
   remainingTime = minutes * 60;
   clearInterval(timerInterval);
