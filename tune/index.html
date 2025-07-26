@@ -415,16 +415,16 @@ const minutesInput = document.getElementById("duration").value.trim();
 // 数値かどうか、整数かどうか、1以上かどうかをすべてチェック
 if (!/^\d+$/.test(minutesInput)) {
   alert(currentLang === 'jp'
-    ? "タイマーには1以上の整数を入力してください。"
-    : "Please enter a whole number greater than 0 for the timer.");
+    ? "タイマーには1分以上の整数を入力してください。"
+    : "Please enter an integer of at least 1 minute for the timer.");
   return;
 }
 
 const minutes = parseInt(minutesInput, 10);
 if (minutes <= 0) {
   alert(currentLang === 'jp'
-    ? "タイマーには1以上の整数を入力してください。"
-    : "Please enter a whole number greater than 0 for the timer.");
+    ? "タイマーには1分以上の整数を入力してください。"
+    : "Please enter an integer of at least 1 minute for the timer.");
   return;
 }
   
