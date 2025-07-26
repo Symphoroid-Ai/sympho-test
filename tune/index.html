@@ -416,7 +416,7 @@ const minutesInput = document.getElementById("duration").value.trim();
 if (!/^\d+$/.test(minutesInput)) {
   alert(currentLang === 'jp'
     ? "タイマーには1分以上の整数を入力してください。"
-    : "Please enter an integer of at least 1 minute for the timer.");
+    : "Please set the timer to an integer value of at least 1 minute.");
   return;
 }
 
@@ -424,7 +424,7 @@ const minutes = parseInt(minutesInput, 10);
 if (minutes <= 0) {
   alert(currentLang === 'jp'
     ? "タイマーには1分以上の整数を入力してください。"
-    : "Please enter an integer of at least 1 minute for the timer.");
+    : "Please set the timer to an integer value of at least 1 minute.");
   return;
 }
   
