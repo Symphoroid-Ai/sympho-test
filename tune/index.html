@@ -449,12 +449,18 @@ if (minutes <= 0) {
       playerVars: { playsinline: 1, fs: 0 },
       events: {
         onReady: event => {
+          event.target.unMute();
           event.target.cueVideoById(videoId);
         },
         onStateChange: evt => {
           if (evt.data === YT.PlayerState.ENDED) {
-            evt.target.seekTo(0);
-            evt.target.playVideo();
+            setTimeout(() => {
+              if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+                ytPlayer.seekTo(0, true);// 秒単位＋音声維持
+                ytPlayer.unMute();  // ここに追加
+                ytPlayer.playVideo();
+              }
+            }, 300); // 少し遅延させてオーディオ復帰を促す
           }
         }
       }
@@ -562,7 +568,7 @@ function playRandomVideo(mood) {
   setTimeout(() => {
     resultArea.innerHTML = `
       <div class="video-wrapper">
-        <iframe src="${embedUrl}" allowfullscreen playsinline></iframe>
+        <iframe src="${embedUrl}" allow="autoplay" allowfullscreen playsinline></iframe>
       </div>
       <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}</p>
       <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
