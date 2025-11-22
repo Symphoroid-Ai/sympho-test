@@ -47,7 +47,17 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
+    .btnHW {
+      background: black;
+      border: none;
+      padding: 0.8em 1.5em;
+      margin: 0.5em;
+      color: #FF6600;
+      border: 3px solid #FF6600;      
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
     iframe {
       display: block;
       border: none;
@@ -106,17 +116,7 @@
       text-align: center;
       padding: 20px;
     }
-/*
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      margin: 2em auto;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-    }
-*/
+
     .video-wrapper iframe {
       position: absolute;
       top: 0;
@@ -124,7 +124,7 @@
       width: 100%;
       height: 100%;
     }
-
+/*
     #timerDisplay {
       position: absolute;
       background: rgba(0,0,0,0.6);
@@ -133,6 +133,29 @@
       z-index: 10;
       pointer-events: none;
     }
+*/
+    #timerDisplay {
+      position: absolute;
+      font-size: 2em;
+      color: #ffffff;
+      z-index: 10;
+      pointer-events: none;
+      text-shadow:
+          0 0 10px rgba(200, 230, 255, 0.9),
+          0 0 18px rgba(120, 180, 255, 0.6);
+      /* --- ガラス風カード（Glassmorphism） --- */
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 0.35em 0.7em;
+      backdrop-filter: blur(12px);
+
+      /* --- 青 + 銀の軽いグロー --- */
+      box-shadow:
+        0 0 18px rgba(255, 255, 255, 0.45),   /* 白い光を強める */
+        0 0 30px rgba(135, 206, 250, 0.35),   /* 青い柔らかい光 */
+        0 6px 25px rgba(0, 0, 0, 0.45);       /* 影を強調して浮かせる */
+    }
+
     header img {
       max-width: 600px;     /* 最大幅を指定 */
       width: 80%;           /* 親要素に対して最大80%に縮小可 */
@@ -185,6 +208,10 @@
       margin-top: 0.5em;
     }
 
+    #videoArea_choice {
+      scroll-margin-top: 80px; /* 上に入れたい余白の高さ */
+    }
+    
     .video-wrapper {
       position: relative;
       width: 100%;
@@ -193,6 +220,7 @@
       margin: 1em auto 0;
       height: 0;
       overflow: hidden;
+      scroll-margin-top: 80px; 
     }
 
     .lower-controls {
@@ -251,6 +279,8 @@
     <button class="btn" onclick="playRandomVideo('癒し')" data-mood="癒し" data-jp="癒し" data-en="Healing">癒し</button>
     <button class="btn" onclick="playRandomVideo('集中')" data-mood="集中" data-jp="集中" data-en="Focus">集中</button>
     <button class="btn" onclick="playRandomVideo('切ない')" data-mood="切ない" data-jp="切ない" data-en="Melancholy">切ない</button>
+    <button class="btn" onclick="playRandomVideo('おやすみ')" data-mood="おやすみ" data-jp="おやすみ" data-en="Bedtime">おやすみ</button>
+    <button class="btnHW" onclick="playRandomVideo('ハロウィン')" data-mood="ハロウィン" data-jp="🎃ハロウィン🎃" data-en="🎃Halloween🎃">ハロウィン</button>       
   </div>
   <div id="videoArea_choice"></div>
 </section>
@@ -305,9 +335,9 @@
   <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
   <br>
 
-  <a href="/sympho-test/terms.html" data-jp="利用規約" data-en="Terms of Use" class="footer-links">利用規約</a> |
-  <a href="/sympho-test/privacy.html" data-jp="プライバシーポリシー" data-en="Privacy Policy" class="footer-links">プライバシーポリシー</a> |
-  <a href="/sympho-test" data-jp="トップページ" data-en="Home" class="footer-links">トップページ</a>  
+  <a href="../terms.html" data-jp="利用規約" data-en="Terms of Use" class="footer-links">利用規約</a> |
+  <a href="../privacy.html" data-jp="プライバシーポリシー" data-en="Privacy Policy" class="footer-links">プライバシーポリシー</a> |
+  <a href="../" data-jp="トップページ" data-en="Home" class="footer-links">トップページ</a>  
 
   <p class="lang-text" data-jp="次のブラウザの最新版をご利用ください：Google Chrome（バージョン80以降）,Safari（iOS13以降）,Firefox（バージョン75以降）,Microsoft Edge（Chromiumベース）,※Internet Explorerは非対応です。" data-en="We recommend using the latest version of one of the following browsers:Google Chrome (version 80 or later), Safari (iOS 13 or later), Firefox (version 75 or later), or Microsoft Edge (Chromium-based).Please note that Internet Explorer is not supported.">
   </p>
@@ -324,13 +354,7 @@ const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "cent
 let positionIndex = 0;
 
 let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
-/*
-document.addEventListener("DOMContentLoaded", () => {
-  updateLanguage(); // 初期表示
-  document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
-  checkYTApiReady();
-});
-*/
+
 document.addEventListener("DOMContentLoaded", () => {
   // 保存されていた時間を復元
   const saved = localStorage.getItem("savedDuration");
@@ -409,15 +433,7 @@ function loadVideo() {
     alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
     return;
   }
-/*
-// 分数入力のチェック
-  const minutesInput = document.getElementById("duration").value;
-  const minutes = parseInt(minutesInput);
-  if (isNaN(minutes) || minutes <= 0) {
-    alert(currentLang === 'jp' ? "タイマーの時間を1分以上に設定してください。" : "Please set the timer to 1 minute or more.");
-    return;
-  }
-*/
+
 const minutesInput = document.getElementById("duration").value.trim();
 
 // 数値かどうか、整数かどうか、1以上かどうかをすべてチェック
@@ -445,6 +461,7 @@ if (minutes <= 0) {
   const timerDisplay = document.getElementById("timerDisplay");
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
+ // document.getElementById("timerDisplay").classList.add("active");
 
   const mins = Math.floor(remainingTime / 60);
   const secs = remainingTime % 60;
