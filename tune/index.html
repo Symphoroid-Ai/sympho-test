@@ -50,43 +50,43 @@
       position: relative;
       z-index: 1;
     }
-/* ---------------- クリック時の軽い反応 ---------------- */
-.btn:active{
-  transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-}
+    /* ---------------- クリック時の軽い反応 ---------------- */
+    .btn:active{
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    }
 
-/* ---------------- ポップエフェクトクラス ---------------- */
-.btn.pop {
-  animation: popGlow 0.25s ease forwards;
-}
+    /* ---------------- ポップエフェクトクラス ---------------- */
+    .btn.pop {
+      animation: popGlow 0.25s ease forwards;
+    }
 
-/* ---------------- ポップ＋光＋色変化アニメーション ---------------- */
-@keyframes popGlow {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-    background-color: inherit;
-    color: inherit;
-  }
-  30% {
-    transform: scale(1.3);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.5);
-  }
-  60% {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 188, 212, 0.4);
-    background-color: #00e0ff;
-    color: #fff;
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba(255,255,255,0);
-    background-color: #00bcd4; /* btn用 */
-    color: white;
-  }
+    /* ---------------- ポップ＋光＋色変化アニメーション ---------------- */
+    @keyframes popGlow {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        background-color: inherit;
+        color: inherit;
+      }
+      30% {
+        transform: scale(1.3);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.5);
+      }
+      60% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 188, 212, 0.4);
+        background-color: #00e0ff;
+        color: #fff;
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255,255,255,0);
+        background-color: #00bcd4; /* btn用 */
+        color: white;
+      }
 
-}
+    }
 
     iframe {
       display: block;
@@ -273,7 +273,51 @@
       padding: 0.5em;
       width: 100px;
     }
-   
+
+    .circular-timer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      z-index: 15;
+      pointer-events: none;
+      display: none;      
+    }
+
+    .circular-timer svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .circular-timer circle {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+    }
+
+    .circular-timer .bg {
+      stroke: rgba(255,255,255,0.2);
+    }
+
+    .circular-timer .progress {
+      stroke: #00bcd4;
+      stroke-dasharray: 314; /* 2πr (r=50) */
+      stroke-dashoffset: 314;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .circular-timer text { 
+      fill: white; 
+      font-size: 20px; 
+      text-anchor: middle; 
+      dominant-baseline: middle; 
+      transform: rotate(90deg); /* SVG全体の-90度を打ち消す */
+      transform-origin: 60px 60px; /* SVG中心を基準 */
+    }
+    
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -309,7 +353,7 @@
     <button class="btn" onclick="playRandomVideo('癒し')" data-mood="癒し" data-jp="癒し" data-en="Healing">癒し</button>
     <button class="btn" onclick="playRandomVideo('集中')" data-mood="集中" data-jp="集中" data-en="Focus">集中</button>
     <button class="btn" onclick="playRandomVideo('切ない')" data-mood="切ない" data-jp="切ない" data-en="Melancholy">切ない</button>
-    <button class="btn" onclick="playRandomVideo('おやすみ')" data-mood="おやすみ" data-jp="おやすみ" data-en="Bedtime">おやすみ</button>
+    <button class="btn" onclick="playRandomVideo('おやすみ')" data-mood="おやすみ" data-jp="おやすみ🌙" data-en="Bedtime🌙">おやすみ</button>
     <button class="btn" onclick="playRandomVideo('ロック')" data-mood="ロック" data-jp="ロック🎸" data-en="Rock🎸">ロック</button>       
   </div>
   <div id="videoArea_choice"></div>
@@ -332,6 +376,8 @@
     <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
     <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
     <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
+    <button class="btn" onclick="toggleTimerType()" id="timerTypeBtn" data-jp="シンプルタイマー" data-en="Simple Timer"></button>
+
   </div>
 </div>
 
@@ -379,6 +425,7 @@ let ytPlayer, timerInterval;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
 let playerReady = false;
+let isCircular = false; // 追加：円形タイマーの初期状態
 
 const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
 let positionIndex = 0;
@@ -438,6 +485,57 @@ function toggleTimerPosition() {
   document.getElementById("positionBtn").textContent = (currentLang === 'jp' ? "表示位置：" : "Position: ") + posLabels[positionIndex];
 }
 
+function toggleTimerType() {
+  isCircular = !isCircular;
+  const btn = document.getElementById("timerTypeBtn");
+  btn.textContent = (isCircular ? (currentLang==='jp'?"体感タイマー":"Circular") : (currentLang==='jp'?"シンプルタイマー":"Simple Timer"));
+
+  const numericTimer = document.getElementById("timerDisplay");
+  let circularTimer = document.getElementById("circularTimer"); // ← ここで毎回取得
+  if(isCircular){
+    numericTimer.style.display = "none";
+    if(!circularTimer) {
+      createCircularTimer();
+      circularTimer = document.getElementById("circularTimer"); // ← 作成後に再取得
+    }
+    circularTimer.style.display = "block";
+  } else {
+    numericTimer.style.display = remainingTime>0 ? "block" : "none";
+    if(circularTimer) circularTimer.style.display = "none";
+  }
+}
+
+function createCircularTimer(){
+  const wrapper = document.querySelector("#loop .video-wrapper");
+  const div = document.createElement("div");
+  div.id = "circularTimer";
+  div.className = "circular-timer";
+  div.innerHTML = `<svg>
+    <circle class="bg" cx="60" cy="60" r="50"></circle>
+    <circle class="progress" cx="60" cy="60" r="50"></circle>
+    <text x="50%" y="50%" id="circularTimerText">00:00</text>
+  </svg>`;
+  wrapper.appendChild(div);
+}
+
+function updateTimerDisplay(){
+  if(isCircular){
+    const circle = document.querySelector(".circular-timer .progress");
+    const text = document.getElementById("circularTimerText");
+    const total = parseInt(document.getElementById("duration").value,10)*60 || 1;
+    const offset = 314*(remainingTime/total);
+    circle.style.strokeDashoffset = offset;
+    const mins = String(Math.floor(remainingTime/60)).padStart(2,'0');
+    const secs = String(remainingTime%60).padStart(2,'0');
+    text.textContent = `${mins}:${secs}`;
+  } else {
+    const timerDisplay = document.getElementById("timerDisplay");
+    const mins = String(Math.floor(remainingTime/60)).padStart(2,'0');
+    const secs = String(remainingTime%60).padStart(2,'0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }
+}
+
 // YouTube APIが既にロード済みかチェックし、playerReadyを設定
 function checkYTApiReady() {
   if (window.YT && window.YT.Player) {
@@ -489,8 +587,40 @@ if (minutes <= 0) {
 
   // タイマー表示の更新
   const timerDisplay = document.getElementById("timerDisplay");
+  // タイマー表示の更新
+if (isCircular) {
+  // 数字タイマーは非表示
+  timerDisplay.style.display = "none";
+
+  // 円形タイマーを作成 or 表示
+  let circularTimer = document.getElementById("circularTimer");
+  if (!circularTimer) createCircularTimer();
+  circularTimer = document.getElementById("circularTimer");
+  circularTimer.style.display = "block";
+
+  // 円形タイマーのテキストを初期化
+  const circularText = document.getElementById("circularTimerText");
+  const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
+  const secs = String(remainingTime % 60).padStart(2, '0');
+  circularText.textContent = `${mins}:${secs}`;
+
+  // 円形タイマーのゲージもリセット
+  const progressCircle = circularTimer.querySelector(".progress");
+  const total = parseInt(document.getElementById("duration").value, 10) * 60 || 1;
+  progressCircle.style.strokeDashoffset = 314 * (remainingTime / total);
+
+} else {
+  // 数字タイマー
   timerDisplay.className = positions[positionIndex];
   timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
+  const mins = String(Math.floor(remainingTime / 60)).padStart(2,'0');
+  const secs = String(remainingTime % 60).padStart(2,'0');
+  timerDisplay.textContent = `${mins}:${secs}`;
+}
+
+ // timerDisplay.className = positions[positionIndex];
+ // timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
+
  // document.getElementById("timerDisplay").classList.add("active");
 
   const mins = Math.floor(remainingTime / 60);
@@ -544,7 +674,7 @@ function playLoop() {
   isPaused = false;
 }
 
-
+/*
 function startTimer(totalTime) {
   if (isPlaying) return;
   isPlaying = true;
@@ -563,6 +693,28 @@ function startTimer(totalTime) {
     }
   }, 1000);
 }
+*/
+
+function startTimer(totalTime) {
+  if (isPlaying) return;
+  isPlaying = true;
+  clearInterval(timerInterval);
+
+  timerInterval = setInterval(() => {
+    updateTimerDisplay();  // ← ここで常に表示更新
+    if (--remainingTime < 0) {
+      clearInterval(timerInterval);
+      if (isCircular) {
+        document.getElementById("circularTimerText").textContent = "00:00";
+      } else {
+        document.getElementById("timerDisplay").textContent = currentLang==='jp' ? "時間終了" : "Time Up";
+      }
+      if (ytPlayer?.stopVideo) ytPlayer.stopVideo();
+      isPlaying = false;
+    }
+  }, 1000);
+}
+
 
 function stopLoop() {
   ytPlayer?.pauseVideo();
