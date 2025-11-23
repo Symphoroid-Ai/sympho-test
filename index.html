@@ -80,12 +80,7 @@
       text-shadow: 0 0 10px black;
       white-space: nowrap;
     }
-/*
-    h1 {
-      font-size: 3rem;
-      text-shadow: 0 0 10px black;
-    }
-*/
+
     .btn-group {
       margin-top: 2rem;
       display: flex;
@@ -96,12 +91,53 @@
 
     .btn {
       background: #00bcd4;
+      border: none;
+      padding: 0.8em 1.5em;
+      margin: 0.5em;
       color: white;
-      padding: 1rem 2rem;
-      text-decoration: none;
-      border: 1px solid white;
+      border: 1px solid white;      
+      font-size: 1em;
       border-radius: 5px;
-      backdrop-filter: blur(4px);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+      position: relative;
+      z-index: 1;
+    }
+    /* ---------------- クリック時の軽い反応 ---------------- */
+    .btn:active{
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    }
+
+    /* ---------------- ポップエフェクトクラス ---------------- */
+    .btn.pop {
+      animation: popGlow 0.25s ease forwards;
+    }
+
+    /* ---------------- ポップ＋光＋色変化アニメーション ---------------- */
+    @keyframes popGlow {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        background-color: inherit;
+        color: inherit;
+      }
+      30% {
+        transform: scale(1.3);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.5);
+      }
+      60% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 188, 212, 0.4);
+        background-color: #00e0ff;
+        color: #fff;
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255,255,255,0);
+        background-color: #00bcd4; /* btn用 */
+        color: white;
+      }
     }
 
     section {
@@ -136,7 +172,34 @@
     .sns-links a:hover {
       color: #00bcd4; /* ホバー時に少し強めのシアンに */
     }
+
+
+    .background-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-image {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 2s ease-in-out, transform 5s ease-in-out; /* transform 追加 */
+ 
+    }
+
+    .bg-image.active {
+      opacity: 1;
+
+    }
     
+
     @media (max-height: 500px) and (orientation: landscape) {
       header {
         height: auto;
@@ -165,20 +228,24 @@
 <body>
 
 
-    <!-- 背景動画
-  <video class="video-background" autoplay muted loop playsinline>
-    <source src="bg.mp4" type="video/mp4">
-  </video> -->
-
-  <!-- ヘッダー -->
+<!-- ヘッダー -->
 <header>
+
+<div class="background-container">
+  <img src="images/starry_sky.jpg" class="bg-image active" alt="星空">
+  <img src="images/floating_island.jpg" class="bg-image" alt="浮遊島">
+  <img src="images/sunset.jpg" class="bg-image" alt="夕焼け">
+  <img src="images/ocean.jpg" class="bg-image" alt="海">
+  <img src="images/title_icon.jpg" class="bg-image" alt="タイトルアイコン">
+</div>
+  
   <!-- 言語切り替えボタン（左上固定） -->
   <button id="langToggle" class="btn" data-jp="English" data-en="日本語">English</button>
 
-  <!-- 背景動画 -->
+  <!-- 背景動画
   <video class="header-video" autoplay muted loop playsinline>
     <source src="bg.mp4" type="video/mp4">
-  </video>
+  </video> -->
 
   <!-- 前面中央コンテンツ -->
   <div class="header-content">
@@ -187,14 +254,14 @@
       癒しの音楽と物語を、あなたへ。
     </p>
     <div class="btn-group">
-      <a href="tune/" class="btn lang-text" data-jp="Sympho tune を体験する" data-en="Try Sympho tune">Sympho tune を体験する</a>
+      <a href="tune" class="btn lang-text" data-jp="Sympho tune を体験する" data-en="Try Sympho tune">Sympho tune を体験する</a>
     </div>
   </div>
 </header>
 
   <!-- ナビゲーション -->
   <nav>
-    <a href="tune/" class="lang-text" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
+    <a href="tune" class="lang-text" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
     <a href="privacy.html" class="lang-text" data-jp="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
     <a href="terms.html" class="lang-text" data-jp="利用規約" data-en="Terms">利用規約</a>
     <a href="contact.html" class="lang-text" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
@@ -204,7 +271,6 @@
   <section>
     <h2 class="lang-text" data-jp="Symphoroid Ai について" data-en="About Symphoroid Ai">Symphoroid Ai について</h2>
     <p class="lang-text" data-jp="Symphoroid Ai は、癒しの音楽をテーマに活動するバーチャルアーティストです。ピアノとバイオリンの音色を中心に、星空のように静かで優しい音楽を届けています。YouTube・Instagram・TikTok・Xなどで活動中。" data-en="symphoroid Ai is a virtual artist focused on healing music. Delivering gentle piano and violin melodies inspired by the night sky. Active on YouTube, Instagram, TikTok, and X.">
-      Symphoroid Ai は、癒しの音楽をテーマに活動するバーチャルアーティストです。ピアノとバイオリンの音色を中心に、星空のように静かで優しい音楽を届けています。YouTube・Instagram・TikTok・Xなどで活動中。
     </p>
   </section>
 
@@ -230,18 +296,25 @@
   <h2 class="lang-text" data-jp="お知らせ" data-en="News">お知らせ</h2>
   <ul style="list-style: none; padding-left: 0;">
     <li class="lang-text"
-        data-jp="2025年7月5日：トップページにお知らせ欄を追加しました。"
-        data-en="July 5, 2025: Added news section to the homepage.">
-      2025年7月5日：トップページにお知らせ欄を追加しました。
+        data-jp="2025年8月3日：先行公開開始しました。Sympho tune向けの動画を随時公開中です。"
+        data-en="August 3, 2025: Early access has started. Videos for Sympho tune are being released continuously."> 
     </li>
-    <!-- 追加する場合は以下のように追記 -->
-    <!--
     <li class="lang-text"
-        data-jp="◯年◯月◯日：◯◯を更新しました。"
-        data-en="◯◯, 20XX: ◯◯ was updated.">
-      ◯年◯月◯日：◯◯を更新しました。
+        data-jp="2025年9月7日：Sympho choice向けの動画を追加しました。"
+        data-en="September 7, 2025: New videos are now available on Sympho choice."> 
     </li>
-    -->
+    <li class="lang-text"
+        data-jp="2025年9月13日：Sympho choice向けの動画を追加しました。気分の選択ボタンに「おやすみ🌙」を追加しました。🎵"
+        data-en="September 13, 2025: New videos are now available for Sympho Choice, and we've added a 'Bedtime🌙' mood option! 🎵"> 
+    </li>
+    <li class="lang-text"
+        data-jp="2025年10月19日：Sympho choice向けの動画を追加しました。気分の選択ボタンに🎃「ハロウィン」🎃を追加しました。"
+        data-en="October 19, 2025: New videos are now on Sympho choice to help you relax. 🎃'Halloween' has been added to the mood buttons!🎃"> 
+    </li>   
+    <li class="lang-text"
+        data-jp="2025年11月23日：Sympho choice向けの動画を追加しました。気分の選択ボタンに「ロック🎸」を追加しました。"
+        data-en="November 23, 2025: New videos are now on Sympho choice to help you relax. 'Rock🎸' has been added to the mood buttons!"> 
+    </li>          
   </ul>
 </section>
   <!-- フッター -->
@@ -271,6 +344,79 @@
   });
 
   applyLang();
+</script>
+
+<script>
+const images = document.querySelectorAll('.bg-image');
+let current = 0;
+const interval = 5000; // 5秒
+const fadeDuration = 2000; // 2秒フェード（CSSで設定済み）
+
+// ページロード直後に最初の画像もズーム開始
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    images[current].style.transform = "scale(1.2)";
+    images[current].classList.add('active');
+  }, 50); // 少し遅延させる
+});
+
+// 画像切り替え
+setInterval(() => {
+  const prev = current;
+  current = (current + 1) % images.length;
+
+  // 新しい画像をactiveにしてフェードイン
+  images[current].classList.add('active');
+  setTimeout(() => {
+    images[current].style.transform = "scale(1.1)";
+  }, 50);
+
+  // 前の画像はフェードアウトしつつズームリセット
+  images[prev].style.opacity = 0;
+  images[prev].style.transform = "scale(1)";
+
+  // 完全に非表示にする（次回に備える）
+  setTimeout(() => {
+    images[prev].classList.remove('active');
+    images[prev].style.opacity = "";
+  }, 2000); // フェード時間に合わせる
+}, interval);
+
+// ---------------- すべてのボタンに豪華ポップエフェクトを追加 ----------------
+document.querySelectorAll('.btn, .btnHW, #positionBtn, #langToggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.remove('pop'); // 念のため一度削除
+    void btn.offsetWidth; // reflowでアニメーションをリセット
+    btn.classList.add('pop');
+  });
+});
+
+
+// ===============================
+// Sympho tune への遷移を 0.25秒 遅延
+// （A. ボタン形式、B. メニュー形式 どちらにも対応）
+// ===============================
+document.querySelectorAll('a[href="tune"], a[href="./tune"], a[href="/tune"]').forEach(link => {
+  link.addEventListener("click", function(e) {
+    e.preventDefault(); // すぐ画面が切り替わるのを止める
+
+    const targetUrl = link.getAttribute("href");
+
+    // ▼ ボタンタイプなら pop エフェクト付与
+    if (link.classList.contains("btn")) {
+      link.classList.remove("pop");
+      void link.offsetWidth; // アニメリセット
+      link.classList.add("pop");
+    }
+
+    // ▼ エフェクト終了後（0.25秒後）にページ遷移
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 250);
+  });
+});
+
+
 </script>
 
 </body>
