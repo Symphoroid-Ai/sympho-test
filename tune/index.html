@@ -276,11 +276,11 @@
 
     .circular-timer {
       position: absolute;
-      top: 100%;
-      left: 100%;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      width: 120px;
-      height: 120px;
+      width: 100%;
+      height: 100%;
       z-index: 15;
       pointer-events: none;
       display: none;      
@@ -303,7 +303,7 @@
     }
 
     .circular-timer .progress {
-      stroke: #ffffff;
+      stroke: #ff0000;
       stroke-dasharray: 314; /* 2πr (r=50) */
       stroke-dashoffset: 314;
       transition: stroke-dashoffset 1s linear;
