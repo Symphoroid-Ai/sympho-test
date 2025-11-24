@@ -273,7 +273,7 @@
       padding: 0.5em;
       width: 100px;
     }
-/*
+
     .circular-timer {
       position: absolute;
       top: 50%;
@@ -304,7 +304,7 @@
 
     .circular-timer .progress {
       stroke: #ff0000;
-      stroke-dasharray: 314; /* 2πr (r=50) 
+      stroke-dasharray: 314; /* 2πr (r=50) */
       stroke-dashoffset: 314;
       transition: stroke-dashoffset 1s linear;
     }
@@ -314,17 +314,17 @@
       font-size: 20px; 
       text-anchor: middle; 
       dominant-baseline: middle; 
-      transform: rotate(90deg); /* SVG全体の-90度を打ち消す 
-      transform-origin: 60px 60px; /* SVG中心を基準 
+      transform: rotate(90deg); /* SVG全体の-90度を打ち消す */
+      transform-origin: 60px 60px; /* SVG中心を基準 */
     }
-*/
-/* ▼ 円形タイマー：動画プレイヤーを全面覆うサイズに変更 */
+
+/* ▼ 円形タイマー：動画プレイヤーを全面覆うサイズに変更 
 .circular-timer {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100%;      /* ← 動画全体を覆う */
-  height: 100%;     /* ← 動画全体を覆う */
+  width: 100%;      /* ← 動画全体を覆う 
+  height: 100%;     /* ← 動画全体を覆う 
   transform: translate(-50%, -50%);
   z-index: 15;
   pointer-events: none;
@@ -334,43 +334,44 @@
   overflow: visible;
 }
 
-/* SVGが中央で最大化されるように */
+/* SVGが中央で最大化されるように 
 .circular-timer svg {
   width: 100%;
   height: 100%;
-  transform: rotate(-90deg); /* 進行方向を上にする */
+  transform: rotate(-90deg); /* 進行方向を上にする 
 }
 
-/* 円の見た目 */
+/* 円の見た目 
 .circular-timer circle {
   fill: none;
-  stroke-width: 3%; /* ← 動画サイズに比例して変化する */
+  stroke-width: 3%; /* ← 動画サイズに比例して変化する 
   stroke-linecap: round;
 }
 
-/* 背景の円 */
+/* 背景の円 
 .circular-timer .bg {
   stroke: rgba(255,255,255,0.25);
 }
 
-/* 進行する円 */
+/* 進行する円 
 .circular-timer .progress {
   stroke: #ff0000;
-  stroke-dasharray: 1000;      /* 大きく広げても途切れないように */
+  stroke-dasharray: 1000;      /* 大きく広げても途切れないように 
   stroke-dashoffset: 1000;
   transition: stroke-dashoffset 1s linear;
 }
 
-/* 中央の時間テキスト */
+/* 中央の時間テキスト 
 .circular-timer text { 
   fill: white; 
-  font-size: 6vw;    /* ← 画面サイズ比例で自動で大きくなる */
+  font-size: 6vw;    /* ← 画面サイズ比例で自動で大きくなる 
   text-anchor: middle; 
   dominant-baseline: middle; 
-  transform: rotate(90deg);      /* SVG全体の -90° を打ち消す */
+  transform: rotate(90deg);      /* SVG全体の -90° を打ち消す 
   transform-origin: center;
   pointer-events: none;
 }    
+*/
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -433,17 +434,7 @@
 
   </div>
 </div>
-<!-- 🔵 円形タイマー本体（必須） -->
-<div class="circular-timer" id="circularTimer">
-  <svg viewBox="0 0 100 100">
-    <!-- 背景円 -->
-    <circle class="bg" cx="50" cy="50" r="45"></circle>
-    <!-- 進行円 -->
-    <circle class="progress" cx="50" cy="50" r="45"></circle>
-    <!-- 残り時間 -->
-    <text x="50" y="50" id="circularTimeText">0:00</text>
-  </svg>
-</div>
+
 
     <div class="video-wrapper">
       <div id="ytPlayer"></div>
