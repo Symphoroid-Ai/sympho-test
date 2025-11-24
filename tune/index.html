@@ -433,7 +433,17 @@
 
   </div>
 </div>
-
+<!-- 🔵 円形タイマー本体（必須） -->
+<div class="circular-timer" id="circularTimer">
+  <svg viewBox="0 0 100 100">
+    <!-- 背景円 -->
+    <circle class="bg" cx="50" cy="50" r="45"></circle>
+    <!-- 進行円 -->
+    <circle class="progress" cx="50" cy="50" r="45"></circle>
+    <!-- 残り時間 -->
+    <text x="50" y="50" id="circularTimeText">0:00</text>
+  </svg>
+</div>
 
     <div class="video-wrapper">
       <div id="ytPlayer"></div>
