@@ -14,15 +14,11 @@
       background-color:  #0d1b2a;
       color: white;
     }
-
     header, section {
       padding: 2em;
       text-align: center;
     }
-
-    h1 {
-      font-size: clamp(1.5rem, 5vw, 3rem);
-    }
+    h1 { font-size: clamp(1.5rem, 5vw, 3rem); }
     #langToggle {
       position: absolute;
       top: 1rem;
@@ -50,807 +46,172 @@
       position: relative;
       z-index: 1;
     }
-    /* ---------------- クリック時の軽い反応 ---------------- */
     .btn:active{
       transform: scale(1.05);
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
     }
-
-    /* ---------------- ポップエフェクトクラス ---------------- */
     .btn.pop {
       animation: popGlow 0.25s ease forwards;
     }
-
-    /* ---------------- ポップ＋光＋色変化アニメーション ---------------- */
     @keyframes popGlow {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-        background-color: inherit;
-        color: inherit;
-      }
-      30% {
-        transform: scale(1.3);
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.5);
-      }
-      60% {
-        transform: scale(1.1);
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 188, 212, 0.4);
-        background-color: #00e0ff;
-        color: #fff;
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(255,255,255,0);
-        background-color: #00bcd4; /* btn用 */
-        color: white;
-      }
-
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); background-color: inherit; color: inherit; }
+      30% { transform: scale(1.3); box-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(0,188,212,0.5); }
+      60% { transform: scale(1.1); box-shadow: 0 0 15px rgba(255,255,255,0.6), 0 0 30px rgba(0,188,212,0.4); background-color: #00e0ff; color: #fff; }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); background-color: #00bcd4; color: white; }
     }
-
-    iframe {
-      display: block;
-      border: none;
+    iframe { display: block; border: none; }
+    #videoArea_loop { position: relative; }
+    .video-wrapper { 
+      position: relative; 
+      width: 100%; 
+      max-width: 800px; 
+      margin: 1em auto 0; 
+      aspect-ratio: 16/9;
     }
-
-    #videoArea_loop {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+    .video-wrapper iframe { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
     }
-
-    section h2 {
-      font-size: clamp(1rem, 5vw, 1.5rem);
-      margin-bottom: 20px;
-    }
-
-    .section-button {
-      padding: 12px 25px;
-      font-weight: bold;
-      color: white;
-      background-color: #FF0000;
-      text-decoration: none;
-      border-radius: 6px;
-    }
-
-    header {
-      background-color: #EAEEF6;
-      color: #01BEE3;
-    }
-
-    .sns-links a {
-      color: #7FDBFF;
-      text-decoration: none;
-      font-size: 32px;
-      margin: 0 10px;      
-    }
-
-    .sns-links a:hover {
-      color: #00bcd4; /* ホバー時に少し強めのシアンに */
-    }
-
-    .footer-links {
-      margin: 0 5px;
-      text-decoration: none;
-      color: inherit;
-      font-size: 0.9rem;
-    }
-
-    .footer-links:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .video-wrapper iframe {
+    .circular-timer {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-    }
-/*
-    #timerDisplay {
-      position: absolute;
-      background: rgba(0,0,0,0.6);
-      font-size: 2em;
-      color: white;
-      z-index: 10;
-      pointer-events: none;
-    }
-*/
-    #timerDisplay {
-      position: absolute;
-      font-size: 2em;
-      color: #ffffff;
-      z-index: 10;
-      pointer-events: none;
-      text-shadow:
-          0 0 10px rgba(200, 230, 255, 0.9),
-          0 0 18px rgba(120, 180, 255, 0.6);
-      /* --- ガラス風カード（Glassmorphism） --- */
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 0.35em 0.7em;
-      backdrop-filter: blur(12px);
-
-      /* --- 青 + 銀の軽いグロー --- */
-      box-shadow:
-        0 0 18px rgba(255, 255, 255, 0.45),   /* 白い光を強める */
-        0 0 30px rgba(135, 206, 250, 0.35),   /* 青い柔らかい光 */
-        0 6px 25px rgba(0, 0, 0, 0.45);       /* 影を強調して浮かせる */
-    }
-
-    header img {
-      max-width: 600px;     /* 最大幅を指定 */
-      width: 80%;           /* 親要素に対して最大80%に縮小可 */
-      height: auto;         /* 縦横比を保持 */
-      display: block;       /* レイアウト安定化（必要に応じて） */
-      margin: 0 auto;       /* 中央寄せ */
-    }
-
-    .responsive-img {
-      max-width: 600px;
-      width: 80%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-    }    
-    .top-left { top: 10px; left: 10px; }
-    .top-right { top: 10px; right: 10px; }
-    .bottom-left { bottom: 10px; left: 10px; }
-    .bottom-right { bottom: 10px; right: 10px; }
-    .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-
-    .loop-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1em;
-    }
-
-    .upper-controls {
-      display: flex;
-      flex-direction: column; /* 縦並び */
-      align-items: center;
-      gap: 0.5em;
-    }
-
-    .lower-controls {
-      display: flex;
-      flex-direction: row;    /* 横並び！ */
-      justify-content: center;
-      align-items: center;
-      gap: 0.5em;
-      margin-top: 1em;
-    }
-
-    .btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5em;
-      margin-top: 0.5em;
-    }
-
-    #videoArea_choice {
-      scroll-margin-top: 80px; /* 上に入れたい余白の高さ */
-    }
-    
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      padding-bottom: 56.25%;
-      margin: 1em auto 0;
-      height: 0;
-      overflow: hidden;
-      scroll-margin-top: 80px; 
-    }
-
-    .lower-controls {
-      margin-top: 1em;
-    }
-    .video-wrapper.empty {
-      padding-bottom: 0;
-      height: 0;
-      min-height: 0;
-      margin: 0;
-    }
-
-    .time-input {
-      display: flex;
-      align-items: center;
-      gap: 0.5em; /* 入力と「分」の間隔 */
-    }
-
-    .time-input input {
-      padding: 0.5em;
-      width: 100px;
-    }
-
-    .circular-timer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 120px;
-      height: 120px;
       z-index: 15;
       pointer-events: none;
-      display: none;      
+      display: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    .circular-timer svg {
-      width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
-    }
-
-    .circular-timer circle {
-      fill: none;
-      stroke-width: 10;
-      stroke-linecap: round;
-    }
-
-    .circular-timer .bg {
-      stroke: rgba(255,255,255,0.2);
-    }
-
-    .circular-timer .progress {
-      stroke: #ff0000;
-      stroke-dasharray: 314; /* 2πr (r=50) */
-      stroke-dashoffset: 314;
-      transition: stroke-dashoffset 1s linear;
-    }
-
-    .circular-timer text { 
-      fill: white; 
-      font-size: 20px; 
-      text-anchor: middle; 
-      dominant-baseline: middle; 
-      transform: rotate(90deg); /* SVG全体の-90度を打ち消す */
-      transform-origin: 60px 60px; /* SVG中心を基準 */
-    }
-
-/* ▼ 円形タイマー：動画プレイヤーを全面覆うサイズに変更 
-.circular-timer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;      /* ← 動画全体を覆う 
-  height: 100%;     /* ← 動画全体を覆う 
-  transform: translate(-50%, -50%);
-  z-index: 15;
-  pointer-events: none;
-  display: none;
-  max-width: 100%;
-  max-height: 100%;
-  overflow: visible;
-}
-
-/* SVGが中央で最大化されるように 
-.circular-timer svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg); /* 進行方向を上にする 
-}
-
-/* 円の見た目 
-.circular-timer circle {
-  fill: none;
-  stroke-width: 3%; /* ← 動画サイズに比例して変化する 
-  stroke-linecap: round;
-}
-
-/* 背景の円 
-.circular-timer .bg {
-  stroke: rgba(255,255,255,0.25);
-}
-
-/* 進行する円 
-.circular-timer .progress {
-  stroke: #ff0000;
-  stroke-dasharray: 1000;      /* 大きく広げても途切れないように 
-  stroke-dashoffset: 1000;
-  transition: stroke-dashoffset 1s linear;
-}
-
-/* 中央の時間テキスト 
-.circular-timer text { 
-  fill: white; 
-  font-size: 6vw;    /* ← 画面サイズ比例で自動で大きくなる 
-  text-anchor: middle; 
-  dominant-baseline: middle; 
-  transform: rotate(90deg);      /* SVG全体の -90° を打ち消す 
-  transform-origin: center;
-  pointer-events: none;
-}    
-*/
+    .circular-timer svg { width: 90%; height: 90%; transform: rotate(-90deg); }
+    .circular-timer circle { fill: none; stroke-width: 5; stroke-linecap: round; }
+    .circular-timer .bg { stroke: rgba(255,255,255,0.25); }
+    .circular-timer .progress { stroke: #ff0000; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 1s linear; }
+    .circular-timer text { fill: white; font-size: 5vw; text-anchor: middle; dominant-baseline: middle; transform: rotate(90deg); transform-origin: center; pointer-events: none; }
+    .loop-controls { display: flex; flex-direction: column; align-items: center; gap: 1em; margin-top: 1em; }
+    .upper-controls { display: flex; flex-direction: column; align-items: center; gap: 0.5em; }
+    .lower-controls { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 0.5em; margin-top: 1em; }
+    .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5em; margin-top: 0.5em; }
+    header img { max-width: 600px; width: 80%; height: auto; display: block; margin: 0 auto; }    
   </style>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'G-DC85V6L5MK');
-  </script>
 </head>
 <body>
-  
+  <button id="langToggle">English</button>
+  <header>
+    <img src="logo.png" alt="Symphoroid Ai">
+    <h1>sympho tune</h1>
+  </header>
 
-
-<header>
-  <button id="langToggle" class="btn">English</button>
-  <img src="Symphotune.png" alt="sympho tune logo" class="responsive-img" />
-  <h1 data-jp="心と時間に寄り添う、癒しの音楽体験。" data-en="Soothing music that cares for your heart and time."></h1>
-  <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
-  <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
-  <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>
-</header>
-
-<section id="choice" style="display:none;">
-  <img src="Symphochoice.png" alt="気分で音楽を選ぶイメージ" " class="responsive-img" />
-  <h2 data-jp="今日の気分にぴったりの音楽を。" data-en="Music that fits your mood today."></h2>
-  <p data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。" data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match."></p>
-  <br><br>
-  <p data-jp="今日の気分は？" data-en="How do you feel today?"></p>
-  <div>
-    <button class="btn" onclick="playRandomVideo('元気')" data-mood="元気" data-jp="元気" data-en="Energetic">元気</button>
-    <button class="btn" onclick="playRandomVideo('癒し')" data-mood="癒し" data-jp="癒し" data-en="Healing">癒し</button>
-    <button class="btn" onclick="playRandomVideo('集中')" data-mood="集中" data-jp="集中" data-en="Focus">集中</button>
-    <button class="btn" onclick="playRandomVideo('切ない')" data-mood="切ない" data-jp="切ない" data-en="Melancholy">切ない</button>
-    <button class="btn" onclick="playRandomVideo('おやすみ')" data-mood="おやすみ" data-jp="おやすみ🌙" data-en="Bedtime🌙">おやすみ</button>
-    <button class="btn" onclick="playRandomVideo('ロック')" data-mood="ロック" data-jp="ロック🎸" data-en="Rock🎸">ロック</button>       
-  </div>
-  <div id="videoArea_choice"></div>
-</section>
-
-<section id="loop" style="display:none;">
-  <img src="Sympholoop.png" alt="タイマー付き動画の例" class="responsive-img" />
-  <h2 data-jp="好きな動画を、集中タイムに。" data-en="Turn your favorite videos into focus time."></h2>
-  <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。" data-en="Customize your work videos with a timer and loop playback."></p>
-
-<div class="upper-controls">
-  <input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;" data-jp="YouTube動画のURLを入力" data-en="Enter YouTube video URL">
-  
-  <div class="time-input">
-    <input type="number" id="duration" placeholder="時間" value="10" data-jp="時間" data-en="Duration">
-    <span data-jp="分" data-en="min">分</span>
-  </div>
-  
-  <div class="btn-group">
-    <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
-    <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
-    <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
-    <button class="btn" onclick="toggleTimerType()" id="timerTypeBtn" data-jp="シンプルタイマー" data-en="Simple Timer"></button>
-
-  </div>
-</div>
-
-
-    <div class="video-wrapper">
-      <div id="ytPlayer"></div>
-      <div id="timerDisplay" class="top-left" style="display:none;"></div>
+  <section id="videoArea_loop">
+    <h2>Loop Player</h2>
+    <div class="video-wrapper" id="loopWrapper"></div>
+    <div class="circular-timer" id="circularTimer"></div>
+    <div class="loop-controls">
+      <div class="upper-controls">
+        <button class="btn" id="startBtn">Start</button>
+        <button class="btn" id="pauseBtn">Pause</button>
+        <button class="btn" id="stopBtn">Stop</button>
+        <div class="time-input">
+          <input type="number" id="timerInput" value="300"> seconds
+        </div>
+      </div>
+      <div class="lower-controls btn-group">
+        <button class="btn" data-video="VIDEO_ID_1">Track 1</button>
+        <button class="btn" data-video="VIDEO_ID_2">Track 2</button>
+      </div>
     </div>
+  </section>
 
-    <div class="lower-controls">
-      <button class="btn" onclick="playLoop()" data-jp="再生" data-en="Play"></button>
-      <button class="btn" onclick="stopLoop()" data-jp="ストップ" data-en="Stop"></button>
+  <section id="videoArea_choice">
+    <h2>Sympho Choice</h2>
+    <div class="video-wrapper empty" id="choiceWrapper"></div>
+    <div class="btn-group">
+      <button class="btn" data-video="VIDEO_ID_A">Option A</button>
+      <button class="btn" data-video="VIDEO_ID_B">Option B</button>
     </div>
-  </div>
-</section>
+  </section>
 
   <footer>
-    <p class="sns-links">
-    <a href="https://www.youtube.com/@symphoroidai" target="_blank">
-      <i class="fab fa-youtube"></i>
-    </a>
-    <a href="https://www.instagram.com/symphoroid_ai" target="_blank">
-      <i class="fab fa-instagram"></i>
-    </a>
-    <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank">
-      <i class="fab fa-tiktok"></i>
-    </a>
-    <a href="https://www.x.com/@SymphoroidAi" target="_blank">
-      <i class="fab fa-x-twitter"></i>
-    </a>
-  <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
-  <br>
+    <div class="sns-links">
+      <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p>&copy; 2025 Symphoroid Ai</p>
+  </footer>
 
-  <a href="../terms.html" data-jp="利用規約" data-en="Terms of Use" class="footer-links">利用規約</a> |
-  <a href="../privacy.html" data-jp="プライバシーポリシー" data-en="Privacy Policy" class="footer-links">プライバシーポリシー</a> |
-  <a href="../" data-jp="トップページ" data-en="Home" class="footer-links">トップページ</a>  
+  <script>
+    let ytPlayer, timerInterval, remainingTime = 0, isPaused = false, isPlaying = false, playerReady = false;
+    const circularTimer = document.getElementById('circularTimer');
 
-  <p class="lang-text" data-jp="次のブラウザの最新版をご利用ください：Google Chrome（バージョン80以降）,Safari（iOS13以降）,Firefox（バージョン75以降）,Microsoft Edge（Chromiumベース）,※Internet Explorerは非対応です。" data-en="We recommend using the latest version of one of the following browsers:Google Chrome (version 80 or later), Safari (iOS 13 or later), Firefox (version 75 or later), or Microsoft Edge (Chromium-based).Please note that Internet Explorer is not supported.">
-  </p>
-
-</footer>
-
-<script>
-let ytPlayer, timerInterval;
-let remainingTime = 0;
-let isPaused = false, isPlaying = false;
-let playerReady = false;
-let isCircular = false; // 追加：円形タイマーの初期状態
-
-const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "center"];
-let positionIndex = 0;
-
-let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
-
-document.addEventListener("DOMContentLoaded", () => {
-  // 保存されていた時間を復元
-  const saved = localStorage.getItem("savedDuration");
-  if (saved) {
-    document.getElementById("duration").value = saved;
-  }
-
-  // 言語処理
-  updateLanguage();
-  document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
-  checkYTApiReady();
-
-  // 時間入力時に保存する
-  document.getElementById("duration").addEventListener("input", function () {
-    localStorage.setItem("savedDuration", this.value);
-  });
-});
-  
-document.getElementById("langToggle").addEventListener("click", () => {
-  currentLang = currentLang === 'jp' ? 'en' : 'jp';
-  localStorage.setItem('lang', currentLang); // ← 言語を保存
-  updateLanguage();
-  document.getElementById("langToggle").textContent = currentLang === 'jp' ? "English" : "日本語";
-});
-
-function updateLanguage() {
-  document.querySelectorAll("[data-jp]").forEach(el => {
-    if ('placeholder' in el) {
-      el.placeholder = el.getAttribute(`data-${currentLang}`);
-    } else {
-      el.textContent = el.getAttribute(`data-${currentLang}`);
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('loopWrapper', {
+        videoId: 'VIDEO_ID_1',
+        playerVars: { 'playsinline': 1, 'fs':0 },
+        events: { 'onReady': onPlayerReady }
+      });
     }
-  });
-}
 
-function showSection(section) {
-  document.getElementById("choice").style.display = section === "choice" ? "block" : "none";
-  document.getElementById("loop").style.display = section === "loop" ? "block" : "none";
-  setTimeout(() => {
-    document.getElementById(section).scrollIntoView({ behavior: "smooth" });
-  }, 100);
-}
+    function onPlayerReady(event) { playerReady = true; }
 
-function toggleTimerPosition() {
-  positionIndex = (positionIndex + 1) % positions.length;
-  const timer = document.getElementById("timerDisplay");
-  timer.className = positions[positionIndex];
-  const posLabels = currentLang === 'jp'
-    ? ["左上","右上","左下","右下","中央"]
-    : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"];
-  document.getElementById("positionBtn").textContent = (currentLang === 'jp' ? "表示位置：" : "Position: ") + posLabels[positionIndex];
-}
-
-function toggleTimerType() {
-  isCircular = !isCircular;
-  const btn = document.getElementById("timerTypeBtn");
-  btn.textContent = (isCircular ? (currentLang==='jp'?"体感タイマー":"Circular") : (currentLang==='jp'?"シンプルタイマー":"Simple Timer"));
-
-  const numericTimer = document.getElementById("timerDisplay");
-  let circularTimer = document.getElementById("circularTimer"); // ← ここで毎回取得
-  if(isCircular){
-    numericTimer.style.display = "none";
-    if(!circularTimer) {
-      createCircularTimer();
-      circularTimer = document.getElementById("circularTimer"); // ← 作成後に再取得
-    }
-    circularTimer.style.display = "block";
-  } else {
-    numericTimer.style.display = remainingTime>0 ? "block" : "none";
-    if(circularTimer) circularTimer.style.display = "none";
-  }
-}
-
-function createCircularTimer(){
-  const wrapper = document.querySelector("#loop .video-wrapper");
-  const div = document.createElement("div");
-  div.id = "circularTimer";
-  div.className = "circular-timer";
-  div.innerHTML = `<svg>
-    <circle class="bg" cx="60" cy="60" r="50"></circle>
-    <circle class="progress" cx="60" cy="60" r="50"></circle>
-    <text x="50%" y="50%" id="circularTimerText">00:00</text>
-  </svg>`;
-  wrapper.appendChild(div);
-}
-
-function updateTimerDisplay(){
-  if(isCircular){
-    const circle = document.querySelector(".circular-timer .progress");
-    const text = document.getElementById("circularTimerText");
-    const total = parseInt(document.getElementById("duration").value,10)*60 || 1;
-    const offset = 314*(remainingTime/total);
-    circle.style.strokeDashoffset = offset;
-    const mins = String(Math.floor(remainingTime/60)).padStart(2,'0');
-    const secs = String(remainingTime%60).padStart(2,'0');
-    text.textContent = `${mins}:${secs}`;
-  } else {
-    const timerDisplay = document.getElementById("timerDisplay");
-    const mins = String(Math.floor(remainingTime/60)).padStart(2,'0');
-    const secs = String(remainingTime%60).padStart(2,'0');
-    timerDisplay.textContent = `${mins}:${secs}`;
-  }
-}
-
-// YouTube APIが既にロード済みかチェックし、playerReadyを設定
-function checkYTApiReady() {
-  if (window.YT && window.YT.Player) {
-    playerReady = true;
-    console.log("YouTube IFrame API is already loaded.");
-  } else {
-    setTimeout(checkYTApiReady, 200);
-  }
-}
-
-// YouTube API読み込み完了時に必ず呼ばれるコールバック
-window.onYouTubeIframeAPIReady = function() {
-  playerReady = true;
-  console.log("YouTube IFrame API ready (callback).");
-};
-
-function loadVideo() {
-  console.log("=== loadVideo triggered ===");
-
-  const url = document.getElementById("ytUrl").value;
-  const videoId = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
-  if (!videoId) {
-    alert(currentLang === 'jp' ? "正しいURLを入力してください。" : "Please enter a valid URL.");
-    return;
-  }
-
-const minutesInput = document.getElementById("duration").value.trim();
-
-// 数値かどうか、整数かどうか、1以上かどうかをすべてチェック
-if (!/^\d+$/.test(minutesInput)) {
-  alert(currentLang === 'jp'
-    ? "タイマーには1分以上の整数を入力してください。"
-    : "Please set the timer to an integer value of at least 1 minute.");
-  return;
-}
-
-const minutes = parseInt(minutesInput, 10);
-if (minutes <= 0) {
-  alert(currentLang === 'jp'
-    ? "タイマーには1分以上の整数を入力してください。"
-    : "Please set the timer to an integer value of at least 1 minute.");
-  return;
-}
-  
-  // タイマー初期化
-  remainingTime = minutes * 60;
-  clearInterval(timerInterval);
-  isCounting = false;
-
-  // タイマー表示の更新
-  const timerDisplay = document.getElementById("timerDisplay");
-  // タイマー表示の更新
-if (isCircular) {
-  // 数字タイマーは非表示
-  timerDisplay.style.display = "none";
-
-  // 円形タイマーを作成 or 表示
-  let circularTimer = document.getElementById("circularTimer");
-  if (!circularTimer) createCircularTimer();
-  circularTimer = document.getElementById("circularTimer");
-  circularTimer.style.display = "block";
-
-  // 円形タイマーのテキストを初期化
-  const circularText = document.getElementById("circularTimerText");
-  const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
-  const secs = String(remainingTime % 60).padStart(2, '0');
-  circularText.textContent = `${mins}:${secs}`;
-
-  // 円形タイマーのゲージもリセット
-  const progressCircle = circularTimer.querySelector(".progress");
-  const total = parseInt(document.getElementById("duration").value, 10) * 60 || 1;
-  progressCircle.style.strokeDashoffset = 314 * (remainingTime / total);
-
-} else {
-  // 数字タイマー
-  timerDisplay.className = positions[positionIndex];
-  timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
-  const mins = String(Math.floor(remainingTime / 60)).padStart(2,'0');
-  const secs = String(remainingTime % 60).padStart(2,'0');
-  timerDisplay.textContent = `${mins}:${secs}`;
-}
-
- // timerDisplay.className = positions[positionIndex];
- // timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
-
- // document.getElementById("timerDisplay").classList.add("active");
-
-  const mins = Math.floor(remainingTime / 60);
-  const secs = remainingTime % 60;
-  timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-  // プレイヤー初期化 or cue 動画
-  if (!ytPlayer && playerReady) {
-    ytPlayer = new YT.Player('ytPlayer', {
-      videoId,
-      playerVars: { playsinline: 1, fs: 0 },
-      events: {
-        onReady: event => {
-          event.target.unMute();
-          event.target.cueVideoById(videoId);
-        },
-        onStateChange: evt => {
-          if (evt.data === YT.PlayerState.ENDED) {
-            setTimeout(() => {
-              if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
-                ytPlayer.seekTo(0, true);// 秒単位＋音声維持
-                ytPlayer.unMute();  // ここに追加
-                ytPlayer.playVideo();
-              }
-            }, 300); // 少し遅延させてオーディオ復帰を促す
-          }
+    function startTimer() {
+      remainingTime = parseInt(document.getElementById('timerInput').value);
+      isPaused = false;
+      updateCircularTimer();
+      circularTimer.style.display = 'flex';
+      timerInterval = setInterval(() => {
+        if (!isPaused && remainingTime > 0) {
+          remainingTime--;
+          updateCircularTimer();
+        } else if (remainingTime <= 0) {
+          clearInterval(timerInterval);
         }
-      }
+      }, 1000);
+      ytPlayer.playVideo();
+    }
+
+    function pauseTimer() { isPaused = !isPaused; }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      remainingTime = 0;
+      updateCircularTimer();
+      circularTimer.style.display = 'none';
+      ytPlayer.stopVideo();
+    }
+
+    function updateCircularTimer() {
+      const radius = 45, circumference = 2 * Math.PI * radius;
+      const offset = circumference * (1 - remainingTime / parseInt(document.getElementById('timerInput').value));
+      circularTimer.innerHTML = `
+        <svg viewBox="0 0 100 100">
+          <circle class="bg" cx="50" cy="50" r="${radius}"/>
+          <circle class="progress" cx="50" cy="50" r="${radius}" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/>
+          <text x="50" y="50">${remainingTime}</text>
+        </svg>
+      `;
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startTimer);
+    document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
+    document.getElementById('stopBtn').addEventListener('click', stopTimer);
+
+    document.querySelectorAll('#videoArea_loop .btn-group button').forEach(btn => {
+      btn.addEventListener('click', () => { ytPlayer.loadVideoById(btn.dataset.video); });
     });
-  } else if (ytPlayer && playerReady) {
-    ytPlayer.cueVideoById(videoId);
-  } else {
-    console.log("YouTube Player not ready yet.");
-  }
 
-  isPaused = false;
-  isPlaying = false;
-  document.querySelector("#loop .video-wrapper").scrollIntoView({ behavior: "smooth" });  
-}
-
-
-function playLoop() {
-  
-  if (!ytPlayer || isPlaying) return;
-
-  console.log("=== playLoop triggered ===");
-  ytPlayer.unMute();
-  ytPlayer.playVideo();
-
-  startTimer(remainingTime || 0);
-  isPaused = false;
-}
-
-/*
-function startTimer(totalTime) {
-  if (isPlaying) return;
-  isPlaying = true;
-  clearInterval(timerInterval);
-
-  const timerDisplay = document.getElementById("timerDisplay");
-  timerInterval = setInterval(() => {
-    const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
-    const secs = String(remainingTime % 60).padStart(2, '0');
-    timerDisplay.textContent = `${mins}:${secs}`;
-    if (--remainingTime < 0) {
-      clearInterval(timerInterval);
-      timerDisplay.textContent = currentLang === 'jp' ? "時間終了：" : "Time Up: ";
-      if (ytPlayer?.stopVideo) ytPlayer.stopVideo();
-      isPlaying = false;
-    }
-  }, 1000);
-}
-*/
-
-function startTimer(totalTime) {
-  if (isPlaying) return;
-  isPlaying = true;
-  clearInterval(timerInterval);
-
-  timerInterval = setInterval(() => {
-    updateTimerDisplay();  // ← ここで常に表示更新
-    if (--remainingTime < 0) {
-      clearInterval(timerInterval);
-      if (isCircular) {
-        document.getElementById("circularTimerText").textContent = "00:00";
-      } else {
-        document.getElementById("timerDisplay").textContent = currentLang==='jp' ? "時間終了" : "Time Up";
-      }
-      if (ytPlayer?.stopVideo) ytPlayer.stopVideo();
-      isPlaying = false;
-    }
-  }, 1000);
-}
-
-
-function stopLoop() {
-  ytPlayer?.pauseVideo();
-  isPaused = true;
-  isPlaying = false;
-  clearInterval(timerInterval);
-}
-
-function resetLoop() {
-  ytPlayer?.destroy();
-  ytPlayer = null;
-  clearInterval(timerInterval);
-  remainingTime = 0;
-  isPaused = false;
-  isPlaying = false;
-  document.getElementById("ytUrl").value = "";
-  document.getElementById("duration").value = "";
-  document.getElementById("timerDisplay").textContent = "";
-  document.getElementById("timerDisplay").style.display = "none";
-  document.getElementById("ytPlayer").innerHTML = "";
-  
-}
-
-
-fetch("videos.json")
-  .then(res => res.ok ? res.json() : Promise.reject(new Error("読み込み失敗")))
-  .then(data => { moodVideos = data; console.log("動画データ読み込み完了", moodVideos); })
-  .catch(err => alert("読み込みエラー: " + err.message));
-
-function extractVideoId(url) {
-  const match = url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
-  return match ? match[1] : null;
-}
-
-function copyToLoop(url) {
-  document.getElementById("ytUrl").value = url;
-  showSection('loop');
-  loadVideo();
-}
-
-function playRandomVideo(mood) {
-  const urls = moodVideos[mood];
-  if (!urls || urls.length === 0) {
-    alert(currentLang === 'jp' ? "その気分の動画が見つかりません。" : "No videos found for that mood.");
-    return;
-  }
-  const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-  const videoId = extractVideoId(randomUrl);
-  if (!videoId) {
-    alert(currentLang === 'jp' ? "無効な動画URLです。" : "Invalid video URL.");
-    return;
-  }
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
-  const resultArea = document.getElementById("videoArea_choice");
-
-  resultArea.innerHTML = `<p data-jp="あなたにぴったりの音楽を占っています…" data-en="Fortune-telling your perfect music...">${currentLang === 'jp' ? "あなたにぴったりの音楽を占っています…" : "Fortune-telling your perfect music..."}</p>`;
-
-  setTimeout(() => {
-    resultArea.innerHTML = `
-      <div class="video-wrapper">
-        <iframe src="${embedUrl}" allow="autoplay" allowfullscreen playsinline></iframe>
-      </div>
-      <p data-jp="あなたの今日の音楽はこちら！" data-en="Your music for today is here!">${currentLang === 'jp' ? "あなたの今日の音楽はこちら！" : "Your music for today is here!"}</p>
-      <p>URL: <span id="copiableUrl">${randomUrl}</span></p>
-      <button class="btn" onclick="copyToLoop('${randomUrl}')" data-jp="この動画をSympho loopで使う" data-en="Use this video with Sympho loop">
-        ${currentLang === 'jp' ? "この動画をSympho loopで使う" : "Use this video with Sympho loop"}
-      </button>
-    `;
-    updateLanguage();
-    document.getElementById("videoArea_choice").scrollIntoView({ behavior: "smooth" });
-  }, 2000);
-}
-
-// ---------------- すべてのボタンに豪華ポップエフェクトを追加 ----------------
-document.querySelectorAll('.btn, .btnHW, #positionBtn, #langToggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.classList.remove('pop'); // 念のため一度削除
-    void btn.offsetWidth; // reflowでアニメーションをリセット
-    btn.classList.add('pop');
-  });
-});
-
-</script>
+    document.querySelectorAll('#videoArea_choice .btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const choiceWrapper = document.getElementById('choiceWrapper');
+        choiceWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${btn.dataset.video}?playsinline=1&fs=0" frameborder="0" allowfullscreen></iframe>`;
+        choiceWrapper.classList.remove('empty');
+      });
+    });
+  </script>
 </body>
 </html>
