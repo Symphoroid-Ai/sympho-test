@@ -269,7 +269,7 @@
     /* ---------------- 円形タイマー修正 ---------------- */
     .circular-timer {
       position: absolute;
-      inset: 0; /* fill the .video-wrapper area */
+      inset: 0; /* fill the .video-wrapper area so SVG can scale with it */
       display: none;
       z-index: 15;
       pointer-events: none;
@@ -292,9 +292,10 @@
     }
     .circular-timer .bg { stroke: rgba(255,255,255,0.2); }
     .circular-timer .progress { stroke: #ff0000; transition: stroke-dashoffset 1s linear; transform-origin: center; }
-    .circular-timer text {
+    /* Use a fixed SVG-unit font size so numbers render consistently and don't depend on viewport vw */
+    .circular-timer svg text {
       fill: white;
-      font-size: 6vw;
+      font-size: 14px; /* SVG units (viewBox) — tuned for clarity */
       text-anchor: middle;
       dominant-baseline: middle;
       transform: rotate(90deg); /* cancel SVG rotation */
@@ -462,6 +463,13 @@ function toggleTimerPosition() {
   positionIndex = (positionIndex + 1) % positions.length;
   const timer = document.getElementById("timerDisplay");
   timer.className = positions[positionIndex];
+  // If circular timer exists, update its position class as well
+  const circularTimer = document.getElementById("circularTimer");
+  if (circularTimer) {
+    // keep base class "circular-timer" and add position class
+    circularTimer.className = "circular-timer " + positions[positionIndex];
+  }
+
   const posLabels = currentLang === 'jp'
     ? ["左上","右上","左下","右下","中央"]
     : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"];
@@ -481,7 +489,16 @@ function toggleTimerType() {
       createCircularTimer();
       circularTimer = document.getElementById("circularTimer"); // ← 作成後に再取得
     }
-    circularTimer.style.display = "block";
+    // Ensure circular timer uses current position class (so "center" works)
+    circularTimer.className = "circular-timer " + positions[positionIndex];
+    circularTimer.style.display = "flex";
+    // initialize text immediately
+    const circularText = document.getElementById("circularTimerText");
+    if (circularText) {
+      const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
+      const secs = String(remainingTime % 60).padStart(2, '0');
+      circularText.textContent = `${mins}:${secs}`;
+    }
   } else {
     numericTimer.style.display = remainingTime>0 ? "block" : "none";
     if(circularTimer) circularTimer.style.display = "none";
@@ -492,12 +509,14 @@ function createCircularTimer(){
   const wrapper = document.querySelector("#loop .video-wrapper");
   const div = document.createElement("div");
   div.id = "circularTimer";
-  div.className = "circular-timer";
+  // include current position class so it aligns with position toggles
+  div.className = "circular-timer " + positions[positionIndex];
   // Use viewBox so SVG scales with container. r = 52 for clear padding.
+  // set text font-size via SVG attribute (viewBox units) for consistent rendering
   div.innerHTML = `<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet">
     <circle class="bg" cx="60" cy="60" r="52" stroke-width="6"></circle>
     <circle class="progress" cx="60" cy="60" r="52" stroke-width="6"></circle>
-    <text x="60" y="68" id="circularTimerText">00:00</text>
+    <text x="60" y="62" id="circularTimerText" font-size="14">00:00</text>
   </svg>`;
   wrapper.appendChild(div);
 
@@ -510,6 +529,15 @@ function createCircularTimer(){
   // store circumference for later use
   div.dataset.circumference = circ;
   div.dataset.r = r;
+
+  // ensure initial stroke widths/appearance (optional but stabilizes rendering)
+  const bg = div.querySelector('.bg');
+  if(bg) {
+    bg.setAttribute('stroke-width', 6);
+  }
+  if(progress) {
+    progress.setAttribute('stroke-width', 6);
+  }
 }
 
 function updateTimerDisplay(){
@@ -522,11 +550,12 @@ function updateTimerDisplay(){
     const circ = parseFloat(circular.dataset.circumference) || parseFloat(circle.style.strokeDasharray) || 314;
     // progress as fraction (0..1) completed
     const progressFraction = (total - remainingTime) / total;
-    const offset = Math.max(0, circ * (1 - progressFraction)); // dashoffset where 0 = full circle
+    // strokeDashoffset: circ when 0% completed, 0 when 100% completed
+    const offset = Math.max(0, circ * (1 - progressFraction));
     circle.style.strokeDashoffset = offset;
     const mins = String(Math.floor(remainingTime/60)).padStart(2,'0');
     const secs = String(remainingTime%60).padStart(2,'0');
-    text.textContent = `${mins}:${secs}`;
+    if(text) text.textContent = `${mins}:${secs}`;
   } else {
     const timerDisplay = document.getElementById("timerDisplay");
     const mins = String(Math.floor(remainingTime/60)).padStart(2,'0');
@@ -595,13 +624,15 @@ if (isCircular) {
   let circularTimer = document.getElementById("circularTimer");
   if (!circularTimer) createCircularTimer();
   circularTimer = document.getElementById("circularTimer");
+  // ensure it uses the current position class
+  circularTimer.className = "circular-timer " + positions[positionIndex];
   circularTimer.style.display = "flex";
 
   // 円形タイマーのテキストを初期化
   const circularText = document.getElementById("circularTimerText");
   const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
   const secs = String(remainingTime % 60).padStart(2, '0');
-  circularText.textContent = `${mins}:${secs}`;
+  if (circularText) circularText.textContent = `${mins}:${secs}`;
 
   // 円形タイマーのゲージもリセット (use stored circumference)
   const progressCircle = circularTimer.querySelector(".progress");
@@ -675,8 +706,10 @@ function startTimer(totalTime) {
   isPlaying = true;
   clearInterval(timerInterval);
 
+  // Immediately update display so user sees initial time without waiting 1s
+  updateTimerDisplay();
+
   timerInterval = setInterval(() => {
-    updateTimerDisplay();  // ← ここで常に表示更新
     if (--remainingTime < 0) {
       clearInterval(timerInterval);
       if (isCircular) {
@@ -687,7 +720,9 @@ function startTimer(totalTime) {
       }
       if (ytPlayer?.stopVideo) ytPlayer.stopVideo();
       isPlaying = false;
+      return;
     }
+    updateTimerDisplay();  // ← 常に表示更新
   }, 1000);
 }
 
@@ -711,6 +746,13 @@ function resetLoop() {
   document.getElementById("timerDisplay").textContent = "";
   document.getElementById("timerDisplay").style.display = "none";
   document.getElementById("ytPlayer").innerHTML = "";
+
+  // hide and remove circular timer if present
+  const circ = document.getElementById("circularTimer");
+  if (circ) {
+    circ.style.display = "none";
+    circ.remove();
+  }
   
 }
 
