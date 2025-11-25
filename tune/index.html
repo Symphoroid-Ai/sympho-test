@@ -279,9 +279,9 @@
     }
     /* SVG scales with the video area; we'll set a max-size so it never overflows excessively */
     .circular-timer svg {
-      width: 80%;      /* relative to video size */
+      width: 60%;      /* relative to video size */
       height: auto;
-      max-width: 700px;
+      max-width: 500px;
       transform: rotate(-90deg);
       overflow: visible;
       display: block;
@@ -295,7 +295,7 @@
     /* Use a fixed SVG-unit font size so numbers render consistently and don't depend on viewport vw */
     .circular-timer svg text {
       fill: white;
-      font-size: 14px; /* SVG units (viewBox) — tuned for clarity */
+      font-size: 6vw; /* SVG units (viewBox) — tuned for clarity */
       text-anchor: middle;
       dominant-baseline: middle;
       transform: rotate(90deg); /* cancel SVG rotation */
