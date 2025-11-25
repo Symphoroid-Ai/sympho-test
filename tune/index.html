@@ -14,10 +14,12 @@
       background-color:  #0d1b2a;
       color: white;
     }
+
     header, section {
       padding: 2em;
       text-align: center;
     }
+
     h1 {
       font-size: clamp(1.5rem, 5vw, 3rem);
     }
@@ -48,98 +50,328 @@
       position: relative;
       z-index: 1;
     }
+    /* ---------------- クリック時の軽い反応 ---------------- */
     .btn:active{
       transform: scale(1.05);
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
     }
+
+    /* ---------------- ポップエフェクトクラス ---------------- */
     .btn.pop {
       animation: popGlow 0.25s ease forwards;
     }
+
+    /* ---------------- ポップ＋光＋色変化アニメーション ---------------- */
     @keyframes popGlow {
-      0% {transform: scale(1); box-shadow: 0 0 0 rgba(255, 255, 255, 0); background-color: inherit; color: inherit;}
-      30% {transform: scale(1.3); box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.5);}
-      60% {transform: scale(1.1); box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 188, 212, 0.4); background-color: #00e0ff; color: #fff;}
-      100% {transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); background-color: #00bcd4; color: white;}
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        background-color: inherit;
+        color: inherit;
+      }
+      30% {
+        transform: scale(1.3);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.5);
+      }
+      60% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 188, 212, 0.4);
+        background-color: #00e0ff;
+        color: #fff;
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255,255,255,0);
+        background-color: #00bcd4; /* btn用 */
+        color: white;
+      }
+
     }
-    iframe { display: block; border: none; }
-    #videoArea_loop { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-    section h2 { font-size: clamp(1rem, 5vw, 1.5rem); margin-bottom: 20px; }
-    .section-button { padding: 12px 25px; font-weight: bold; color: white; background-color: #FF0000; text-decoration: none; border-radius: 6px; }
-    header { background-color: #EAEEF6; color: #01BEE3; }
-    .sns-links a { color: #7FDBFF; text-decoration: none; font-size: 32px; margin: 0 10px; }
-    .sns-links a:hover { color: #00bcd4; }
-    .footer-links { margin: 0 5px; text-decoration: none; color: inherit; font-size: 0.9rem; }
-    .footer-links:hover { text-decoration: underline; }
-    footer { text-align: center; padding: 20px; }
-    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+    iframe {
+      display: block;
+      border: none;
+    }
+
+    #videoArea_loop {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    section h2 {
+      font-size: clamp(1rem, 5vw, 1.5rem);
+      margin-bottom: 20px;
+    }
+
+    .section-button {
+      padding: 12px 25px;
+      font-weight: bold;
+      color: white;
+      background-color: #FF0000;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    header {
+      background-color: #EAEEF6;
+      color: #01BEE3;
+    }
+
+    .sns-links a {
+      color: #7FDBFF;
+      text-decoration: none;
+      font-size: 32px;
+      margin: 0 10px;      
+    }
+
+    .sns-links a:hover {
+      color: #00bcd4; /* ホバー時に少し強めのシアンに */
+    }
+
+    .footer-links {
+      margin: 0 5px;
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.9rem;
+    }
+
+    .footer-links:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+/*
+    #timerDisplay {
+      position: absolute;
+      background: rgba(0,0,0,0.6);
+      font-size: 2em;
+      color: white;
+      z-index: 10;
+      pointer-events: none;
+    }
+*/
     #timerDisplay {
       position: absolute;
       font-size: 2em;
       color: #ffffff;
       z-index: 10;
       pointer-events: none;
-      text-shadow: 0 0 10px rgba(200, 230, 255, 0.9), 0 0 18px rgba(120, 180, 255, 0.6);
+      text-shadow:
+          0 0 10px rgba(200, 230, 255, 0.9),
+          0 0 18px rgba(120, 180, 255, 0.6);
+      /* --- ガラス風カード（Glassmorphism） --- */
       background: rgba(255, 255, 255, 0.12);
       border-radius: 12px;
       padding: 0.35em 0.7em;
       backdrop-filter: blur(12px);
-      box-shadow: 0 0 18px rgba(255, 255, 255, 0.45), 0 0 30px rgba(135, 206, 250, 0.35), 0 6px 25px rgba(0, 0, 0, 0.45);
+
+      /* --- 青 + 銀の軽いグロー --- */
+      box-shadow:
+        0 0 18px rgba(255, 255, 255, 0.45),   /* 白い光を強める */
+        0 0 30px rgba(135, 206, 250, 0.35),   /* 青い柔らかい光 */
+        0 6px 25px rgba(0, 0, 0, 0.45);       /* 影を強調して浮かせる */
     }
-    header img { max-width: 600px; width: 80%; height: auto; display: block; margin: 0 auto; }
-    .responsive-img { max-width: 600px; width: 80%; height: auto; display: block; margin: 0 auto; }    
+
+    header img {
+      max-width: 600px;     /* 最大幅を指定 */
+      width: 80%;           /* 親要素に対して最大80%に縮小可 */
+      height: auto;         /* 縦横比を保持 */
+      display: block;       /* レイアウト安定化（必要に応じて） */
+      margin: 0 auto;       /* 中央寄せ */
+    }
+
+    .responsive-img {
+      max-width: 600px;
+      width: 80%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }    
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
     .bottom-left { bottom: 10px; left: 10px; }
     .bottom-right { bottom: 10px; right: 10px; }
     .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .loop-controls { display: flex; flex-direction: column; align-items: center; gap: 1em; }
-    .upper-controls { display: flex; flex-direction: column; align-items: center; gap: 0.5em; }
-    .lower-controls { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 0.5em; margin-top: 1em; }
-    .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5em; margin-top: 0.5em; }
-    #videoArea_choice { scroll-margin-top: 80px; }
-    .video-wrapper { position: relative; width: 100%; max-width: 800px; padding-bottom: 56.25%; margin: 1em auto 0; height: 0; overflow: hidden; scroll-margin-top: 80px; }
-    .lower-controls { margin-top: 1em; }
-    .video-wrapper.empty { padding-bottom: 0; height: 0; min-height: 0; margin: 0; }
-    .time-input { display: flex; align-items: center; gap: 0.5em; }
-    .time-input input { padding: 0.5em; width: 100px; }
 
-    /* ---------------- 円形タイマー修正 ---------------- */
+    .loop-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1em;
+    }
+
+    .upper-controls {
+      display: flex;
+      flex-direction: column; /* 縦並び */
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .lower-controls {
+      display: flex;
+      flex-direction: row;    /* 横並び！ */
+      justify-content: center;
+      align-items: center;
+      gap: 0.5em;
+      margin-top: 1em;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5em;
+      margin-top: 0.5em;
+    }
+
+    #videoArea_choice {
+      scroll-margin-top: 80px; /* 上に入れたい余白の高さ */
+    }
+    
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      padding-bottom: 56.25%;
+      margin: 1em auto 0;
+      height: 0;
+      overflow: hidden;
+      scroll-margin-top: 80px; 
+    }
+
+    .lower-controls {
+      margin-top: 1em;
+    }
+    .video-wrapper.empty {
+      padding-bottom: 0;
+      height: 0;
+      min-height: 0;
+      margin: 0;
+    }
+
+    .time-input {
+      display: flex;
+      align-items: center;
+      gap: 0.5em; /* 入力と「分」の間隔 */
+    }
+
+    .time-input input {
+      padding: 0.5em;
+      width: 100px;
+    }
+
     .circular-timer {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      max-width: 100%;
-      max-height: 100%;
-      pointer-events: none;
-      display: none;
+      width: 120px;
+      height: 120px;
       z-index: 15;
+      pointer-events: none;
+      display: none;      
     }
+
     .circular-timer svg {
       width: 100%;
       height: 100%;
       transform: rotate(-90deg);
     }
+
     .circular-timer circle {
       fill: none;
-      stroke-width: 3%;
+      stroke-width: 10;
       stroke-linecap: round;
     }
-    .circular-timer .bg { stroke: rgba(255,255,255,0.2); }
-    .circular-timer .progress { stroke: #ff0000; stroke-dasharray: 314; stroke-dashoffset: 314; transition: stroke-dashoffset 1s linear; }
-    .circular-timer text {
-      fill: white;
-      font-size: 6vw;
-      text-anchor: middle;
-      dominant-baseline: middle;
-      transform: rotate(90deg);
-      transform-origin: center;
-      pointer-events: none;
+
+    .circular-timer .bg {
+      stroke: rgba(255,255,255,0.2);
     }
 
+    .circular-timer .progress {
+      stroke: #ff0000;
+      stroke-dasharray: 314; /* 2πr (r=50) */
+      stroke-dashoffset: 314;
+      transition: stroke-dashoffset 1s linear;
+    }
 
+    .circular-timer text { 
+      fill: white; 
+      font-size: 20px; 
+      text-anchor: middle; 
+      dominant-baseline: middle; 
+      transform: rotate(90deg); /* SVG全体の-90度を打ち消す */
+      transform-origin: 60px 60px; /* SVG中心を基準 */
+    }
+
+/* ▼ 円形タイマー：動画プレイヤーを全面覆うサイズに変更 
+.circular-timer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;      /* ← 動画全体を覆う 
+  height: 100%;     /* ← 動画全体を覆う 
+  transform: translate(-50%, -50%);
+  z-index: 15;
+  pointer-events: none;
+  display: none;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: visible;
+}
+
+/* SVGが中央で最大化されるように 
+.circular-timer svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* 進行方向を上にする 
+}
+
+/* 円の見た目 
+.circular-timer circle {
+  fill: none;
+  stroke-width: 3%; /* ← 動画サイズに比例して変化する 
+  stroke-linecap: round;
+}
+
+/* 背景の円 
+.circular-timer .bg {
+  stroke: rgba(255,255,255,0.25);
+}
+
+/* 進行する円 
+.circular-timer .progress {
+  stroke: #ff0000;
+  stroke-dasharray: 1000;      /* 大きく広げても途切れないように 
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* 中央の時間テキスト 
+.circular-timer text { 
+  fill: white; 
+  font-size: 6vw;    /* ← 画面サイズ比例で自動で大きくなる 
+  text-anchor: middle; 
+  dominant-baseline: middle; 
+  transform: rotate(90deg);      /* SVG全体の -90° を打ち消す 
+  transform-origin: center;
+  pointer-events: none;
+}    
+*/
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
