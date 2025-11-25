@@ -198,6 +198,8 @@
     .bottom-left { bottom: 10px; left: 10px; }
     .bottom-right { bottom: 10px; right: 10px; }
     .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .simple-center { top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
 
     .loop-controls {
       display: flex;
@@ -277,6 +279,15 @@
       align-items: center;
       justify-content: center;
     }
+    /* 円形タイマーは動画中央に固定する */
+    #circularTimer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
     /* SVG scales with the video area; we'll set a max-size so it never overflows excessively */
     .circular-timer svg {
       width: 60%;      /* relative to video size */
