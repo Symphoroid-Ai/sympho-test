@@ -268,10 +268,10 @@
       width: 100px;
     }
 
-    /* ---------------- 円形タイマー修正 ---------------- */
+    /* ---------------- 円形タイマー修正 ---------------- 
     .circular-timer {
       position: absolute;
-      inset: 0; /* fill the .video-wrapper area so SVG can scale with it */
+      inset: 0; /* fill the .video-wrapper area so SVG can scale with it 
       display: none;
       z-index: 15;
       pointer-events: none;
@@ -279,7 +279,18 @@
       align-items: center;
       justify-content: center;
     }
-    /* 円形タイマーは動画中央に固定する */
+    */
+    .circular-timer {
+      position: absolute;
+      inset: 0; /* fill the .video-wrapper area */
+      display: none;
+      z-index: 15;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* 円形タイマーは動画中央に固定する
     #circularTimer {
       position: absolute;
       top: 50%;
@@ -287,8 +298,8 @@
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
-
-    /* SVG scales with the video area; we'll set a max-size so it never overflows excessively */
+ */
+    /* SVG scales with the video area; we'll set a max-size so it never overflows excessively 
     .circular-timer svg {
       width: 90%;
       height: auto;
@@ -296,14 +307,24 @@
       transform: rotate(-90deg);
       overflow: visible;
       display: block;
-    }
+    }*/
+    .circular-timer svg {
+      width: 90%;
+      height: auto;
+      max-width: 800px;
+      transform: rotate(-90deg);
+      overflow: visible;
+      display: block;
+    }  
+    
     .circular-timer circle {
       fill: none;
       stroke-linecap: round;
     }
     .circular-timer .bg { stroke: rgba(255,255,255,0.2); }
     .circular-timer .progress { stroke: #ff0000; transition: stroke-dashoffset 1s linear; transform-origin: center; }
-    /* Use a fixed SVG-unit font size so numbers render consistently and don't depend on viewport vw */
+ 
+    /* Use a fixed SVG-unit font size so numbers render consistently and don't depend on viewport vw 
     .circular-timer svg text {
       font-size: 150%  ;
       fill: white;
@@ -313,7 +334,18 @@
       transform-origin: center;
       pointer-events: none;
     }
-
+*/
+    
+    .circular-timer svg text {
+      fill: white;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      font-size: 8em; /* viewBox 0-100 に対して相対的に大きく */
+      font-weight: bold;
+      transform: rotate(90deg);
+      transform-origin: 50% 50%;
+      pointer-events: none;
+    }
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -523,14 +555,12 @@ function createCircularTimer(){
   div.id = "circularTimer";
   div.className = "circular-timer";
 
-  // 🔸 サイズを少し小さくした SVG（90x90）
+
   div.innerHTML = `
     <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <circle class="bg" cx="50" cy="50" r="50" stroke-width="6"></circle>
-      <circle class="progress" cx="50" cy="50" r="50" stroke-width="6"></circle>
-
-      <!-- 🔸 数字を確実に表示するために fill="white" を指定 -->
-      <text x="50" y="50" id="circularTimerText" text-anchor="middle" fill="white" font-size="16" font-weight="bold">
+      <circle class="bg" cx="50" cy="50" r="48" stroke-width="4"></circle>
+      <circle class="progress" cx="50" cy="50" r="48" stroke-width="4"></circle>
+      <text x="50" y="50" id="circularTimerText" font-size="8em" fill="white" font-weight="bold">
         00:00
       </text>
     </svg>
