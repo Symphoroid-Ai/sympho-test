@@ -271,7 +271,7 @@
     /* ---------------- 円形タイマー修正 ---------------- */
     .circular-timer {
       position: absolute;
-      inset: 0; /* fill the .video-wrapper area so SVG can scale with it 
+      inset: 0; /* fill the .video-wrapper area so SVG can scale with it */
       display: none;
       z-index: 15;
       pointer-events: none;
@@ -279,7 +279,6 @@
       align-items: center;
       justify-content: center;
     }
-    
     /* 円形タイマーは動画中央に固定する */
     #circularTimer {
       position: absolute;
@@ -304,10 +303,9 @@
     }
     .circular-timer .bg { stroke: rgba(255,255,255,0.2); }
     .circular-timer .progress { stroke: #ff0000; transition: stroke-dashoffset 1s linear; transform-origin: center; }
- 
     /* Use a fixed SVG-unit font size so numbers render consistently and don't depend on viewport vw */
     .circular-timer svg text {
-      font-size: 8em  ;
+      font-size: 150%  ;
       fill: white;
       text-anchor: middle;
       dominant-baseline: middle;
@@ -315,7 +313,7 @@
       transform-origin: center;
       pointer-events: none;
     }
-    
+
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -528,13 +526,14 @@ function createCircularTimer(){
 
   div.innerHTML = `
     <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-       <circle class="bg" cx="50" cy="50" r="50" stroke-width="6"></circle>
-       <circle class="progress" cx="50" cy="50" r="50" stroke-width="6"></circle>
-       <!-- 🔸 数字を確実に表示するために fill="white" を指定 -->
-       <text x="50" y="50" id="circularTimerText" text-anchor="middle" fill="white" font-size="16" font-weight="bold">
-       00:00 
-      </text> 
-    </svg> ;
+      <circle class="bg" cx="50" cy="50" r="50" stroke-width="6"></circle>
+      <circle class="progress" cx="50" cy="50" r="50" stroke-width="6"></circle>
+
+      <!-- 🔸 数字を確実に表示するために fill="white" を指定 -->
+      <text x="50" y="50" id="circularTimerText" text-anchor="middle" fill="white" font-size="16" font-weight="bold">
+        00:00
+      </text>
+    </svg>
   `;
   wrapper.appendChild(div);
 
