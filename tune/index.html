@@ -147,6 +147,7 @@
       padding: 20px;
     }
 
+    /* ensure any iframe inside .video-wrapper fills the area */
     .video-wrapper iframe {
       position: absolute;
       top: 0;
@@ -154,16 +155,7 @@
       width: 100%;
       height: 100%;
     }
-/*
-    #timerDisplay {
-      position: absolute;
-      background: rgba(0,0,0,0.6);
-      font-size: 2em;
-      color: white;
-      z-index: 10;
-      pointer-events: none;
-    }
-*/
+
     #timerDisplay {
       position: absolute;
       font-size: 2em;
@@ -274,104 +266,41 @@
       width: 100px;
     }
 
+    /* ---------------- 円形タイマー修正 ---------------- */
     .circular-timer {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 120px;
-      height: 120px;
+      inset: 0; /* fill the .video-wrapper area */
+      display: none;
       z-index: 15;
       pointer-events: none;
-      display: none;      
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
+    /* SVG scales with the video area; we'll set a max-size so it never overflows excessively */
     .circular-timer svg {
-      width: 100%;
-      height: 100%;
+      width: 80%;      /* relative to video size */
+      height: auto;
+      max-width: 700px;
       transform: rotate(-90deg);
+      overflow: visible;
+      display: block;
     }
-
     .circular-timer circle {
       fill: none;
-      stroke-width: 10;
       stroke-linecap: round;
     }
-
-    .circular-timer .bg {
-      stroke: rgba(255,255,255,0.2);
+    .circular-timer .bg { stroke: rgba(255,255,255,0.2); }
+    .circular-timer .progress { stroke: #ff0000; transition: stroke-dashoffset 1s linear; transform-origin: center; }
+    .circular-timer text {
+      fill: white;
+      font-size: 6vw;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      transform: rotate(90deg); /* cancel SVG rotation */
+      transform-origin: center;
+      pointer-events: none;
     }
-
-    .circular-timer .progress {
-      stroke: #ff0000;
-      stroke-dasharray: 314; /* 2πr (r=50) */
-      stroke-dashoffset: 314;
-      transition: stroke-dashoffset 1s linear;
-    }
-
-    .circular-timer text { 
-      fill: white; 
-      font-size: 20px; 
-      text-anchor: middle; 
-      dominant-baseline: middle; 
-      transform: rotate(90deg); /* SVG全体の-90度を打ち消す */
-      transform-origin: 60px 60px; /* SVG中心を基準 */
-    }
-
-/* ▼ 円形タイマー：動画プレイヤーを全面覆うサイズに変更 
-.circular-timer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;      /* ← 動画全体を覆う 
-  height: 100%;     /* ← 動画全体を覆う 
-  transform: translate(-50%, -50%);
-  z-index: 15;
-  pointer-events: none;
-  display: none;
-  max-width: 100%;
-  max-height: 100%;
-  overflow: visible;
-}
-
-/* SVGが中央で最大化されるように 
-.circular-timer svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg); /* 進行方向を上にする 
-}
-
-/* 円の見た目 
-.circular-timer circle {
-  fill: none;
-  stroke-width: 3%; /* ← 動画サイズに比例して変化する 
-  stroke-linecap: round;
-}
-
-/* 背景の円 
-.circular-timer .bg {
-  stroke: rgba(255,255,255,0.25);
-}
-
-/* 進行する円 
-.circular-timer .progress {
-  stroke: #ff0000;
-  stroke-dasharray: 1000;      /* 大きく広げても途切れないように 
-  stroke-dashoffset: 1000;
-  transition: stroke-dashoffset 1s linear;
-}
-
-/* 中央の時間テキスト 
-.circular-timer text { 
-  fill: white; 
-  font-size: 6vw;    /* ← 画面サイズ比例で自動で大きくなる 
-  text-anchor: middle; 
-  dominant-baseline: middle; 
-  transform: rotate(90deg);      /* SVG全体の -90° を打ち消す 
-  transform-origin: center;
-  pointer-events: none;
-}    
-*/
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -564,20 +493,36 @@ function createCircularTimer(){
   const div = document.createElement("div");
   div.id = "circularTimer";
   div.className = "circular-timer";
-  div.innerHTML = `<svg>
-    <circle class="bg" cx="60" cy="60" r="50"></circle>
-    <circle class="progress" cx="60" cy="60" r="50"></circle>
-    <text x="50%" y="50%" id="circularTimerText">00:00</text>
+  // Use viewBox so SVG scales with container. r = 52 for clear padding.
+  div.innerHTML = `<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet">
+    <circle class="bg" cx="60" cy="60" r="52" stroke-width="6"></circle>
+    <circle class="progress" cx="60" cy="60" r="52" stroke-width="6"></circle>
+    <text x="60" y="68" id="circularTimerText">00:00</text>
   </svg>`;
   wrapper.appendChild(div);
+
+  // compute circumference and set stroke-dasharray/offset for progress circle
+  const progress = div.querySelector('.progress');
+  const r = parseFloat(progress.getAttribute('r'));
+  const circ = 2 * Math.PI * r;
+  progress.style.strokeDasharray = circ;
+  progress.style.strokeDashoffset = circ; // start as empty
+  // store circumference for later use
+  div.dataset.circumference = circ;
+  div.dataset.r = r;
 }
 
 function updateTimerDisplay(){
   if(isCircular){
-    const circle = document.querySelector(".circular-timer .progress");
+    const circular = document.getElementById("circularTimer");
+    if(!circular) return;
+    const circle = circular.querySelector(".progress");
     const text = document.getElementById("circularTimerText");
     const total = parseInt(document.getElementById("duration").value,10)*60 || 1;
-    const offset = 314*(remainingTime/total);
+    const circ = parseFloat(circular.dataset.circumference) || parseFloat(circle.style.strokeDasharray) || 314;
+    // progress as fraction (0..1) completed
+    const progressFraction = (total - remainingTime) / total;
+    const offset = Math.max(0, circ * (1 - progressFraction)); // dashoffset where 0 = full circle
     circle.style.strokeDashoffset = offset;
     const mins = String(Math.floor(remainingTime/60)).padStart(2,'0');
     const secs = String(remainingTime%60).padStart(2,'0');
@@ -650,7 +595,7 @@ if (isCircular) {
   let circularTimer = document.getElementById("circularTimer");
   if (!circularTimer) createCircularTimer();
   circularTimer = document.getElementById("circularTimer");
-  circularTimer.style.display = "block";
+  circularTimer.style.display = "flex";
 
   // 円形タイマーのテキストを初期化
   const circularText = document.getElementById("circularTimerText");
@@ -658,10 +603,12 @@ if (isCircular) {
   const secs = String(remainingTime % 60).padStart(2, '0');
   circularText.textContent = `${mins}:${secs}`;
 
-  // 円形タイマーのゲージもリセット
+  // 円形タイマーのゲージもリセット (use stored circumference)
   const progressCircle = circularTimer.querySelector(".progress");
   const total = parseInt(document.getElementById("duration").value, 10) * 60 || 1;
-  progressCircle.style.strokeDashoffset = 314 * (remainingTime / total);
+  const circ = parseFloat(circularTimer.dataset.circumference) || 314;
+  progressCircle.style.strokeDashoffset = circ * 1; // start at 0 progress
+  progressCircle.style.strokeDasharray = circ;
 
 } else {
   // 数字タイマー
@@ -671,11 +618,6 @@ if (isCircular) {
   const secs = String(remainingTime % 60).padStart(2,'0');
   timerDisplay.textContent = `${mins}:${secs}`;
 }
-
- // timerDisplay.className = positions[positionIndex];
- // timerDisplay.style.display = remainingTime > 0 ? "block" : "none";
-
- // document.getElementById("timerDisplay").classList.add("active");
 
   const mins = Math.floor(remainingTime / 60);
   const secs = remainingTime % 60;
@@ -728,27 +670,6 @@ function playLoop() {
   isPaused = false;
 }
 
-/*
-function startTimer(totalTime) {
-  if (isPlaying) return;
-  isPlaying = true;
-  clearInterval(timerInterval);
-
-  const timerDisplay = document.getElementById("timerDisplay");
-  timerInterval = setInterval(() => {
-    const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
-    const secs = String(remainingTime % 60).padStart(2, '0');
-    timerDisplay.textContent = `${mins}:${secs}`;
-    if (--remainingTime < 0) {
-      clearInterval(timerInterval);
-      timerDisplay.textContent = currentLang === 'jp' ? "時間終了：" : "Time Up: ";
-      if (ytPlayer?.stopVideo) ytPlayer.stopVideo();
-      isPlaying = false;
-    }
-  }, 1000);
-}
-*/
-
 function startTimer(totalTime) {
   if (isPlaying) return;
   isPlaying = true;
@@ -759,7 +680,8 @@ function startTimer(totalTime) {
     if (--remainingTime < 0) {
       clearInterval(timerInterval);
       if (isCircular) {
-        document.getElementById("circularTimerText").textContent = "00:00";
+        const circEl = document.getElementById("circularTimerText");
+        if(circEl) circEl.textContent = "00:00";
       } else {
         document.getElementById("timerDisplay").textContent = currentLang==='jp' ? "時間終了" : "Time Up";
       }
