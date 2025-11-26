@@ -290,8 +290,10 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  width: 40%;   /* ★ 動画サイズに対して割合で縮む／拡大する */
+  height: auto;
   pointer-events: none;
+  display: none;
 }
 
 .circular-timer svg {
@@ -319,7 +321,7 @@
 }
 
 .circular-timer svg text {
-  font-size: 16; /* SVG viewBox 単位で指定 */
+  font-size: 3em; /* SVG viewBox 単位で指定 */
   fill: white;
   text-anchor: middle;
   dominant-baseline: middle;
@@ -544,7 +546,7 @@ function createCircularTimer(){
       <circle class="progress" cx="50" cy="50" r="50" stroke-width="6"></circle>
 
       <!-- 🔸 数字を確実に表示するために fill="white" を指定 -->
-      <text x="50" y="50" id="circularTimerText" text-anchor="middle" fill="white" font-size="16" font-weight="bold">
+      <text x="50" y="50" id="circularTimerText" text-anchor="middle" fill="white" font-size="3em" font-weight="bold">
         00:00
       </text>
     </svg>
