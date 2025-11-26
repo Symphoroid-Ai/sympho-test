@@ -262,27 +262,20 @@ function showSection(section) {
 
 function toggleTimerPosition() {
   positionIndex = (positionIndex + 1) % positions.length;
+  const timer = document.getElementById("timerDisplay");
+  timer.className = positions[positionIndex];
+  // If circular timer exists, update its position class as well
+  const circularTimer = document.getElementById("circularTimer");
+  if (circularTimer) {
+    // keep base class "circular-timer" and add position class
+    circularTimer.className = "circular-timer " + positions[positionIndex];
+  }
+
   const posLabels = currentLang === 'jp'
     ? ["左上","右上","左下","右下","中央"]
     : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"];
-  
-  const timerDisplay = document.getElementById("timerDisplay");
-  if (!isCircular) {
-    // シンプルタイマーの位置だけ変更
-    timerDisplay.className = positions[positionIndex];
-  }
-
-  document.getElementById("positionBtn").textContent =
-    (currentLang === 'jp' ? "表示位置：" : "Position: ") + posLabels[positionIndex];
-
-  // 円形タイマーは円形タイマー切替時のみ位置を変更
-  const circularTimer = document.getElementById("circularTimer");
-  if (circularTimer && isCircular) {
-    circularTimer.className = "circular-timer " + positions[positionIndex];
-  }
+  document.getElementById("positionBtn").textContent = (currentLang === 'jp' ? "表示位置：" : "Position: ") + posLabels[positionIndex];
 }
-
-
 function toggleTimerType() {
   isCircular = !isCircular;
   const btn = document.getElementById("timerTypeBtn");
