@@ -109,17 +109,29 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40%;      /* 円のサイズ */
+        width: 50%;      /* 円のサイズ */
+        max-width: 600px; /* 最大サイズを制限 */
         height: auto;
         z-index: 15;
         pointer-events: none;
     }
     #circularTimer { position:absolute; width:40%; height:auto; pointer-events:none; display:none; }
-    .circular-timer svg { width:90%; height:auto; max-width:800px; transform:rotate(-90deg); overflow:visible; display:block; }
+    .circular-timer svg { width:100%; height:auto; max-width:800px; transform:rotate(-90deg); overflow:visible; display:block; }
     .circular-timer circle { fill:none; stroke-linecap:round; }
     .circular-timer .bg { stroke:rgba(255,255,255,0.2); }
     .circular-timer .progress { stroke:#ff0000; transition: stroke-dashoffset 1s linear; transform-origin:50% 50%; }
-    .circular-timer svg text { font-size:3em; fill:white; text-anchor:middle; dominant-baseline:middle; transform:rotate(90deg); transform-origin:50% 50%; pointer-events:none; }
+    .circular-timer svg text {
+        font-size: 4em; /* 文字を大きく */
+        fill: white;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        transform: rotate(90deg);
+        transform-origin: 50% 50%;
+        pointer-events: none;
+        text-shadow:
+            2px 2px 6px rgba(0,0,0,0.6),  /* 黒でアウトライン風の影 */
+            0 0 10px rgba(255,255,255,0.3); /* 光のハイライトっぽく */
+    }
 
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -511,25 +523,24 @@ function startTimer(totalTime) {
   isPlaying = true;
   clearInterval(timerInterval);
 
-  // Immediately update display so user sees initial time without waiting 1s
-  updateTimerDisplay();
+  // タイマー初期表示
+  if (remainingTime < 0) remainingTime = 0;
+  updateTimerDisplay(); // ← ここで数字を最新に
 
   timerInterval = setInterval(() => {
     if (--remainingTime < 0) {
       clearInterval(timerInterval);
-      if (isCircular) {
-        const circEl = document.getElementById("circularTimerText");
-        if(circEl) circEl.textContent = "00:00";
-      } else {
-        document.getElementById("timerDisplay").textContent = currentLang==='jp' ? "時間終了" : "Time Up";
-      }
+      remainingTime = 0; // 0で固定
+      updateTimerDisplay(); // タイムアップ表示を更新
+
       if (ytPlayer?.stopVideo) ytPlayer.stopVideo();
       isPlaying = false;
       return;
     }
-    updateTimerDisplay();  // ← 常に表示更新
+    updateTimerDisplay();
   }, 1000);
 }
+
 
 
 function stopLoop() {
