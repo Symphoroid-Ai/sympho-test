@@ -101,7 +101,6 @@
     .time-input input { padding:0.5em; width:100px; }
 
     /* ---------------- 円形タイマー ---------------- */
-    /* ---------------- 円形タイマー ---------------- */
     .circular-timer {
       position: absolute;
       top: 50%;
@@ -352,11 +351,20 @@ function createCircularTimer(){
   div.className = "circular-timer";
 
  div.innerHTML = `
-  <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-    <circle class="bg" cx="100" cy="100" r="90" stroke-width="12"></circle>
-    <circle class="progress" cx="100" cy="100" r="90" stroke-width="12"></circle>
-
-    <text x="100" y="100" id="circularTimerText">
+  <svg viewBox="0 0 200 200">
+    <circle class="bg" cx="100" cy="100" r="90"
+        stroke="#ffffff33" stroke-width="12" fill="none" />
+    <circle class="progress" cx="100" cy="100" r="90"
+        stroke="#00eaff" stroke-width="12" fill="none"
+        transform="rotate(-90 100 100)"
+        style="stroke-linecap: round; transition: stroke-dashoffset 0.1s linear;" />
+    <text id="circularTimerText"
+          x="100" y="100"
+          text-anchor="middle"
+          dominant-baseline="central"
+          fill="white"
+          font-size="42"
+          style="text-shadow: 0 0 8px black;">
       00:00
     </text>
   </svg>
