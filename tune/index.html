@@ -353,8 +353,9 @@ function createCircularTimer(){
 
  div.innerHTML = `
   <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-    <circle class="bg" cx="100" cy="100" r="90" stroke-width="10"></circle>
-    <circle class="progress" cx="100" cy="100" r="90" stroke-width="10"></circle>
+    <circle class="bg" cx="100" cy="100" r="90" stroke-width="12"></circle>
+    <circle class="progress" cx="100" cy="100" r="90" stroke-width="12" 
+        transform="rotate(-90 100 100)" stroke="#ff0000" style="transition: stroke-dashoffset 1s linear;"></circle>
 
     <text x="100" y="100" id="circularTimerText">
       00:00
