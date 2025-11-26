@@ -106,9 +106,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 100%;
-  width: auto;        /* 円を大きく */
-  max-height: 400px;  /* 最大サイズ */
+  height: auto;
+  width: 50%;        /* 円を大きく */
+  max-width: 400px;  /* 最大サイズ */
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
@@ -126,10 +126,9 @@
 }
 
 .circular-timer svg {
-  width: auto;
-  height:100%;
-  max-height: 400px;
-  transform: rotate(-90deg) 
+  width: 50%;
+  height:auto%;
+  max-width: 400px; 
   overflow: visible;
   display: block;
   transform: none;   /* 回転を削除 */
@@ -155,7 +154,6 @@
   fill: white;
   text-anchor: middle;         /* 横中央 */
   dominant-baseline: middle;   /* 縦中央 */
-  transform: rotate(90deg);
   pointer-events: none;
   transform: none;             /* 回転削除 */
   text-shadow: 0 0 6px rgba(0,0,0,0.6),
