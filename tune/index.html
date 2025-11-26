@@ -101,64 +101,64 @@
     .time-input input { padding:0.5em; width:100px; }
 
     /* ---------------- 円形タイマー ---------------- */
-/* ---------------- 円形タイマー ---------------- */
-.circular-timer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: auto;
-  width: 50%;        /* 円を大きく */
-  max-width: 400px;  /* 最大サイズ */
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  z-index: 15;
-}
-
-#circularTimer {
-  position: absolute;
-  width: 100%;
-  height: auto;
-  pointer-events: none;
-  display: none;
-}
-
-.circular-timer svg {
-  width: 50%;
-  height:auto%;
-  max-width: 400px; 
-  overflow: visible;
-  display: block;
-  transform: none;   /* 回転を削除 */
-}
-
-.circular-timer circle {
-  fill: none;
-  stroke-linecap: round;
-}
-
-.circular-timer .bg {
-  stroke: rgba(255,255,255,0.2);
-}
-
-.circular-timer .progress {
-  stroke: #ff0000;
-  transition: stroke-dashoffset 1s linear;
-  transform-origin: 50% 50%;
-}
-
-.circular-timer svg text {
-  font-size: 2.5em;           /* 数字を大きく */
-  fill: white;
-  text-anchor: middle;         /* 横中央 */
-  dominant-baseline: middle;   /* 縦中央 */
-  pointer-events: none;
-  transform: none;             /* 回転削除 */
-  text-shadow: 0 0 6px rgba(0,0,0,0.6),
-               0 0 12px rgba(255,255,255,0.3); /* シャドウで見やすく */
-}
+    /* ---------------- 円形タイマー ---------------- */
+    .circular-timer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: auto;
+      width: 50%;        /* 円を大きく */
+      max-width: 600px;  /* 最大サイズ */
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 15;
+    }
+    
+    #circularTimer {
+      position: absolute;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      display: none;
+    }
+    
+    .circular-timer svg {
+      width: 50%;
+      height:auto%;
+      max-width: 600px; 
+      overflow: visible;
+      display: block;
+      transform: none;   /* 回転を削除 */
+    }
+    
+    .circular-timer circle {
+      fill: none;
+      stroke-linecap: round;
+    }
+    
+    .circular-timer .bg {
+      stroke: rgba(255,255,255,0.2);
+    }
+    
+    .circular-timer .progress {
+      stroke: #ff0000;
+      transition: stroke-dashoffset 1s linear;
+      transform-origin: 50% 50%;
+    }
+    
+    .circular-timer svg text {
+      font-size: 2.5em;           /* 数字を大きく */
+      fill: white;
+      text-anchor: middle;         /* 横中央 */
+      dominant-baseline: middle;   /* 縦中央 */
+      pointer-events: none;
+      transform: none;             /* 回転削除 */
+      text-shadow: 0 0 6px rgba(0,0,0,0.6),
+                   0 0 12px rgba(255,255,255,0.3); /* シャドウで見やすく */
+    }
 
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -354,8 +354,7 @@ function createCircularTimer(){
  div.innerHTML = `
   <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
     <circle class="bg" cx="100" cy="100" r="90" stroke-width="12"></circle>
-    <circle class="progress" cx="100" cy="100" r="90" stroke-width="12" 
-        transform="rotate(-90 100 100)" stroke="#ff0000" style="transition: stroke-dashoffset 1s linear;"></circle>
+    <circle class="progress" cx="100" cy="100" r="90" stroke-width="12"></circle>
 
     <text x="100" y="100" id="circularTimerText">
       00:00
