@@ -534,14 +534,13 @@ function createCircularTimer(){
   div.id = "circularTimer";
   div.className = "circular-timer";
 
-
   div.innerHTML = `
-    <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <circle class="bg" cx="50" cy="50" r="50" stroke-width="6"></circle>
-      <circle class="progress" cx="50" cy="50" r="50" stroke-width="6"></circle>
+    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+      <circle class="bg" cx="100" cy="100" r="90" stroke-width="10"></circle>
+      <circle class="progress" cx="100" cy="100" r="90" stroke-width="10"></circle>
 
       <!-- 🔸 数字を確実に表示するために fill="white" を指定 -->
-      <text x="50" y="50" id="circularTimerText" text-anchor="middle" fill="white" font-size="3em" font-weight="bold">
+      <text x="100" y="100" id="circularTimerText" text-anchor="middle" fill="white" font-size="3em" font-weight="bold">
         00:00
       </text>
     </svg>
