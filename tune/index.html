@@ -271,7 +271,7 @@
  /* ---------------- 円形タイマー修正 ---------------- */
 .circular-timer {
   position: absolute;
-  inset: 0;
+  inset: 0; /* fill the .video-wrapper area */
   display: none;
   z-index: 15;
   pointer-events: none;
@@ -280,14 +280,7 @@
   justify-content: center;
 }
 
-#circularTimer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
+/* SVG scales with the video area; set max-size */
 .circular-timer svg {
   width: 90%;
   height: auto;
@@ -297,31 +290,27 @@
   display: block;
 }
 
+/* 円の円周 */
 .circular-timer circle {
   fill: none;
   stroke-linecap: round;
 }
+.circular-timer .bg { stroke: rgba(255,255,255,0.2); }
+.circular-timer .progress { stroke: #ff0000; transition: stroke-dashoffset 1s linear; transform-origin: center; }
 
-.circular-timer .bg {
-  stroke: rgba(255,255,255,0.2);
-}
-
-.circular-timer .progress {
-  stroke: #ff0000;
-  transition: stroke-dashoffset 1s linear;
-  transform-origin: 50% 50%;
-}
-
+/* 文字を常に中央にフィットさせる */
 .circular-timer svg text {
-  font-size: 16; /* SVG viewBox 単位で指定 */
   fill: white;
   text-anchor: middle;
   dominant-baseline: middle;
+  font-size: 8em; /* viewBox 0-100 に対して相対的に大きく */
+  font-weight: bold;
   transform: rotate(90deg);
   transform-origin: 50% 50%;
   pointer-events: none;
 }
 
+/* 親 flex があるので中央揃えが効く */
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
