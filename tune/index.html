@@ -114,7 +114,7 @@
       left: 50%;
       height: auto;
       width: 50%;        /* ベース値（JSで上書き可能） */
-      max-width: 600px;  /* 最大サイズ（保険） */
+      max-width: 1000px;  /* 最大サイズ（保険） */
       transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
@@ -134,10 +134,10 @@
     .circular-timer svg {
       width: 50%;
       height: auto;
-      max-width: 600px;
+      max-width: 1000px;
       overflow: visible;
       display: block;
-      transform: none;
+
     }
 
     .circular-timer circle {
@@ -250,7 +250,7 @@
 </footer>
 
 <script>
-/* ---------------- 既存のスクリプトはここから（パート2,3の内容を統合） ---------------- */
+
 let ytPlayer, timerInterval;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
@@ -374,6 +374,7 @@ function createCircularTimer(){
           dominant-baseline="central"
           fill="white"
           font-size="42"
+          transform="rotate(0 100 100)"
           style="text-shadow: 0 0 8px black;">
       00:00
     </text>
@@ -438,7 +439,8 @@ function adjustTimerSizes() {
   // 円形：動画高さの 60% を直径に（調整可）
   const circEl = document.getElementById("circularTimer");
   if(circEl) {
-    const size = Math.max(48, Math.min(h * 0.6, 0.9 * rect.width)); // 最小48px、最大は幅の90%を上限
+//    const size = Math.max(48, Math.min(h * 1.0, 0.95 * rect.width)); // 最小48px、最大は幅の90%を上限
+    const size = h*1.8;
     circEl.style.width = size + "px";
     circEl.style.height = size + "px";
 
@@ -453,7 +455,8 @@ function adjustTimerSizes() {
     // progress circle stroke width also can be scaled:
     const progress = circEl.querySelector('.progress');
     const bg = circEl.querySelector('.bg');
-    const stroke = Math.max(6, Math.round(size * 0.06)); // 6px min
+  //const stroke = Math.max(6, Math.round(size * 0.06)); // 6px min
+    const stroke = 15;
     if(progress) progress.setAttribute('stroke-width', stroke);
     if(bg) bg.setAttribute('stroke-width', Math.max( stroke, stroke + 2 ));
     
