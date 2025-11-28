@@ -72,9 +72,11 @@
     .footer-links:hover { text-decoration: underline; }
     footer { text-align: center; padding: 20px; }
     .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-/*    #timerDisplay {
+
+    /* シンプルタイマー（レイアウトは保持） - font-size は JS が上書きします */
+    #timerDisplay {
       position: absolute;
-      font-size: 2em;
+      /* font-size を CSS だけに頼らない（JSで動画高さ基準に設定） */
       color: #ffffff;
       z-index: 10;
       pointer-events: none;
@@ -83,30 +85,13 @@
       border-radius: 12px;
       padding: 0.35em 0.7em;
       backdrop-filter: blur(12px);
-      box-shadow:0 0 18px rgba(255,255,255,0.45),0 0 30px rgba(135,206,250,0.35),0 6px 25px rgba(0,0,0,0.45);
+      box-shadow:
+        0 0 18px rgba(255,255,255,0.45),
+        0 0 30px rgba(135,206,250,0.35),
+        0 6px 25px rgba(0,0,0,0.45);
+      /* 中央表示時の transform は class .center で付与 */
     }
-    */
-    #timerDisplay {
-  position: absolute;
-  
-  /* ← ここを動画サイズに応じて可変に */
-  font-size: min(10vw, 10vh, 200px); 
 
-  color: #ffffff;
-  z-index: 10;
-  pointer-events: none;
-  text-shadow:0 0 10px rgba(200,230,255,0.9),0 0 18px rgba(120,180,255,0.6);
-
-  background: rgba(255,255,255,0.12);
-  border-radius: 12px;
-  padding: 0.35em 0.7em;
-
-  backdrop-filter: blur(12px);
-  box-shadow:
-    0 0 18px rgba(255,255,255,0.45),
-    0 0 30px rgba(135,206,250,0.35),
-    0 6px 25px rgba(0,0,0,0.45);
-}
     header img, .responsive-img { max-width:600px; width:80%; height:auto; display:block; margin:0 auto; }
     .top-left { top: 10px; left: 10px; }
     .top-right { top: 10px; right: 10px; }
@@ -121,14 +106,15 @@
     .video-wrapper.empty { padding-bottom:0; height:0; min-height:0; margin:0; }
     .time-input { display:flex; align-items:center; gap:0.5em; }
     .time-input input { padding:0.5em; width:100px; }
+
     /* ---------------- 円形タイマー ---------------- */
     .circular-timer {
       position: absolute;
       top: 50%;
       left: 50%;
       height: auto;
-      width: 50%;        /* 円を大きく */
-      max-width: 600px;  /* 最大サイズ */
+      width: 50%;        /* ベース値（JSで上書き可能） */
+      max-width: 600px;  /* 最大サイズ（保険） */
       transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
@@ -136,7 +122,7 @@
       pointer-events: none;
       z-index: 15;
     }
-    
+
     #circularTimer {
       position: absolute;
       width: 100%;
@@ -144,40 +130,39 @@
       pointer-events: none;
       display: none;
     }
-    
+
     .circular-timer svg {
       width: 50%;
-      height:auto%;
-      max-width: 600px; 
+      height: auto;
+      max-width: 600px;
       overflow: visible;
       display: block;
-      transform: none;   /* 回転を削除 */
+      transform: none;
     }
-    
+
     .circular-timer circle {
       fill: none;
       stroke-linecap: round;
     }
-    
+
     .circular-timer .bg {
-      stroke: rgba(255,255,255,0.5);
+      stroke: rgba(255,255,255,0.5); /* 濃くして目立たせる */
     }
-    
+
     .circular-timer .progress {
       stroke: #ff0000;
-      transition: stroke-dashoffset 1s linear;
+      transition: stroke-dashoffset 0.1s linear;
       transform-origin: 50% 50%;
     }
-    
+
     .circular-timer svg text {
-      font-size: 2.5em;           /* 数字を大きく */
+      font-size: 2.5em;
       fill: white;
-      text-anchor: middle;         /* 横中央 */
-      dominant-baseline: middle;   /* 縦中央 */
+      text-anchor: middle;
+      dominant-baseline: middle;
       pointer-events: none;
-      transform: none;             /* 回転削除 */
-      text-shadow: 0 0 6px rgba(0,0,0,0.6),
-                   0 0 12px rgba(255,255,255,0.3); /* シャドウで見やすく */
+      transform: none;
+      text-shadow: 0 0 6px rgba(0,0,0,0.6), 0 0 12px rgba(255,255,255,0.3);
     }
 
   </style>
@@ -265,6 +250,7 @@
 </footer>
 
 <script>
+/* ---------------- 既存のスクリプトはここから（パート2,3の内容を統合） ---------------- */
 let ytPlayer, timerInterval;
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
@@ -275,6 +261,7 @@ const positions = ["top-left", "top-right", "bottom-left", "bottom-right", "cent
 let positionIndex = 0;
 
 let currentLang = localStorage.getItem('lang') || 'jp'; // ← localStorageから読み込み
+let moodVideos = {}; // fetch後に埋まる
 
 document.addEventListener("DOMContentLoaded", () => {
   // 保存されていた時間を復元
@@ -359,6 +346,8 @@ function toggleTimerType() {
       const secs = String(remainingTime % 60).padStart(2, '0');
       circularText.textContent = `${mins}:${secs}`;
     }
+    // make sure sizes match player
+    adjustTimerSizes();
   } else {
     numericTimer.style.display = remainingTime>0 ? "block" : "none";
     if(circularTimer) circularTimer.style.display = "none";
@@ -374,10 +363,10 @@ function createCircularTimer(){
  div.innerHTML = `
   <svg viewBox="0 0 200 200">
     <circle class="bg" cx="100" cy="100" r="90"
-        stroke="#ffffff33" stroke-widt15" fill="none" />
+        stroke="#ffffff33" stroke-width="15" fill="none" />
     <circle class="progress" cx="100" cy="100" r="90"
         stroke="#00eaff" stroke-width="15" fill="none"
-
+        
         style="stroke-linecap: round; transition: stroke-dashoffset 0.1s linear;" />
     <text id="circularTimerText"
           x="100" y="100"
@@ -394,7 +383,7 @@ function createCircularTimer(){
 
   // circumference 計算
   const progress = div.querySelector('.progress');
-  const r = parseFloat(progress.getAttribute('r')); // 38
+  const r = parseFloat(progress.getAttribute('r')) || 90;
   const circ = 2 * Math.PI * r;
   progress.style.strokeDasharray = circ;
   progress.style.strokeDashoffset = circ;
@@ -402,7 +391,7 @@ function createCircularTimer(){
   div.dataset.circumference = circ;
   div.dataset.r = r;
 
-  // ensure initial stroke widths/appearance (optional but stabilizes rendering)
+  // ensure initial stroke widths/appearance
   const bg = div.querySelector('.bg');
   if(bg) {
     bg.setAttribute('stroke-width', 15);
@@ -410,6 +399,9 @@ function createCircularTimer(){
   if(progress) {
     progress.setAttribute('stroke-width', 15);
   }
+
+  // after creating, size it to video
+  adjustTimerSizes();
 }
 
 function updateTimerDisplay(){
@@ -436,6 +428,55 @@ function updateTimerDisplay(){
   }
 }
 
+// サイズ調整：動画エリアの高さを基準に円形とシンプルタイマーを合わせる
+function adjustTimerSizes() {
+  const wrapper = document.querySelector("#loop .video-wrapper");
+  if(!wrapper) return;
+  const rect = wrapper.getBoundingClientRect();
+  const h = rect.height || (wrapper.clientHeight || 0);
+
+  // 円形：動画高さの 60% を直径に（調整可）
+  const circEl = document.getElementById("circularTimer");
+  if(circEl) {
+    const size = Math.max(48, Math.min(h * 0.6, 0.9 * rect.width)); // 最小48px、最大は幅の90%を上限
+    circEl.style.width = size + "px";
+    circEl.style.height = size + "px";
+
+    // SVG内の文字サイズを動画に応じて調整（比率は好みで調整）
+    const txt = circEl.querySelector('#circularTimerText');
+    if(txt) {
+      // font-size in SVG units: scale by size / viewBox(200)
+      const fontPx = Math.round(size * 0.22); // 調整係数
+      txt.setAttribute('font-size', fontPx);
+    }
+
+    // progress circle stroke width also can be scaled:
+    const progress = circEl.querySelector('.progress');
+    const bg = circEl.querySelector('.bg');
+    const stroke = Math.max(6, Math.round(size * 0.06)); // 6px min
+    if(progress) progress.setAttribute('stroke-width', stroke);
+    if(bg) bg.setAttribute('stroke-width', Math.max( stroke, stroke + 2 ));
+    
+    // recalc circumference (if r changed in logic we keep r constant=90 in viewBox; strokeDash uses r from SVG)
+    const r = parseFloat(progress.getAttribute('r')) || 90;
+    const circ = 2 * Math.PI * r;
+    progress.style.strokeDasharray = circ;
+    // Update dashoffset according to remainingTime if running
+    if(typeof remainingTime === 'number') {
+      const total = parseInt(document.getElementById("duration").value,10)*60 || 1;
+      const progressFraction = (total - remainingTime) / total;
+      progress.style.strokeDashoffset = Math.max(0, circ * (1 - progressFraction));
+    }
+  }
+
+  // シンプルタイマー：動画高さの 12% をフォントサイズに
+  const simple = document.getElementById("timerDisplay");
+  if(simple) {
+    const fontPx = Math.round(h * 0.12);
+    simple.style.fontSize = Math.max(12, Math.min(fontPx, 0.25 * rect.width)) + "px"; // 最小12px, 最大は幅の25%
+  }
+}
+
 // YouTube APIが既にロード済みかチェックし、playerReadyを設定
 function checkYTApiReady() {
   if (window.YT && window.YT.Player) {
@@ -450,6 +491,8 @@ function checkYTApiReady() {
 window.onYouTubeIframeAPIReady = function() {
   playerReady = true;
   console.log("YouTube IFrame API ready (callback).");
+  // If player exists, we might want to adjust sizes once it's ready
+  setTimeout(adjustTimerSizes, 300);
 };
 
 function loadVideo() {
@@ -513,6 +556,9 @@ if (isCircular) {
   progressCircle.style.strokeDashoffset = circ * 1; // start at 0 progress
   progressCircle.style.strokeDasharray = circ;
 
+  // サイズを合わせる
+  adjustTimerSizes();
+
 } else {
   // 数字タイマー
   timerDisplay.className = positions[positionIndex];
@@ -520,6 +566,9 @@ if (isCircular) {
   const mins = String(Math.floor(remainingTime / 60)).padStart(2,'0');
   const secs = String(remainingTime % 60).padStart(2,'0');
   timerDisplay.textContent = `${mins}:${secs}`;
+
+  // サイズ合わせ（シンプルタイマー）
+  adjustTimerSizes();
 }
 
   const mins = Math.floor(remainingTime / 60);
@@ -535,6 +584,8 @@ if (isCircular) {
         onReady: event => {
           event.target.unMute();
           event.target.cueVideoById(videoId);
+          // プレイヤー高さが確定したらサイズ調整
+          setTimeout(adjustTimerSizes, 300);
         },
         onStateChange: evt => {
           if (evt.data === YT.PlayerState.ENDED) {
@@ -551,6 +602,8 @@ if (isCircular) {
     });
   } else if (ytPlayer && playerReady) {
     ytPlayer.cueVideoById(videoId);
+    // 動画切り替え後にサイズ更新
+    setTimeout(adjustTimerSizes, 300);
   } else {
     console.log("YouTube Player not ready yet.");
   }
@@ -684,6 +737,11 @@ document.querySelectorAll('.btn, .btnHW, #positionBtn, #langToggle').forEach(btn
     void btn.offsetWidth; // reflowでアニメーションをリセット
     btn.classList.add('pop');
   });
+});
+
+// window resize -> 調整
+window.addEventListener('resize', () => {
+  adjustTimerSizes();
 });
 
 </script>
