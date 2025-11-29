@@ -116,6 +116,7 @@
       width: 50%;        /* ベース値（JSで上書き可能） */
       max-width: 1000px;  /* 最大サイズ（保険） */
       transform: translate(-50%, -50%);
+ 
       display: flex;
       align-items: center;
       justify-content: center;
@@ -137,7 +138,7 @@
       max-width: 1000px;
       overflow: visible;
       display: block;
-
+      transform: rotate(-90deg);
     }
 
     .circular-timer circle {
@@ -369,12 +370,12 @@ function createCircularTimer(){
         
         style="stroke-linecap: round; transition: stroke-dashoffset 0.1s linear;" />
     <text id="circularTimerText"
-          x="100" y="100"
+          x="50%" y="50%"
           text-anchor="middle"
           dominant-baseline="central"
           fill="white"
           font-size="42"
-          transform="rotate(0 100 100)"
+          transform="rotate(90 100 100)"
           style="text-shadow: 0 0 8px black;">
       00:00
     </text>
