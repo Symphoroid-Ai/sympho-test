@@ -216,6 +216,17 @@
     <span data-jp="分" data-en="min">分</span>
   </div>
   
+  <div class="time-input">
+    <input type="number" id="breakDuration" placeholder="休憩" value="5">
+    <span data-jp="分休憩" data-en="min break">分休憩</span>
+  </div>
+
+<label style="margin-top:10px;">
+  <input type="checkbox" id="pomodoroMode">
+  <span data-jp="ポモドーロモード" data-en="Pomodoro Mode">ポモドーロモード</span>
+</label>
+
+<div id="phaseDisplay" style="margin-top:10px; font-size:1.1em;"></div> 
   <div class="btn-group">
     <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
     <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
@@ -253,6 +264,12 @@
 <script>
 
 let ytPlayer, timerInterval;
+
+let pomodoroMode = false;
+let currentPhase = "focus";
+let focusDuration = 0;
+let breakDuration = 0;
+
 let remainingTime = 0;
 let isPaused = false, isPlaying = false;
 let playerReady = false;
@@ -327,7 +344,7 @@ function toggleTimerPosition(){
 function toggleTimerType() {
   isCircular = !isCircular;
   const btn = document.getElementById("timerTypeBtn");
-  btn.textContent = (isCircular ? (currentLang==='jp'?"体感タイマー":"Circular") : (currentLang==='jp'?"シンプルタイマー":"Simple Timer"));
+  btn.textContent = (isCircular ? (currentLang==='jp'?"体感タイマー":"Progress Circle") : (currentLang==='jp'?"シンプルタイマー":"Simple Timer"));
 
   const numericTimer = document.getElementById("timerDisplay");
   let circularTimer = document.getElementById("circularTimer"); // ← ここで毎回取得
@@ -429,7 +446,30 @@ function updateTimerDisplay(){
     timerDisplay.textContent = `${mins}:${secs}`;
   }
 }
+function updatePhaseDisplay() {
 
+  const phaseDisplay = document.getElementById("phaseDisplay");
+
+  if (!pomodoroMode) {
+    phaseDisplay.textContent = "";
+    return;
+  }
+
+  if (currentPhase === "focus") {
+
+    phaseDisplay.textContent =
+      currentLang === "jp"
+        ? "🌌 集中時間"
+        : "🌌 Focus Time";
+
+  } else {
+
+    phaseDisplay.textContent =
+      currentLang === "jp"
+        ? "☕ 休憩時間"
+        : "☕ Break Time";
+  }
+}
 // サイズ調整：動画エリアの高さを基準に円形とシンプルタイマーを合わせる
 function adjustTimerSizes() {
   const wrapper = document.querySelector("#loop .video-wrapper");
@@ -529,6 +569,17 @@ if (minutes <= 0) {
   
   // タイマー初期化
   remainingTime = minutes * 60;
+
+  pomodoroMode = document.getElementById("pomodoroMode").checked;
+  focusDuration = minutes * 60;
+  const breakInput = parseInt(
+    document.getElementById("breakDuration").value,
+    10
+  ) || 5;
+  breakDuration = breakInput * 60;
+  currentPhase = "focus";
+  updatePhaseDisplay();
+
   clearInterval(timerInterval);
   isCounting = false;
 
@@ -630,6 +681,7 @@ function playLoop() {
   isPaused = false;
 }
 
+/*
 function startTimer(totalTime) {
   if (isPlaying) return;
   isPlaying = true;
@@ -652,13 +704,58 @@ function startTimer(totalTime) {
     updateTimerDisplay();
   }, 1000);
 }
+*/
+function startTimer(totalTime) {
+  if (isPlaying) return;
+  isPlaying = true;
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    remainingTime--;
+    if (remainingTime < 0) {
+      // -------------------------
+      // ポモドーロモード
+      // -------------------------
+      if (pomodoroMode) {
+        if (currentPhase === "focus") {
+          currentPhase = "break";
+          remainingTime = breakDuration;
+          ytPlayer?.pauseVideo();
+        } 
+        else {
+          currentPhase = "focus";
+          remainingTime = focusDuration;
+          ytPlayer?.playVideo();
+        }
+        updatePhaseDisplay();
+        updateTimerDisplay();
+        return;
+      }
 
-
+      // -------------------------
+      // 通常モード
+      // -------------------------
+      clearInterval(timerInterval);
+      remainingTime = 0;
+      updateTimerDisplay();
+      ytPlayer?.stopVideo();
+      isPlaying = false;
+      return;
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
 
 function stopLoop() {
   ytPlayer?.pauseVideo();
   isPaused = true;
   isPlaying = false;
+  
+  currentPhase = "focus";
+  pomodoroMode = false;
+  document.getElementById("phaseDisplay").textContent = "";
+  document.getElementById("pomodoroMode").checked = false;
+
   clearInterval(timerInterval);
 }
 
