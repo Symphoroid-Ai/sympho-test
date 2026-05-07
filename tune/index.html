@@ -184,6 +184,7 @@
   <p data-jp="Focus your time. Tune your mind." data-en="Focus your time. Tune your mind."></p>
   <button class="btn" onclick="showSection('choice')" data-jp="気分で音楽を選ぶ" data-en="Pick music by mood"></button>
   <button class="btn" onclick="showSection('loop')" data-jp="動画にタイマーをつける" data-en="Attach timer to video"></button>
+  <button class="btn" onclick="showSection('focus')"data-jp="集中空間をつくる"data-en="Create a focus space"></button>
 </header>
 
 <section id="choice" style="display:none;">
@@ -205,10 +206,33 @@
 
 <section id="loop" style="display:none;">
   <img src="Sympholoop.png" alt="タイマー付き動画の例" class="responsive-img" />
-  <h2 data-jp="好きな動画を、う集中タイムに。" data-en="Turn your favorite videos into focus time."></h2>
+  <h2 data-jp="好きな動画を、集中タイムに。" data-en="Turn your favorite videos into focus time."></h2>
   <p data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。" data-en="Customize your work videos with a timer and loop playback."></p>
 
-<div class="upper-controls">
+  <div class="upper-controls">
+  <input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;" data-jp="YouTube動画のURLを入力" data-en="Enter YouTube video URL">
+  
+  <div class="time-input">
+    <input type="number" id="duration" placeholder="時間" value="10" data-jp="時間" data-en="Duration">
+    <span data-jp="分" data-en="min">分</span>
+  </div>
+  
+  <div id="phaseDisplay" style="margin-top:10px; font-size:1.1em;"></div> 
+  <div class="btn-group">
+    <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
+    <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
+    <button class="btn" onclick="toggleTimerType()" id="timerTypeBtn" data-jp="シンプルタイマー" data-en="Simple Timer"></button>
+    <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
+  </div>
+</div>
+</section>
+
+<section id="focus" style="display:none;">
+  <img src="Symphofocus.png" alt="タイマー付き動画の例" class="responsive-img" />
+  <h2 data-jp="集中と休憩を、心地よいリズムに。" Turn focus and breaks into a comfortable rhythm."></h2>
+  <p data-jp="お気に入りの動画とポモドーロタイマーで、自分だけの集中空間をつくります。" Create your own focus space with your favorite videos and a Pomodoro timer."></p>
+
+  <div class="upper-controls">
   <input type="text" id="ytUrl" placeholder="YouTube動画のURLを入力" style="width:80%; padding:0.5em;" data-jp="YouTube動画のURLを入力" data-en="Enter YouTube video URL">
   
   <div class="time-input">
@@ -221,19 +245,20 @@
     <span data-jp="分休憩" data-en="min break">分休憩</span>
   </div>
 
-<label style="margin-top:10px;">
+  <label style="margin-top:10px;">
   <input type="checkbox" id="pomodoroMode">
   <span data-jp="ポモドーロモード" data-en="Pomodoro Mode">ポモドーロモード</span>
-</label>
+  </label>
 
-<div id="phaseDisplay" style="margin-top:10px; font-size:1.1em;"></div> 
+  <div id="phaseDisplay" style="margin-top:10px; font-size:1.1em;"></div> 
   <div class="btn-group">
     <button class="btn" onclick="loadVideo()" data-jp="動画とタイマーをセット" data-en="Set Video & Timer"></button>
     <button class="btn" onclick="resetLoop()" data-jp="リセット" data-en="Reset"></button>
     <button class="btn" onclick="toggleTimerType()" id="timerTypeBtn" data-jp="シンプルタイマー" data-en="Simple Timer"></button>
     <button class="btn" onclick="toggleTimerPosition()" id="positionBtn" data-jp="表示位置：左上" data-en="Position: Top-Left"></button>
   </div>
-</div>
+  </div>
+</section>
 
 <div class="video-wrapper">
   <div id="ytPlayer"></div>
@@ -319,6 +344,7 @@ function updateLanguage() {
 function showSection(section) {
   document.getElementById("choice").style.display = section === "choice" ? "block" : "none";
   document.getElementById("loop").style.display = section === "loop" ? "block" : "none";
+  document.getElementById("focus").style.display = section === "focus" ? "block" : "none";
   setTimeout(() => {
     document.getElementById(section).scrollIntoView({ behavior: "smooth" });
   }, 100);
