@@ -307,7 +307,7 @@
       dominant-baseline: middle;
       pointer-events: none;
 
-      transform: rotate(90deg);
+/*    transform: rotate(90deg);*/
 
       text-shadow:
         0 0 6px rgba(0,0,0,0.6),
@@ -610,17 +610,6 @@
 
     </div>
 
-    <label>
-
-      <input
-        type="checkbox"
-        id="focus_pomodoroMode">
-
-      <span
-        data-jp="ポモドーロモード"
-        data-en="Pomodoro Mode">
-        ポモドーロモード
-      </span>
 
     </label>
 
@@ -845,7 +834,7 @@ function updateLanguage(){
   });
 
 }
-
+/*
 function showSection(section){
 
   document.getElementById("choice").style.display =
@@ -867,7 +856,81 @@ function showSection(section){
   }, 100);
 
 }
+*/
+function showSection(section){
 
+  // 表示切替
+  document.getElementById("choice").style.display =
+    section === "choice" ? "block" : "none";
+
+  document.getElementById("loop").style.display =
+    section === "loop" ? "block" : "none";
+
+  document.getElementById("focus").style.display =
+    section === "focus" ? "block" : "none";
+
+  // loop動画停止
+  if(section !== "loop"){
+
+    const loopState = appStates.loop;
+
+    if(loopState.ytPlayer){
+
+      loopState.ytPlayer.pauseVideo();
+
+    }
+
+    clearInterval(loopState.timerInterval);
+
+    loopState.isPlaying = false;
+
+  }
+
+  // focus動画停止
+  if(section !== "focus"){
+
+    const focusState = appStates.focus;
+
+    if(focusState.ytPlayer){
+
+      focusState.ytPlayer.pauseVideo();
+
+    }
+
+    clearInterval(focusState.timerInterval);
+
+    focusState.isPlaying = false;
+
+  }
+
+  // choice動画停止
+  if(section !== "choice"){
+
+    const choiceArea =
+      document.getElementById("videoArea_choice");
+
+    const iframe =
+      choiceArea.querySelector("iframe");
+
+    if(iframe){
+
+      iframe.src = "";
+
+    }
+
+  }
+
+  // スクロール
+  setTimeout(() => {
+
+    document.getElementById(section)
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+  }, 100);
+
+}
 function checkYTApiReady(){
 
   if(window.YT && window.YT.Player){
@@ -1026,14 +1089,14 @@ function createCircularTimer(mode){
 
       <text
         id="${mode}_circularTimerText"
-          x="50%" y="50%"
-          text-anchor="middle"
-          dominant-baseline="central"
-          fill="white"
-          font-size="42"
-          transform="rotate(90 100 100)"
-          style="text-shadow: 0 0 8px black;">
-          00:00
+        x="100"
+        y="100"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        fill="white"
+        font-size="42"
+        style="text-shadow: 0 0 8px black;">
+        00:00
       </text>
 
     </svg>
@@ -1050,6 +1113,16 @@ if(positions[appStates[mode].positionIndex] !== "center"){
 
   const progress =
     div.querySelector(".progress");
+  if(mode === "focus" && state.currentPhase === "break"){
+
+    progress.style.stroke = "#4da6ff";
+
+  }
+  else{
+
+    progress.style.stroke = "#ff0000";
+
+  }
 
   const r =
     parseFloat(progress.getAttribute("r"));
@@ -1222,8 +1295,7 @@ function loadVideo(mode){
 
   if(mode === "focus"){
 
-    state.pomodoroMode =
-      getEl(mode, "pomodoroMode").checked;
+    state.pomodoroMode = true;
 
     state.focusDuration =
       duration * 60;
@@ -1315,7 +1387,7 @@ function playLoop(mode){
 
       if(state.remainingTime <= 0){
 
-        if(mode === "focus" && state.pomodoroMode){
+        if(mode === "focus"){
 
           if(state.currentPhase === "focus"){
 
