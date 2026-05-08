@@ -1088,17 +1088,7 @@ if(positions[appStates[mode].positionIndex] !== "center"){
 
   const progress =
     div.querySelector(".progress");
-    
-  if(mode === "focus" && state.currentPhase === "break"){
 
-    progress.style.stroke = "#4da6ff";
-
-  }
-  else{
-
-    progress.style.stroke = "#ff0000";
-
-  }
   const r =
     parseFloat(progress.getAttribute("r"));
 
