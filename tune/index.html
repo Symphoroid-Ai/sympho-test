@@ -1198,44 +1198,12 @@ function updateTimerDisplay(mode){
 
     const progress =
       circle.querySelector(".progress");
-      
-      if(mode === "focus"){
 
-        if(state.currentPhase === "break"){
-          progress.style.stroke = "#4da6ff";
-        }
-        else{
-          progress.style.stroke = "#ff0000";
-        }
-
-      }
-      else{
-
-        progress.style.stroke = "#ff0000";
-
-      }      
-/*
     const total =
       mode === "focus"
       ? state.focusDuration
       : parseInt(getEl(mode, "duration").value, 10) * 60;
-*/
-    let total;
 
-    if(mode === "focus"){
-
-      total =
-        state.currentPhase === "break"
-        ? state.breakDuration
-        : state.focusDuration;
-
-    }
-    else{
-
-      total =
-        parseInt(getEl(mode, "duration").value, 10) * 60;
-
-    }
     const circ =
       parseFloat(circle.dataset.circumference);
 
