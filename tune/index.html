@@ -608,20 +608,6 @@
 
     </div>
 
-    <label>
-
-      <input
-        type="checkbox"
-        id="focus_pomodoroMode">
-
-      <span
-        data-jp="ポモドーロモード"
-        data-en="Pomodoro Mode">
-        ポモドーロモード
-      </span>
-
-    </label>
-
     <div id="focus_phaseDisplay"></div>
 
     <div class="btn-group">
@@ -846,6 +832,7 @@ function updateLanguage(){
 
 function showSection(section){
 
+  // 表示切替
   document.getElementById("choice").style.display =
     section === "choice" ? "block" : "none";
 
@@ -855,6 +842,58 @@ function showSection(section){
   document.getElementById("focus").style.display =
     section === "focus" ? "block" : "none";
 
+  // loop動画停止
+  if(section !== "loop"){
+
+    const loopState = appStates.loop;
+
+    if(loopState.ytPlayer){
+
+      loopState.ytPlayer.pauseVideo();
+
+    }
+
+    clearInterval(loopState.timerInterval);
+
+    loopState.isPlaying = false;
+
+  }
+
+  // focus動画停止
+  if(section !== "focus"){
+
+    const focusState = appStates.focus;
+
+    if(focusState.ytPlayer){
+
+      focusState.ytPlayer.pauseVideo();
+
+    }
+
+    clearInterval(focusState.timerInterval);
+
+    focusState.isPlaying = false;
+
+  }
+
+  // choice動画停止
+  if(section !== "choice"){
+
+    const choiceArea =
+      document.getElementById("videoArea_choice");
+
+    const iframe =
+      choiceArea.querySelector("iframe");
+
+    if(iframe){
+
+      iframe.src = "";
+
+    }
+
+  }
+
+  // スクロール
   setTimeout(() => {
 
     document.getElementById(section)
@@ -1221,8 +1260,7 @@ function loadVideo(mode){
 
   if(mode === "focus"){
 
-    state.pomodoroMode =
-      getEl(mode, "pomodoroMode").checked;
+    state.pomodoroMode = true;
 
     state.focusDuration =
       duration * 60;
@@ -1314,7 +1352,7 @@ function playLoop(mode){
 
       if(state.remainingTime <= 0){
 
-        if(mode === "focus" && state.pomodoroMode){
+        if(mode === "focus"){
 
           if(state.currentPhase === "focus"){
 
