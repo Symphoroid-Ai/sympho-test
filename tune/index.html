@@ -184,7 +184,7 @@
     .video-wrapper {
       position: relative;
       width: 100%;
-      max-width: 800px;
+
       padding-bottom: 56.25%;
       margin: auto;
       height: 0;
@@ -1010,10 +1010,14 @@ function createCircularTimer(mode){
 
       <text
         id="${mode}_circularTimerText"
-        x="100"
-        y="100"
-        font-size="42">
-        00:00
+          x="50%" y="50%"
+          text-anchor="middle"
+          dominant-baseline="central"
+          fill="white"
+          font-size="42"
+          transform="rotate(90 100 100)"
+          style="text-shadow: 0 0 8px black;">
+          00:00
       </text>
 
     </svg>
@@ -1373,6 +1377,7 @@ function resetLoop(mode){
     document.getElementById(`${mode}_circularTimer`);
 
   if(circle){
+    circle.style.display = "none";
     circle.remove();
   }
 
