@@ -251,21 +251,21 @@
         0 6px 25px rgba(0,0,0,0.45);
     }
 
-    .circular-timer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      height: auto;
-      width: 50%;        /* ベース値（JSで上書き可能） */
-      max-width: 1000px;  /* 最大サイズ（保険） */
-      transform: translate(-50%, -50%); 
+.circular-timer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: auto;
+  width: 50%;
+  max-width: 1000px;
+  transform: translate(-50%, -50%);
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      z-index: 15;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 15;
+}
 
     #circularTimer {
       position: absolute;
@@ -895,9 +895,21 @@ function toggleTimerPosition(mode){
   const timerDisplay =
     getEl(mode, "timerDisplay");
 
-  timerDisplay.className =
-    `timer-display ${positions[state.positionIndex]}`;
+timerDisplay.className =
+  `timer-display ${positions[state.positionIndex]}`;
 
+const circle =
+  document.getElementById(`${mode}_circularTimer`);
+
+if(circle){
+
+  circle.className = "circular-timer";
+
+  if(positions[state.positionIndex] !== "center"){
+    circle.classList.add(positions[state.positionIndex]);
+  }
+
+}
   const labels =
     currentLang === 'jp'
     ? ["左上","右上","左下","右下","中央"]
@@ -1022,7 +1034,13 @@ function createCircularTimer(mode){
 
   `;
 
-  wrapper.appendChild(div);
+wrapper.appendChild(div);
+
+if(positions[appStates[mode].positionIndex] !== "center"){
+  div.classList.add(
+    positions[appStates[mode].positionIndex]
+  );
+}
 
   const progress =
     div.querySelector(".progress");
