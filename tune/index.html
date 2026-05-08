@@ -1087,15 +1087,33 @@ if(positions[appStates[mode].positionIndex] !== "center"){
 }
 
   const progress =
-    div.querySelector(".progress");
+    circle.querySelector(".progress");
+
+  const total =
+    mode === "focus"
+      ? (
+          state.currentPhase === "break"
+            ? state.breakDuration
+            : state.focusDuration
+        )
+      : parseInt(getEl(mode, "duration").value, 10) * 60;
+
+  const circ =
+    parseFloat(circle.dataset.circumference);
+
+  const fraction =
+    (total - state.remainingTime) / total;
+
+  progress.style.strokeDashoffset =
+    Math.max(0, circ * (1 - fraction));
 
   if(mode === "focus" && state.pomodoroMode){
 
     if(state.currentPhase === "break"){
-      progress.style.stroke = "#4da6ff"; // 休憩＝青
+      progress.style.stroke = "#4da6ff";
     }
     else{
-      progress.style.stroke = "#ff0000"; // 集中＝赤
+      progress.style.stroke = "#ff0000";
     }
 
   }
