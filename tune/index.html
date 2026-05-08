@@ -1089,6 +1089,20 @@ if(positions[appStates[mode].positionIndex] !== "center"){
   const progress =
     div.querySelector(".progress");
 
+  if(mode === "focus" && state.pomodoroMode){
+
+    if(state.currentPhase === "break"){
+      progress.style.stroke = "#4da6ff"; // 休憩＝青
+    }
+    else{
+      progress.style.stroke = "#ff0000"; // 集中＝赤
+    }
+
+  }
+  else{
+    progress.style.stroke = "#ff0000";
+  }
+
   const r =
     parseFloat(progress.getAttribute("r"));
 
