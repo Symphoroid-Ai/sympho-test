@@ -257,15 +257,30 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 15;
-      display: none;
+      height: auto;
+      width: 50%;        /* ベース値（JSで上書き可能） */
+      max-width: 1000px;  /* 最大サイズ（保険） */
+      transform: translate(-50%, -50%); 
+
+      display: flex;
       align-items: center;
       justify-content: center;
+      pointer-events: none;
+      z-index: 15;
     }
 
+    #circularTimer {
+      position: absolute;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      display: none;
+    }    
+
     .circular-timer svg {
+      width: 50%;
+      height: auto;
+      max-width: 1000px;
       overflow: visible;
       display: block;
       transform: rotate(-90deg);
@@ -281,18 +296,20 @@
     }
 
     .circular-timer .progress {
-      stroke: #00eaff;
+      stroke: #ff0000;
       transition: stroke-dashoffset 0.1s linear;
+      transform-origin: 50% 50%;      
     }
 
-    .circular-timer text {
+    .circular-timer svg text {
+      font-size: 2.5em;
       fill: white;
       text-anchor: middle;
       dominant-baseline: middle;
-      transform: rotate(90deg);
-      text-shadow:
-        0 0 6px rgba(0,0,0,0.6),
-        0 0 12px rgba(255,255,255,0.3);
+      pointer-events: none;
+      transform: rotate(90deg)
+      text-shadow: 0 0 6px rgba(0,0,0,0.6), 0 0 12px rgba(255,255,255,0.3);
+
     }
 
   </style>
