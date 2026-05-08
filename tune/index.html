@@ -307,7 +307,7 @@
       dominant-baseline: middle;
       pointer-events: none;
 
-    transform: rotate(90deg);
+/*      transform: rotate(90deg);*/
 
       text-shadow:
         0 0 6px rgba(0,0,0,0.6),
@@ -610,6 +610,17 @@
 
     </div>
 
+    <label>
+
+      <input
+        type="checkbox"
+        id="focus_pomodoroMode">
+
+      <span
+        data-jp="ポモドーロモード"
+        data-en="Pomodoro Mode">
+        ポモドーロモード
+      </span>
 
     </label>
 
@@ -834,7 +845,7 @@ function updateLanguage(){
   });
 
 }
-/*
+
 function showSection(section){
 
   document.getElementById("choice").style.display =
@@ -856,81 +867,7 @@ function showSection(section){
   }, 100);
 
 }
-*/
-function showSection(section){
 
-  // 表示切替
-  document.getElementById("choice").style.display =
-    section === "choice" ? "block" : "none";
-
-  document.getElementById("loop").style.display =
-    section === "loop" ? "block" : "none";
-
-  document.getElementById("focus").style.display =
-    section === "focus" ? "block" : "none";
-
-  // loop動画停止
-  if(section !== "loop"){
-
-    const loopState = appStates.loop;
-
-    if(loopState.ytPlayer){
-
-      loopState.ytPlayer.pauseVideo();
-
-    }
-
-    clearInterval(loopState.timerInterval);
-
-    loopState.isPlaying = false;
-
-  }
-
-  // focus動画停止
-  if(section !== "focus"){
-
-    const focusState = appStates.focus;
-
-    if(focusState.ytPlayer){
-
-      focusState.ytPlayer.pauseVideo();
-
-    }
-
-    clearInterval(focusState.timerInterval);
-
-    focusState.isPlaying = false;
-
-  }
-
-  // choice動画停止
-  if(section !== "choice"){
-
-    const choiceArea =
-      document.getElementById("videoArea_choice");
-
-    const iframe =
-      choiceArea.querySelector("iframe");
-
-    if(iframe){
-
-      iframe.src = "";
-
-    }
-
-  }
-
-  // スクロール
-  setTimeout(() => {
-
-    document.getElementById(section)
-    .scrollIntoView({
-      behavior: "smooth"
-    });
-
-  }, 100);
-
-}
 function checkYTApiReady(){
 
   if(window.YT && window.YT.Player){
@@ -1113,16 +1050,6 @@ if(positions[appStates[mode].positionIndex] !== "center"){
 
   const progress =
     div.querySelector(".progress");
-  if(mode === "focus" && state.currentPhase === "break"){
-
-    progress.style.stroke = "#4da6ff";
-
-  }
-  else{
-
-    progress.style.stroke = "#ff0000";
-
-  }
 
   const r =
     parseFloat(progress.getAttribute("r"));
@@ -1194,7 +1121,8 @@ function adjustTimerSizes(mode){
 
 function updateTimerDisplay(mode){
 
-  const state = appStates[mode];
+  const state =
+    appStates[mode];
 
   const mins =
     String(Math.floor(state.remainingTime / 60))
@@ -1233,40 +1161,19 @@ function updateTimerDisplay(mode){
     const progress =
       circle.querySelector(".progress");
 
-    let total;
-
-    if(mode === "focus"){
-
-      total =
-        state.currentPhase === "break"
-        ? state.breakDuration
-        : state.focusDuration;
-
-      progress.style.stroke =
-        state.currentPhase === "break"
-        ? "#4da6ff"
-        : "#ff0000";
-
-    }
-    else{
-
-      total =
-        parseInt(getEl(mode, "duration").value, 10) * 60;
-
-      progress.style.stroke = "#ff0000";
-
-    }
+    const total =
+      mode === "focus"
+      ? state.focusDuration
+      : parseInt(getEl(mode, "duration").value, 10) * 60;
 
     const circ =
       parseFloat(circle.dataset.circumference);
 
     const fraction =
-      Math.max(0, Math.min(1,
-        state.remainingTime / total
-      ));
+      (total - state.remainingTime) / total;
 
     progress.style.strokeDashoffset =
-      circ * (1 - fraction);
+      Math.max(0, circ * (1 - fraction));
 
   }
 
@@ -1315,7 +1222,8 @@ function loadVideo(mode){
 
   if(mode === "focus"){
 
-    state.pomodoroMode = true;
+    state.pomodoroMode =
+      getEl(mode, "pomodoroMode").checked;
 
     state.focusDuration =
       duration * 60;
@@ -1407,7 +1315,7 @@ function playLoop(mode){
 
       if(state.remainingTime <= 0){
 
-        if(mode === "focus"){
+        if(mode === "focus" && state.pomodoroMode){
 
           if(state.currentPhase === "focus"){
 
