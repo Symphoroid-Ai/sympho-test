@@ -307,7 +307,7 @@
       dominant-baseline: middle;
       pointer-events: none;
 
-/*    transform: rotate(90deg);*/
+    transform: rotate(90deg);
 
       text-shadow:
         0 0 6px rgba(0,0,0,0.6),
@@ -1194,8 +1194,7 @@ function adjustTimerSizes(mode){
 
 function updateTimerDisplay(mode){
 
-  const state =
-    appStates[mode];
+  const state = appStates[mode];
 
   const mins =
     String(Math.floor(state.remainingTime / 60))
@@ -1234,19 +1233,40 @@ function updateTimerDisplay(mode){
     const progress =
       circle.querySelector(".progress");
 
-    const total =
-      mode === "focus"
-      ? state.focusDuration
-      : parseInt(getEl(mode, "duration").value, 10) * 60;
+    let total;
+
+    if(mode === "focus"){
+
+      total =
+        state.currentPhase === "break"
+        ? state.breakDuration
+        : state.focusDuration;
+
+      progress.style.stroke =
+        state.currentPhase === "break"
+        ? "#4da6ff"
+        : "#ff0000";
+
+    }
+    else{
+
+      total =
+        parseInt(getEl(mode, "duration").value, 10) * 60;
+
+      progress.style.stroke = "#ff0000";
+
+    }
 
     const circ =
       parseFloat(circle.dataset.circumference);
 
     const fraction =
-      (total - state.remainingTime) / total;
+      Math.max(0, Math.min(1,
+        state.remainingTime / total
+      ));
 
     progress.style.strokeDashoffset =
-      Math.max(0, circ * (1 - fraction));
+      circ * (1 - fraction);
 
   }
 
