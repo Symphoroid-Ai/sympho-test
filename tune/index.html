@@ -1195,7 +1195,7 @@ function updateTimerDisplay(mode){
 
     text.textContent =
       `${mins}:${secs}`;
-
+/*
     const progress =
       circle.querySelector(".progress");
 
@@ -1212,7 +1212,35 @@ function updateTimerDisplay(mode){
 
     progress.style.strokeDashoffset =
       Math.max(0, circ * (1 - fraction));
+*/
+    const progress =
+      circle.querySelector(".progress");
 
+    // focusの休憩時間だけ青にする
+    if(mode === "focus" && state.currentPhase === "break"){
+      progress.style.stroke = "#4da6ff";
+    }
+    else{
+      progress.style.stroke = "#ff0000";
+    }
+
+    const total =
+      mode === "focus"
+      ? (
+          state.currentPhase === "break"
+          ? state.breakDuration
+          : state.focusDuration
+        )
+      : parseInt(getEl(mode, "duration").value, 10) * 60;
+
+    const circ =
+      parseFloat(circle.dataset.circumference);
+
+    const fraction =
+      (total - state.remainingTime) / total;
+
+    progress.style.strokeDashoffset =
+      Math.max(0, circ * (1 - fraction));
   }
 
 }
