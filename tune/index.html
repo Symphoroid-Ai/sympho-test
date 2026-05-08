@@ -188,13 +188,16 @@
       aspect-ratio: 16 / 9;
       margin: auto;
       overflow: hidden;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .video-wrapper iframe,
     .video-wrapper > div {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
     }
@@ -251,36 +254,33 @@
         0 6px 25px rgba(0,0,0,0.45);
     }
 
-.circular-timer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: auto;
-  width: 50%;
-  max-width: 1000px;
-  transform: translate(-50%, -50%);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  z-index: 15;
-}
-
-    #circularTimer {
+    .circular-timer {
       position: absolute;
-      width: 100%;
-      height: auto;
+
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      width: 60%;
+      aspect-ratio: 1 / 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       pointer-events: none;
-      display: none;
-    }    
+      z-index: 15;
+    }
+
 
     .circular-timer svg {
-      width: 50%;
-      height: auto;
-      max-width: 1000px;
+      width: 100%;
+      height: 100%;
+
       overflow: visible;
       display: block;
+
       transform: rotate(-90deg);
     }
 
@@ -305,9 +305,12 @@
       text-anchor: middle;
       dominant-baseline: middle;
       pointer-events: none;
-      transform: rotate(90deg)
-      text-shadow: 0 0 6px rgba(0,0,0,0.6), 0 0 12px rgba(255,255,255,0.3);
 
+      transform: rotate(90deg);
+
+      text-shadow:
+        0 0 6px rgba(0,0,0,0.6),
+        0 0 12px rgba(255,255,255,0.3);
     }
 
   </style>
@@ -895,21 +898,24 @@ function toggleTimerPosition(mode){
   const timerDisplay =
     getEl(mode, "timerDisplay");
 
-timerDisplay.className =
-  `timer-display ${positions[state.positionIndex]}`;
+  timerDisplay.className =
+    `timer-display ${positions[state.positionIndex]}`;
 
-const circle =
-  document.getElementById(`${mode}_circularTimer`);
+  const circle =
+    document.getElementById(`${mode}_circularTimer`);
 
-if(circle){
+  if(circle){
 
-  circle.className = "circular-timer";
+    circle.className = "circular-timer";
 
-  if(positions[state.positionIndex] !== "center"){
-    circle.classList.add(positions[state.positionIndex]);
+    if(positions[state.positionIndex] !== "center"){
+      circle.classList.add(
+        positions[state.positionIndex]
+      );
+    }
+
   }
 
-}
   const labels =
     currentLang === 'jp'
     ? ["左上","右上","左下","右下","中央"]
@@ -921,7 +927,6 @@ if(circle){
       ? "表示位置："
       : "Position: ")
       + labels[state.positionIndex];
-
 }
 
 function toggleTimerType(mode){
@@ -1074,7 +1079,7 @@ function adjustTimerSizes(mode){
 
   if(circle){
 
-    const size = h * 1.8;
+    const size = Math.min(rect.width, rect.height) * 0.75;
 
     circle.style.width =
       size + "px";
@@ -1089,11 +1094,10 @@ function adjustTimerSizes(mode){
 
       txt.setAttribute(
         "font-size",
-        Math.round(size * 0.22)
+        Math.round(size * 0.14)
       );
 
     }
-
   }
 
   const timer =
