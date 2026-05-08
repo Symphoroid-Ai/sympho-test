@@ -1087,39 +1087,7 @@ if(positions[appStates[mode].positionIndex] !== "center"){
 }
 
   const progress =
-    circle.querySelector(".progress");
-
-  const total =
-    mode === "focus"
-      ? (
-          state.currentPhase === "break"
-            ? state.breakDuration
-            : state.focusDuration
-        )
-      : parseInt(getEl(mode, "duration").value, 10) * 60;
-
-  const circ =
-    parseFloat(circle.dataset.circumference);
-
-  const fraction =
-    (total - state.remainingTime) / total;
-
-  progress.style.strokeDashoffset =
-    Math.max(0, circ * (1 - fraction));
-
-  if(mode === "focus" && state.pomodoroMode){
-
-    if(state.currentPhase === "break"){
-      progress.style.stroke = "#4da6ff";
-    }
-    else{
-      progress.style.stroke = "#ff0000";
-    }
-
-  }
-  else{
-    progress.style.stroke = "#ff0000";
-  }
+    div.querySelector(".progress");
 
   const r =
     parseFloat(progress.getAttribute("r"));
@@ -1230,12 +1198,44 @@ function updateTimerDisplay(mode){
 
     const progress =
       circle.querySelector(".progress");
+      
+      if(mode === "focus"){
 
+        if(state.currentPhase === "break"){
+          progress.style.stroke = "#4da6ff";
+        }
+        else{
+          progress.style.stroke = "#ff0000";
+        }
+
+      }
+      else{
+
+        progress.style.stroke = "#ff0000";
+
+      }      
+/*
     const total =
       mode === "focus"
       ? state.focusDuration
       : parseInt(getEl(mode, "duration").value, 10) * 60;
+*/
+    let total;
 
+    if(mode === "focus"){
+
+      total =
+        state.currentPhase === "break"
+        ? state.breakDuration
+        : state.focusDuration;
+
+    }
+    else{
+
+      total =
+        parseInt(getEl(mode, "duration").value, 10) * 60;
+
+    }
     const circ =
       parseFloat(circle.dataset.circumference);
 
