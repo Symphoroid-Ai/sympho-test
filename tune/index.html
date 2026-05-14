@@ -170,13 +170,23 @@
       margin-top: 1em;
     }
 
-    .focus-time-row{
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      gap:24px;
-      flex-wrap:wrap;
-    }
+.focus-time-row{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:16px;
+  flex-wrap:nowrap;
+}
+
+.time-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+
+  min-width: 120px;
+  flex-shrink: 0;
+}
     .btn-group {
       flex-direction: row;
       flex-wrap: wrap;
@@ -187,10 +197,6 @@
       gap: 0.5em;
     }
 
-    .time-input input {
-      padding: 0.5em;
-      width: 100px;
-    }
 
     .video-wrapper {
       position: relative;
