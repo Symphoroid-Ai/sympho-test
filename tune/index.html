@@ -1232,7 +1232,8 @@ function createState() {
     pomodoroMode: false,
     currentPhase: "focus",
     focusDuration: 0,
-    breakDuration: 0
+    breakDuration: 0,
+    loopDuration: 0
 
   };
 
@@ -1713,12 +1714,14 @@ function updateTimerDisplay(mode){
           ? state.breakDuration
           : state.focusDuration
         )
+      : state.loopDuration;
+ /*     
 //      : parseInt(getEl(mode, "duration").value, 10) * 60;
         :parseInt(
         getEl(mode, "duration").dataset.value,
         10
       ) * 60
-
+*/
     const circ =
       parseFloat(circle.dataset.circumference);
 
@@ -1735,6 +1738,16 @@ function loadVideo(mode){
 
   const state =
     appStates[mode];
+
+  clearInterval(state.timerInterval);
+
+    state.isPlaying = false;
+    state.isPaused = false;
+
+    if(state.ytPlayer){
+      state.ytPlayer.pauseVideo();
+    }
+
 
   const url =
     getEl(mode, "ytUrl").value;
@@ -1775,23 +1788,38 @@ function loadVideo(mode){
   state.remainingTime =
     duration * 60;
 
+  if(mode === "loop"){
+    state.loopDuration =
+      duration * 60;
+  }
+
   if(mode === "focus"){
 
     state.pomodoroMode = true;
+
+    state.currentPhase = "focus";
 
     state.focusDuration =
       duration * 60;
 
 //    state.breakDuration =
 //      (parseInt(getEl(mode, "breakDuration").value, 10) || 5) * 60;
-      state.breakDuration =
-        (
-          parseInt(
-            getEl(mode, "breakDuration").dataset.value,
-            10
-          ) || 5
-        ) * 60;
+    state.breakDuration =
+      (
+        parseInt(
+          getEl(mode, "breakDuration").dataset.value,
+          10
+        ) || 5
+      ) * 60;
+    state.remainingTime =
+      state.focusDuration;
 
+    const circle =
+      document.querySelector(`#${mode}_circularTimer .progress`);
+
+    if(circle){
+      circle.style.stroke = "#ff0000";
+    }
   }
 
   updateTimerDisplay(mode);
