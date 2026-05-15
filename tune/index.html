@@ -1889,7 +1889,13 @@ function playLoop(mode){
 
   state.ytPlayer.unMute();
 
-  state.ytPlayer.playVideo();
+  if(!(mode === "focus" && state.currentPhase === "break")){
+    state.ytPlayer.playVideo();
+  }
+  else{
+    state.ytPlayer.playVideo();
+  }
+//  state.ytPlayer.playVideo();
 
   state.isPlaying = true;
 
