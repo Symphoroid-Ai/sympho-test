@@ -1878,6 +1878,7 @@ function loadVideo(mode){
 
 }
 
+/*
 function playLoop(mode){
 
   const state =
@@ -1903,7 +1904,33 @@ function playLoop(mode){
 
   state.timerInterval =
     setInterval(() => {
+*/
 
+  function playLoop(mode){
+
+    const state =
+      appStates[mode];
+
+    if(!state.ytPlayer){
+      return;
+    }
+
+    state.ytPlayer.unMute();
+
+    // focus休憩中は動画を再生しない
+    if(!(mode === "focus" && state.currentPhase === "break")){
+      state.ytPlayer.playVideo();
+    }
+
+    state.isPlaying = true;
+
+    if(state.timerInterval){
+      clearInterval(state.timerInterval);
+    }
+
+    state.timerInterval =
+      setInterval(() => {
+        
       state.remainingTime--;
 
       updateTimerDisplay(mode);
