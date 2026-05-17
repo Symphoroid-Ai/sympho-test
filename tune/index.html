@@ -654,6 +654,25 @@
     margin-top:0;
   }
 
+  .loop-running .upper-controls{
+    opacity:0;
+    visibility:hidden;
+    height:0;
+    overflow:hidden;
+    margin:0;
+    padding:0;
+  }
+
+  .loop-running .responsive-img,
+  .loop-running h2,
+  .loop-running p{
+    display:none;
+  }
+
+  .loop-running .video-wrapper{
+    margin-top:0;
+  }
+  
   .focus-running .responsive-img,
   .focus-running h2,
   .focus-running p{
@@ -2212,13 +2231,24 @@ function playLoop(mode){
     }
 
     state.isPlaying = true;
-
+/*
     if(mode === "focus"){
       document
         .getElementById("focus")
         .classList.add("focus-running");
     }    
+*/
+    if(mode === "focus"){
+      document
+        .getElementById("focus")
+        .classList.add("focus-running");
+    }
 
+    if(mode === "loop"){
+      document
+        .getElementById("loop")
+        .classList.add("loop-running");
+    }
     if(state.timerInterval){
       clearInterval(state.timerInterval);
     }
@@ -2291,6 +2321,7 @@ function stopLoop(mode){
   clearInterval(state.timerInterval);
 
   state.isPlaying = false;
+  
   if(mode === "focus"){
     document
       .getElementById("focus")
@@ -2299,6 +2330,12 @@ function stopLoop(mode){
     document
       .getElementById("focus_breakOverlay")
       ?.classList.remove("show");
+  }
+
+  if(mode === "loop"){
+    document
+      .getElementById("loop")
+      .classList.remove("loop-running");
   }
 }
 
@@ -2343,6 +2380,11 @@ function resetLoop(mode){
       .getElementById("focus_breakOverlay")
       ?.classList.remove("show");
   }
+  if(mode === "loop"){
+    document
+      .getElementById("loop")
+      .classList.remove("loop-running");
+  }  
 }
 
 fetch("videos.json")
