@@ -716,7 +716,7 @@
     backdrop-filter:blur(8px);
   }    
 
-  
+ /* 
   #focus_breakOverlay{
     position:absolute;
     inset:0;
@@ -734,6 +734,35 @@
       0 0 20px rgba(255,255,255,0.7),
       0 0 40px rgba(120,200,255,0.5);
   }
+*/
+#focus_breakOverlay{
+  position:absolute;
+
+  inset:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  pointer-events:none;
+
+  font-size:clamp(2rem, 6vw, 5rem);
+  font-weight:700;
+  letter-spacing:0.25em;
+
+  color:#bfe9ff;
+
+  text-shadow:
+    0 0 20px rgba(120,220,255,0.9),
+    0 0 40px rgba(120,220,255,0.5);
+
+  opacity:0;
+
+  transition:opacity 0.4s ease;
+
+  z-index:16;
+}
+
 
   #focus_breakOverlay.show{
     display:flex;
@@ -801,9 +830,9 @@
   <div class="mode-card">
 
     <div class="mode-title"
-      data-jp="🎵 Sympho Choice"
-      data-en="🎵 Sympho Choice">
-      🎵 Sympho Choice
+      data-jp="Sympho Choice"
+      data-en="Sympho Choice">
+      Sympho Choice
     </div>
 
     <div class="mode-desc"
@@ -825,9 +854,9 @@
   <div class="mode-card">
 
     <div class="mode-title"
-      data-jp="⏳ Sympho Loop"
-      data-en="⏳ Sympho Loop">
-      ⏳ Sympho Loop
+      data-jp="Sympho Loop"
+      data-en="Sympho Loop">
+      Sympho Loop
     </div>
 
     <div class="mode-desc"
@@ -849,9 +878,9 @@
   <div class="mode-card">
 
     <div class="mode-title"
-      data-jp="🧠 Sympho Focus"
-      data-en="🧠 Sympho Focus">
-      🧠 Sympho Focus
+      data-jp="Sympho Focus"
+      data-en="Sympho Focus">
+      Sympho Focus
     </div>
 
     <div class="mode-desc"
