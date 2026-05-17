@@ -735,33 +735,33 @@
       0 0 40px rgba(120,200,255,0.5);
   }
 */
-#focus_breakOverlay{
-  position:absolute;
+  #focus_breakOverlay{
+    position:absolute;
 
-  inset:0;
+    inset:0;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-  pointer-events:none;
+    pointer-events:none;
 
-  font-size:clamp(2rem, 6vw, 5rem);
-  font-weight:700;
-  letter-spacing:0.25em;
+    font-size:clamp(2rem, 6vw, 5rem);
+    font-weight:700;
+    letter-spacing:0.25em;
 
-  color:#bfe9ff;
+    color:#bfe9ff;
 
-  text-shadow:
-    0 0 20px rgba(120,220,255,0.9),
-    0 0 40px rgba(120,220,255,0.5);
+    text-shadow:
+      0 0 20px rgba(120,220,255,0.9),
+      0 0 40px rgba(120,220,255,0.5);
 
-  opacity:0;
+    opacity:0;
 
-  transition:opacity 0.4s ease;
+    transition:opacity 0.4s ease;
 
-  z-index:16;
-}
+    z-index:16;
+  }
 
 
   #focus_breakOverlay.show{
@@ -1807,6 +1807,7 @@ function createCircularTimer(mode){
         id="${mode}_circularTimerText"
         x="100"
         y="100"
+
         text-anchor="middle"
         dominant-baseline="middle"
         fill="white"
@@ -1948,11 +1949,20 @@ function updateTimerDisplay(mode){
 
   if(circle){
 
-    const text =
-      document.getElementById(`${mode}_circularTimerText`);
+  const text =
+    document.getElementById(`${mode}_circularTimerText`);
 
-    text.textContent =
-      `${mins}:${secs}`;
+  text.textContent =
+    `${mins}:${secs}`;
+
+  // 休憩中だけタイマー位置を下げる
+  if(mode === "focus" && state.currentPhase === "break"){
+    text.setAttribute("dy", "45");
+  }
+  else{
+    text.setAttribute("dy", "0");
+  }
+
     const progress =
       circle.querySelector(".progress");
 
@@ -1993,18 +2003,22 @@ function updateTimerDisplay(mode){
     const phase =
       document.getElementById("focus_phaseDisplay");
 
-    phase.textContent =
-      state.currentPhase === "focus"
-        ? (
-            currentLang === "jp"
-            ? "FOCUS"
-            : "FOCUS"
-          )
-        : (
-            currentLang === "jp"
-            ? "BREAK"
-            : "BREAK"
-          );
+      phase.textContent =
+        state.currentPhase === "focus"
+          ? "FOCUS"
+          : "BREAK";
+
+      const breakOverlay =
+        document.getElementById("focus_breakOverlay");
+
+      if(breakOverlay){
+
+        breakOverlay.style.opacity =
+          state.currentPhase === "break"
+            ? "1"
+            : "0";
+
+      }
 
   }
 }
