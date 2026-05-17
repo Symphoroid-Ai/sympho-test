@@ -594,7 +594,152 @@
       display:block;
     }
 
-  </style>
+  .mode-buttons{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    margin-top:2rem;
+  }
+
+  .mode-card{
+    width:min(320px, 90%);
+    padding:18px;
+    border-radius:20px;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(14px);
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+      0 10px 30px rgba(0,0,0,0.18);
+
+    transition:0.25s;
+  }
+
+  .mode-card:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+      0 0 25px rgba(120,220,255,0.3);
+  }
+
+  .mode-title{
+    font-size:1.1rem;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+
+  .mode-desc{
+    font-size:0.9rem;
+    opacity:0.8;
+  }
+
+  .focus-setup{
+    transition:0.35s ease;
+  }
+
+  .focus-running .focus-setup{
+    opacity:0;
+    visibility:hidden;
+    height:0;
+    overflow:hidden;
+    margin:0;
+    padding:0;
+  }
+
+  .focus-running .video-wrapper{
+    margin-top:0;
+  }
+
+  .focus-running .responsive-img,
+  .focus-running h2,
+  .focus-running p{
+    display:none;
+  }
+
+  #focus_phaseDisplay{
+    font-size:1.1rem;
+    font-weight:700;
+    letter-spacing:2px;
+
+    margin:14px 0;
+
+    color:#bfe9ff;
+
+    text-shadow:
+      0 0 10px rgba(120,220,255,0.8);
+  }
+
+  .video-wrapper{
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:
+      0 20px 50px rgba(0,0,0,0.45);
+  }
+
+  .btn{
+    min-width:220px;
+    min-height:48px;
+
+    border-radius:14px;
+
+    font-weight:600;
+  }
+
+  .lower-controls .btn{
+    min-width:120px;
+  }
+
+  .sns-links{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+  }
+
+  .sns-links a{
+    width:48px;
+    height:48px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(8px);
+  }    
+
+  
+  #focus_breakOverlay{
+    position:absolute;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    font-size:clamp(2rem,6vw,4rem);
+    font-weight:700;
+    letter-spacing:0.25em;
+    color:white;
+    background:rgba(10,20,35,0.55);
+    backdrop-filter:blur(10px);
+    z-index:30;
+    text-shadow:
+      0 0 20px rgba(255,255,255,0.7),
+      0 0 40px rgba(120,200,255,0.5);
+  }
+
+  #focus_breakOverlay.show{
+    display:flex;
+  }
+
+</style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
 
@@ -628,7 +773,7 @@
     data-jp="Focus your time. Tune your mind."
     data-en="Focus your time. Tune your mind.">
   </p>
-
+<!--
   <button
     class="btn"
     onclick="showSection('choice')"
@@ -649,6 +794,65 @@
     data-jp="集中空間をつくる"
     data-en="Create a focus space">
   </button>
+-->
+
+<div class="mode-buttons">
+
+  <div class="mode-card">
+
+    <div class="mode-title">
+      🎵 Sympho Choice
+    </div>
+
+    <div class="mode-desc">
+      気分に合わせて音楽を探す
+    </div>
+
+    <button
+      class="btn"
+      onclick="showSection('choice')">
+      Start
+    </button>
+
+  </div>
+
+  <div class="mode-card">
+
+    <div class="mode-title">
+      ⏳ Sympho Loop
+    </div>
+
+    <div class="mode-desc">
+      動画にタイマーを追加
+    </div>
+
+    <button
+      class="btn"
+      onclick="showSection('loop')">
+      Start
+    </button>
+
+  </div>
+
+  <div class="mode-card">
+
+    <div class="mode-title">
+      🧠 Sympho Focus
+    </div>
+
+    <div class="mode-desc">
+      集中と休憩を管理
+    </div>
+
+    <button
+      class="btn"
+      onclick="showSection('focus')">
+      Start
+    </button>
+
+  </div>
+
+</div>
 
 </header>
 
@@ -741,7 +945,8 @@
     data-en="Customize your work videos with a timer and loop playback.">
   </p>
 
-  <div class="upper-controls">
+<!--  <div class="upper-controls"> -->
+  <div class="upper-controls focus-setup">
 
   <div class="video-carousel-wrapper">
 
@@ -868,7 +1073,8 @@
     data-en="Stay productive with a Pomodoro timer.">
   </p>
 
-  <div class="upper-controls">
+<!-- focus -->  
+  <div class="upper-controls focus-setup">    
 
   <div class="video-carousel-wrapper">
 
@@ -971,6 +1177,10 @@
   <div class="video-wrapper">
 
     <div id="focus_ytPlayer"></div>
+
+    <div id="focus_breakOverlay">
+      BREAK TIME
+    </div>
 
     <div
       id="focus_timerDisplay"
@@ -1731,7 +1941,25 @@ function updateTimerDisplay(mode){
     progress.style.strokeDashoffset =
       Math.max(0, circ * (1 - fraction));
   }
+  if(mode === "focus"){
 
+    const phase =
+      document.getElementById("focus_phaseDisplay");
+
+    phase.textContent =
+      state.currentPhase === "focus"
+        ? (
+            currentLang === "jp"
+            ? "FOCUS"
+            : "FOCUS"
+          )
+        : (
+            currentLang === "jp"
+            ? "BREAK"
+            : "BREAK"
+          );
+
+  }
 }
 
 function loadVideo(mode){
@@ -1924,6 +2152,12 @@ function playLoop(mode){
 
     state.isPlaying = true;
 
+    if(mode === "focus"){
+      document
+        .getElementById("focus")
+        .classList.add("focus-running");
+    }    
+
     if(state.timerInterval){
       clearInterval(state.timerInterval);
     }
@@ -1948,6 +2182,10 @@ function playLoop(mode){
 
             state.ytPlayer.pauseVideo();
 
+            document
+              .getElementById("focus_breakOverlay")
+              ?.classList.add("show");
+
           }
           else{
 
@@ -1957,6 +2195,10 @@ function playLoop(mode){
               state.focusDuration;
 
             state.ytPlayer.playVideo();
+
+            document
+              .getElementById("focus_breakOverlay")
+              ?.classList.remove("show");
 
           }
 
@@ -1988,7 +2230,15 @@ function stopLoop(mode){
   clearInterval(state.timerInterval);
 
   state.isPlaying = false;
+  if(mode === "focus"){
+    document
+      .getElementById("focus")
+      .classList.remove("focus-running");
 
+    document
+      .getElementById("focus_breakOverlay")
+      ?.classList.remove("show");
+  }
 }
 
 function resetLoop(mode){
@@ -2023,7 +2273,15 @@ function resetLoop(mode){
     circle.style.display = "none";
     circle.remove();
   }
+  if(mode === "focus"){
+    document
+      .getElementById("focus")
+      .classList.remove("focus-running");
 
+    document
+      .getElementById("focus_breakOverlay")
+      ?.classList.remove("show");
+  }
 }
 
 fetch("videos.json")
@@ -2431,6 +2689,19 @@ function restoreSavedSettings(){
   }
 
 }
+
+function toggleUrlInput(mode){
+
+  const input =
+    document.getElementById(`${mode}_ytUrl`);
+
+  input.style.display =
+    input.style.display === "none"
+    ? "block"
+    : "none";
+
+}
+
 document.querySelectorAll(".video-select-grid")
 .forEach(carousel => {
 
