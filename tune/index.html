@@ -732,6 +732,62 @@
 
     font-weight:600;
   }
+  .timer-switch{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    user-select:none;
+    cursor:pointer;
+
+    color:white;
+
+    font-size:0.95rem;
+  }
+
+  .switch-track{
+    width:64px;
+    height:34px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,0.25);
+
+    position:relative;
+
+    transition:0.25s ease;
+
+    border:1px solid rgba(255,255,255,0.35);
+
+    backdrop-filter:blur(10px);
+  }
+
+  .switch-thumb{
+    position:absolute;
+
+    top:3px;
+    left:3px;
+
+    width:28px;
+    height:28px;
+
+    border-radius:50%;
+
+    background:white;
+
+    transition:0.25s ease;
+
+    box-shadow:
+      0 0 10px rgba(255,255,255,0.5);
+  }
+
+  .switch-track.active{
+    background:#00bcd4;
+  }
+
+  .switch-track.active .switch-thumb{
+    transform:translateX(30px);
+  }
 
   .lower-controls .btn{
     min-width:120px;
@@ -1093,7 +1149,7 @@
         data-jp="リセット"
         data-en="Reset">
       </button>
-
+<!--
       <button
         class="btn"
         id="loop_timerTypeBtn"
@@ -1109,8 +1165,43 @@
         data-jp="表示位置：左上"
         data-en="Position: Top-Left">
       </button>
+-->
+      <div
+        class="timer-switch"
+        onclick="toggleTimerType('loop')">
 
-    </div>
+        <span
+          data-jp="シンプルタイマー"
+          data-en="Simple Timer">
+          シンプル
+        </span>
+
+        <div
+          class="switch-track"
+          id="loop_switchTrack">
+
+          <div class="switch-thumb"></div>
+
+        </div>
+
+        <span
+          data-jp="体感タイマー"
+          data-en="Circle Timer">
+          円形
+        </span>
+
+      </div>
+
+      <div id="loop_positionWrap">
+        <button
+          class="btn"
+          id="loop_positionBtn"
+          onclick="toggleTimerPosition('loop')"
+          data-jp="表示位置：左上"
+          data-en="Position: Top-Left">
+        </button>
+      </div>
+  </div>
 
   </div>
 
@@ -1242,7 +1333,7 @@
         data-jp="リセット"
         data-en="Reset">
       </button>
-
+<!--
       <button
         class="btn"
         id="focus_timerTypeBtn"
@@ -1258,6 +1349,45 @@
         data-jp="表示位置：左上"
         data-en="Position: Top-Left">
       </button>
+-->
+    <div
+      class="timer-switch"
+      onclick="toggleTimerType('focus')">
+
+      <span
+        data-jp="シンプルタイマー"
+        data-en="Simple Timer">
+        シンプル
+      </span>
+
+      <div
+        class="switch-track"
+        id="focus_switchTrack">
+
+        <div class="switch-thumb"></div>
+
+      </div>
+
+      <span
+        data-jp="体感タイマー"
+        data-en="Circle Timer">
+        円形
+      </span>
+
+    </div>
+
+      <div id="focus_positionWrap">
+
+        <button
+          class="btn"
+          id="focus_positionBtn"
+          onclick="toggleTimerPosition('focus')"
+          data-jp="表示位置：左上"
+          data-en="Position: Top-Left">          
+        </button>
+
+
+      </div>
 
     </div>
 
@@ -1579,6 +1709,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   checkYTApiReady();
 
+  document.getElementById("loop_positionWrap")
+  .style.display = "block";
+
+  document.getElementById("focus_positionWrap")
+  .style.display = "block";
 });
 
 document.getElementById("langToggle")
@@ -1758,6 +1893,15 @@ function toggleTimerType(mode){
   state.isCircular =
     !state.isCircular;
 
+  const positionWrap =
+    document.getElementById(`${mode}_positionWrap`);
+
+  positionWrap.style.display =
+    state.isCircular
+      ? "none"
+      : "block";
+
+/*
   const btn =
     document.getElementById(`${mode}_timerTypeBtn`);
 
@@ -1769,7 +1913,21 @@ function toggleTimerType(mode){
       : (currentLang === 'jp'
         ? "シンプルタイマー"
         : "Simple Timer");
+*/
 
+  const switchTrack =
+    document.getElementById(`${mode}_switchTrack`);
+
+  if(switchTrack){
+
+    if(state.isCircular){
+      switchTrack.classList.add("active");
+    }
+    else{
+      switchTrack.classList.remove("active");
+    }
+
+  }
   const numeric =
     getEl(mode, "timerDisplay");
 
