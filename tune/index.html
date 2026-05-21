@@ -449,12 +449,10 @@
 
       scroll-behavior:auto;
     }
-    .wheel-item:first-child{
-      margin-top:84px;
-    }
-
-    .wheel-item:last-child{
-      margin-bottom:84px;
+    .wheel-scroll{
+      padding-top:84px;
+      padding-bottom:84px;
+      box-sizing:border-box;
     }
     .wheel-scroll::-webkit-scrollbar{
       display:none;
@@ -833,6 +831,7 @@
       0 0 40px rgba(120,200,255,0.5);
   }
 */
+
   #focus_breakOverlay{
     position:absolute;
 
@@ -851,9 +850,10 @@
     color:#bfe9ff;
 
     text-shadow:
-      0 0 20px rgba(120,220,255,0.9),
+ /*     0 0 20px rgba(120,220,255,0.9),
       0 0 40px rgba(120,220,255,0.5);
-
+*/      0 0 6px rgba(0,0,0,0.6),
+      0 0 12px rgba(255,255,255,0.3);
     opacity:0;
 
     transition:opacity 0.4s ease;
@@ -861,7 +861,52 @@
     z-index:16;
   }
 
+/*
+  #focus_breakOverlay{
 
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%) scale(0.96);
+
+    padding:10px 22px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,0.06);
+
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+
+    border:1px solid rgba(255,255,255,0.14);
+
+    color:white;
+
+    font-size:18px; 
+    font-weight:600;
+
+    letter-spacing:0.18em;
+
+    text-shadow:
+      0 0 8px rgba(255,255,255,0.7),
+      0 0 18px rgba(120,180,255,0.35);
+
+    box-shadow:
+      0 0 12px rgba(255,255,255,0.08),
+      0 0 26px rgba(120,180,255,0.12);
+
+    opacity:0;
+
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease;
+
+    pointer-events:none;
+
+    z-index:20;
+
+  }
+*/
   #focus_breakOverlay.show{
     display:flex;
   }
@@ -1292,8 +1337,8 @@
         </div>
 
         <span
-          data-jp="分"
-          data-en="min">
+          data-jp="分 集中"
+          data-en="min focus">
           分
         </span>
 
@@ -1307,7 +1352,7 @@
         </div>
 
         <span
-          data-jp="分休憩"
+          data-jp="分 休憩"
           data-en="min break">
           分休憩
         </span>
@@ -1820,7 +1865,33 @@ function showSection(section){
     });
 
   }, 100);
+  requestAnimationFrame(() => {
 
+    document
+      .querySelectorAll(`#${section} .wheel-scroll`)
+      .forEach(wheel => {
+
+        const value =
+          parseInt(wheel.dataset.value, 10);
+
+        if(!value) return;
+
+        const target =
+          [...wheel.children]
+          .find(el =>
+            parseInt(el.dataset.value, 10) === value
+          );
+
+        if(!target) return;
+
+        wheel.scrollTop =
+          target.offsetTop
+          - (wheel.clientHeight / 2)
+          + (target.clientHeight / 2);
+
+      });
+
+  });
 }
 
 function checkYTApiReady(){
@@ -2199,6 +2270,7 @@ function updateTimerDisplay(mode){
   }
   if(mode === "focus"){
 
+/*    
     const phase =
       document.getElementById("focus_phaseDisplay");
 
@@ -2206,7 +2278,7 @@ function updateTimerDisplay(mode){
         state.currentPhase === "focus"
           ? "FOCUS"
           : "BREAK";
-
+*/
       const breakOverlay =
         document.getElementById("focus_breakOverlay");
 
@@ -2216,7 +2288,22 @@ function updateTimerDisplay(mode){
           state.currentPhase === "break"
             ? "1"
             : "0";
+/*
+        if(state.currentPhase === "break"){
 
+          breakOverlay.style.opacity = "1";
+          breakOverlay.style.transform =
+            "translate(-50%, -50%) scale(1)";
+
+        }
+        else{
+
+          breakOverlay.style.opacity = "0";
+          breakOverlay.style.transform =
+            "translate(-50%, -50%) scale(0.92)";
+
+        }
+*/
       }
 
   }
@@ -2759,7 +2846,7 @@ function createWheelPicker(id, min, max, defaultValue){
 
   let currentValue =
     parseInt(saved || defaultValue, 10);
-
+/*
   function setActive(value){
 
     wheel.dataset.value = value;
@@ -2777,6 +2864,28 @@ function createWheelPicker(id, min, max, defaultValue){
     });
 
   }
+*/
+
+  function setActive(value){
+
+    currentValue = value;
+
+    wheel.dataset.value = value;
+
+    localStorage.setItem(id, value);
+
+    wheel.querySelectorAll(".wheel-item")
+    .forEach(item => {
+
+      item.classList.toggle(
+        "active",
+        parseInt(item.dataset.value, 10) === value
+      );
+
+    });
+
+  }
+
 
   function scrollToValue(value){
 
@@ -2795,16 +2904,91 @@ function createWheelPicker(id, min, max, defaultValue){
 
     wheel.scrollTop = targetTop;
   }
+/*
+  wheel.setValue = function(value){
 
-  setTimeout(() => {
+    currentValue = parseInt(value, 10);
 
     scrollToValue(currentValue);
 
     setActive(currentValue);
 
-  }, 50);
+  };
+*/
+  wheel.setValue = function(value){
+
+    currentValue = parseInt(value, 10);
+
+    requestAnimationFrame(() => {
+
+      const target =
+        [...wheel.children]
+        .find(el =>
+          parseInt(el.dataset.value, 10) === currentValue
+        );
+
+      if(!target) return;
+
+      const targetTop =
+        target.offsetTop
+        - (wheel.clientHeight / 2)
+        + (target.clientHeight / 2);
+
+      wheel.scrollTop = targetTop;
+
+      setActive(currentValue);
+
+    });
+
+  };
+  requestAnimationFrame(() => {
+
+    requestAnimationFrame(() => {
+
+      wheel.setValue(currentValue);
+
+    });
+
+  });
 
   let ticking = false;
+  let snapTimeout = null;
+
+  function getClosestItem(){
+
+    const wheelRect =
+      wheel.getBoundingClientRect();
+
+    const wheelCenter =
+      wheelRect.top + wheelRect.height / 2;
+
+    let closest = null;
+    let closestDist = Infinity;
+
+    wheel.querySelectorAll(".wheel-item")
+    .forEach(item => {
+
+      const rect =
+        item.getBoundingClientRect();
+
+      const itemCenter =
+        rect.top + rect.height / 2;
+
+      const dist =
+        Math.abs(wheelCenter - itemCenter);
+
+      if(dist < closestDist){
+
+        closestDist = dist;
+        closest = item;
+
+      }
+
+    });
+
+    return closest;
+
+  }
 
   wheel.addEventListener("scroll", () => {
 
@@ -2814,35 +2998,8 @@ function createWheelPicker(id, min, max, defaultValue){
 
     requestAnimationFrame(() => {
 
-      const wheelRect =
-        wheel.getBoundingClientRect();
-
-      const wheelCenter =
-        wheelRect.top + wheelRect.height / 2;
-
-      let closest = null;
-      let closestDist = Infinity;
-
-      wheel.querySelectorAll(".wheel-item")
-      .forEach(item => {
-
-        const rect =
-          item.getBoundingClientRect();
-
-        const itemCenter =
-          rect.top + rect.height / 2;
-
-        const dist =
-          Math.abs(wheelCenter - itemCenter);
-
-        if(dist < closestDist){
-
-          closestDist = dist;
-          closest = item;
-
-        }
-
-      });
+      const closest =
+        getClosestItem();
 
       if(closest){
 
@@ -2855,6 +3012,24 @@ function createWheelPicker(id, min, max, defaultValue){
       ticking = false;
 
     });
+
+    clearTimeout(snapTimeout);
+
+    snapTimeout = setTimeout(() => {
+
+      const closest =
+        getClosestItem();
+
+      if(!closest) return;
+
+      const value =
+        parseInt(closest.dataset.value, 10);
+
+      scrollToValue(value);
+
+      setActive(value);
+
+    }, 80);
 
   });
 
@@ -2939,7 +3114,7 @@ function restoreSavedSettings(){
 
   const breakDuration =
     localStorage.getItem("focus_breakDuration");
-
+/*
   if(loopDuration){
     document.getElementById("loop_duration").dataset.value = 
     loopDuration;
@@ -2954,6 +3129,32 @@ function restoreSavedSettings(){
     document.getElementById("focus_breakDuration").value =
       breakDuration;
   }
+*/
+
+  if(loopDuration){
+
+    document
+      .getElementById("loop_duration")
+      .setValue(loopDuration);
+
+  }
+
+  if(focusDuration){
+
+    document
+      .getElementById("focus_duration")
+      .setValue(focusDuration);
+
+  }
+
+  if(breakDuration){
+
+    document
+      .getElementById("focus_breakDuration")
+      .setValue(breakDuration);
+
+  }
+
 
   const loopVideo =
     localStorage.getItem("loop_selectedVideo");
