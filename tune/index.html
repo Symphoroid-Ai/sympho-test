@@ -193,23 +193,23 @@
       margin-top: 1em;
     }
 
-.focus-time-row{
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  gap:16px;
-  flex-wrap:nowrap;
-}
+    .focus-time-row{
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:nowrap;
+    }
 
-.time-input {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5em;
+    .time-input {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5em;
 
-  min-width: 120px;
-  flex-shrink: 0;
-}
+      min-width: 120px;
+      flex-shrink: 0;
+    }
     .btn-group {
       flex-direction: row;
       flex-wrap: wrap;
@@ -811,7 +811,26 @@
 
     backdrop-filter:blur(8px);
   }    
+  .wheel-label{
 
+    margin-top:10px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    letter-spacing:0.22em;
+
+    opacity:0.82;
+
+    color:#d8f3ff;
+
+    text-transform:uppercase;
+
+    text-shadow:
+      0 0 8px rgba(120,220,255,0.35);
+
+  }
  /* 
   #focus_breakOverlay{
     position:absolute;
@@ -1172,9 +1191,10 @@
     </div>
 
       <span
-        data-jp="分"
-        data-en="min">
-        分
+        class="wheel-label"
+        data-jp="MIN"
+        data-en="MIN">
+        MIN
       </span>
 
     </div>
@@ -1337,10 +1357,17 @@
         </div>
 
         <span
-          data-jp="分 集中"
-          data-en="min focus">
-          分
+          class="wheel-label"
+          data-jp="MIN"
+          data-en="MIN">
+          MIN
         </span>
+        <span
+          class="wheel-label"
+          data-jp="FOCUS"
+          data-en="FOCUS">
+          FOCUS
+        </span>        
 
       </div>
 
@@ -1352,11 +1379,17 @@
         </div>
 
         <span
-          data-jp="分 休憩"
-          data-en="min break">
-          分休憩
+          class="wheel-label"
+          data-jp="MIN"
+          data-en="MIN">
+          MIN
         </span>
-
+        <span
+          class="wheel-label"
+          data-jp="BREAK"
+          data-en="BREAK">
+          BREAK
+        </span>  
       </div>
 
     </div>
