@@ -27,22 +27,7 @@
     h1 {
       font-size: clamp(1.5rem, 5vw, 3rem);
     }
-/*
-    #langToggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: #00bcd4;
-      color: white;
-      border: 1px solid white;
-      border-radius: 5px;
-      padding: 0.5rem 1rem;
-      z-index: 10;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-      
-*/
+
     #langToggle {
       position: absolute;
       top: 1rem;
@@ -860,26 +845,6 @@
       0 0 8px rgba(120,220,255,0.35);
 
   }
- /* 
-  #focus_breakOverlay{
-    position:absolute;
-    inset:0;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    font-size:clamp(2rem,6vw,4rem);
-    font-weight:700;
-    letter-spacing:0.25em;
-    color:white;
-    background:rgba(10,20,35,0.55);
-    backdrop-filter:blur(10px);
-    z-index:30;
-    text-shadow:
-      0 0 20px rgba(255,255,255,0.7),
-      0 0 40px rgba(120,200,255,0.5);
-  }
-*/
-
   #focus_breakOverlay{
     position:absolute;
 
@@ -898,9 +863,8 @@
     color:#bfe9ff;
 
     text-shadow:
- /*     0 0 20px rgba(120,220,255,0.9),
-      0 0 40px rgba(120,220,255,0.5);
-*/      0 0 6px rgba(0,0,0,0.6),
+ 
+      0 0 6px rgba(0,0,0,0.6),
       0 0 12px rgba(255,255,255,0.3);
     opacity:0;
 
@@ -929,52 +893,7 @@
 
     box-sizing:border-box;
   }
-/*
-  #focus_breakOverlay{
 
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%) scale(0.96);
-
-    padding:10px 22px;
-
-    border-radius:999px;
-
-    background:rgba(255,255,255,0.06);
-
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-
-    border:1px solid rgba(255,255,255,0.14);
-
-    color:white;
-
-    font-size:18px; 
-    font-weight:600;
-
-    letter-spacing:0.18em;
-
-    text-shadow:
-      0 0 8px rgba(255,255,255,0.7),
-      0 0 18px rgba(120,180,255,0.35);
-
-    box-shadow:
-      0 0 12px rgba(255,255,255,0.08),
-      0 0 26px rgba(120,180,255,0.12);
-
-    opacity:0;
-
-    transition:
-      opacity 0.45s ease,
-      transform 0.45s ease;
-
-    pointer-events:none;
-
-    z-index:20;
-
-  }
-*/
   #focus_breakOverlay.show{
     display:flex;
   }
@@ -1013,28 +932,6 @@
     data-jp="Focus your time. Tune your mind."
     data-en="Focus your time. Tune your mind.">
   </p>
-<!--
-  <button
-    class="btn"
-    onclick="showSection('choice')"
-    data-jp="気分で音楽を選ぶ"
-    data-en="Pick music by mood">
-  </button>
-
-  <button
-    class="btn"
-    onclick="showSection('loop')"
-    data-jp="動画にタイマーをつける"
-    data-en="Attach timer to video">
-  </button>
-
-  <button
-    class="btn"
-    onclick="showSection('focus')"
-    data-jp="集中空間をつくる"
-    data-en="Create a focus space">
-  </button>
--->
 
 <div class="mode-buttons">
 
@@ -1238,9 +1135,13 @@
     type="text"
     id="loop_ytUrl"
     placeholder="YouTube動画のURLを入力"
-    style="width:80%; padding:0.5em;"
+    style="width:100%; 
+    max-width:1000px;
+    padding:0.5em;"
+    box-sizing:border-box;
     data-jp="YouTube動画のURLを入力"
     data-en="Enter YouTube video URL">
+    
 
     <div class="time-input">
 
@@ -2037,6 +1938,23 @@ function toggleTimerPosition(mode){
   timerDisplay.className =
     `timer-display ${positions[state.positionIndex]}`;
 
+  if(
+    mode === "focus" &&
+    !state.isCircular &&
+    positions[state.positionIndex] === "center" &&
+    state.currentPhase === "break"
+  ){
+
+    timerDisplay.style.transform =
+      "translate(-50%, 70%)";
+
+  }
+  else{
+
+    timerDisplay.style.transform = "";
+
+  }
+ 
   const circle =
     document.getElementById(`${mode}_circularTimer`);
 
@@ -2079,21 +1997,6 @@ function toggleTimerType(mode){
     state.isCircular
       ? "none"
       : "block";
-
-/*
-  const btn =
-    document.getElementById(`${mode}_timerTypeBtn`);
-
-  btn.textContent =
-    state.isCircular
-      ? (currentLang === 'jp'
-        ? "体感タイマー"
-        : "Progress Circle")
-      : (currentLang === 'jp'
-        ? "シンプルタイマー"
-        : "Simple Timer");
-*/
-
   const switchTrack =
     document.getElementById(`${mode}_switchTrack`);
 
@@ -2308,12 +2211,40 @@ function updateTimerDisplay(mode){
     String(state.remainingTime % 60)
     .padStart(2, '0');
 
-  const timerDisplay =
-    getEl(mode, "timerDisplay");
+const timerDisplay =
+  getEl(mode, "timerDisplay");
 
-  timerDisplay.textContent =
-    `${mins}:${secs}`;
+timerDisplay.textContent =
+  `${mins}:${secs}`;
 
+  if(mode === "focus" && !state.isCircular){
+
+    const currentPosition =
+      positions[state.positionIndex];
+
+    if(
+      currentPosition === "center" &&
+      state.currentPhase === "break"
+    ){
+
+      timerDisplay.style.transform =
+        "translate(-50%, 70%)";
+
+    }
+    else if(currentPosition === "center"){
+
+      timerDisplay.style.transform =
+        "translate(-50%, -50%)";
+
+    }
+    else{
+
+      timerDisplay.style.transform =
+        "";
+
+    }
+
+  }
   if(!state.isCircular){
 
     timerDisplay.style.display =
@@ -2361,13 +2292,7 @@ function updateTimerDisplay(mode){
           : state.focusDuration
         )
       : state.loopDuration;
- /*     
-//      : parseInt(getEl(mode, "duration").value, 10) * 60;
-        :parseInt(
-        getEl(mode, "duration").dataset.value,
-        10
-      ) * 60
-*/
+
     const circ =
       parseFloat(circle.dataset.circumference);
 
@@ -2379,15 +2304,6 @@ function updateTimerDisplay(mode){
   }
   if(mode === "focus"){
 
-/*    
-    const phase =
-      document.getElementById("focus_phaseDisplay");
-
-      phase.textContent =
-        state.currentPhase === "focus"
-          ? "FOCUS"
-          : "BREAK";
-*/
       const breakOverlay =
         document.getElementById("focus_breakOverlay");
 
@@ -2397,22 +2313,6 @@ function updateTimerDisplay(mode){
           state.currentPhase === "break"
             ? "1"
             : "0";
-/*
-        if(state.currentPhase === "break"){
-
-          breakOverlay.style.opacity = "1";
-          breakOverlay.style.transform =
-            "translate(-50%, -50%) scale(1)";
-
-        }
-        else{
-
-          breakOverlay.style.opacity = "0";
-          breakOverlay.style.transform =
-            "translate(-50%, -50%) scale(0.92)";
-
-        }
-*/
       }
 
   }
@@ -2562,34 +2462,6 @@ function loadVideo(mode){
 
 }
 
-/*
-function playLoop(mode){
-
-  const state =
-    appStates[mode];
-
-  if(!state.ytPlayer || state.isPlaying){
-    return;
-  }
-
-  state.ytPlayer.unMute();
-
-  if(!(mode === "focus" && state.currentPhase === "break")){
-    state.ytPlayer.playVideo();
-  }
-  else{
-    state.ytPlayer.playVideo();
-  }
-//  state.ytPlayer.playVideo();
-
-  state.isPlaying = true;
-
-  clearInterval(state.timerInterval);
-
-  state.timerInterval =
-    setInterval(() => {
-*/
-
   function playLoop(mode){
 
     const state =
@@ -2607,13 +2479,7 @@ function playLoop(mode){
     }
 
     state.isPlaying = true;
-/*
-    if(mode === "focus"){
-      document
-        .getElementById("focus")
-        .classList.add("focus-running");
-    }    
-*/
+
     if(mode === "focus"){
       document
         .getElementById("focus")
@@ -2958,25 +2824,6 @@ function createWheelPicker(id, min, max, defaultValue){
 
   let currentValue =
     parseInt(saved || defaultValue, 10);
-/*
-  function setActive(value){
-
-    wheel.dataset.value = value;
-
-    localStorage.setItem(id, value);
-
-    wheel.querySelectorAll(".wheel-item")
-    .forEach(item => {
-
-      item.classList.toggle(
-        "active",
-        parseInt(item.dataset.value, 10) === value
-      );
-
-    });
-
-  }
-*/
 
   function setActive(value){
 
@@ -3016,17 +2863,7 @@ function createWheelPicker(id, min, max, defaultValue){
 
     wheel.scrollTop = targetTop;
   }
-/*
-  wheel.setValue = function(value){
 
-    currentValue = parseInt(value, 10);
-
-    scrollToValue(currentValue);
-
-    setActive(currentValue);
-
-  };
-*/
   wheel.setValue = function(value){
 
     currentValue = parseInt(value, 10);
@@ -3226,22 +3063,6 @@ function restoreSavedSettings(){
 
   const breakDuration =
     localStorage.getItem("focus_breakDuration");
-/*
-  if(loopDuration){
-    document.getElementById("loop_duration").dataset.value = 
-    loopDuration;
-  }
-
-  if(focusDuration){
-    document.getElementById("focus_duration").value =
-      focusDuration;
-  }
-
-  if(breakDuration){
-    document.getElementById("focus_breakDuration").value =
-      breakDuration;
-  }
-*/
 
   if(loopDuration){
 
