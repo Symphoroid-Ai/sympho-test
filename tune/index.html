@@ -628,7 +628,7 @@
       object-fit:cover;
       display:block;
     }
-
+/*
   .mode-buttons{
     display:flex;
     flex-direction:column;
@@ -636,9 +636,27 @@
     gap:14px;
     margin-top:2rem;
   }
+*/
+  .mode-buttons{
 
-  .mode-card{
-    width:min(320px, 90%);
+    display:flex;
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:20px;
+
+    width:100%;
+    max-width:1000px;
+
+    margin:2rem auto 0;
+
+  }
+  .mode-card{ 
+    flex:1 1 240px;
+    max-width:320px;
+    width:100%;
+
     padding:18px;
     border-radius:20px;
 
@@ -1142,7 +1160,6 @@
     data-jp="YouTube動画のURLを入力"
     data-en="Enter YouTube video URL">
     
-
     <div class="time-input">
 
     <div class="wheel-picker">
