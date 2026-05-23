@@ -495,7 +495,36 @@
         0 0 12px rgba(255,255,255,0.9),
         0 0 25px rgba(120,200,255,0.8);
     }
+    .wheel-number{
 
+      display:inline-block;
+
+    }
+
+    .wheel-unit{
+
+      margin-left:5px;
+
+      font-size:0.34em;
+
+      font-weight:600;
+
+      letter-spacing:0.18em;
+
+      opacity:0;
+
+      transform:translateY(1px);
+
+      transition:
+        opacity 0.2s ease;
+
+    }
+
+    .wheel-item.active .wheel-unit{
+
+      opacity:0.72;
+
+    }
     .video-select-grid{
       width:100%;
       max-width:1000px;
@@ -509,7 +538,7 @@
 
       padding:10px 6px 20px;
 
-      margin:20px auto;
+      margin:2px auto 20px;
 
       scroll-snap-type:x mandatory;
 
@@ -879,7 +908,27 @@
 
     z-index:16;
   }
+  .source-title{
 
+    font-size:0.95rem;
+    font-weight:700;
+
+    margin:
+      6px 0 2px;
+
+    color:#dff6ff;
+
+    letter-spacing:0.04em;
+
+    text-align:left;
+
+    width:100%;
+    max-width:1000px;
+
+    padding-left:8px;
+
+    box-sizing:border-box;
+  }
 /*
   #focus_breakOverlay{
 
@@ -1156,7 +1205,12 @@
 
 <!--  <div class="upper-controls"> -->
   <div class="upper-controls focus-setup">
-
+  <div
+    class="source-title"
+    data-jp="Symphoroid Aiから音楽を選ぶ"
+    data-en="Choose from Symphoroid Ai">
+    Symphoroid Aiから音楽を選ぶ
+  </div>
   <div class="video-carousel-wrapper">
 
     <button
@@ -1174,7 +1228,12 @@
     </button>
 
   </div>
-
+  <div
+    class="source-title sub"
+    data-jp="YouTubeリンクを貼り付け"
+    data-en="Paste YouTube URL">
+    YouTubeリンクを貼り付け
+  </div>
   <input
     type="text"
     id="loop_ytUrl"
@@ -1189,14 +1248,14 @@
       <div class="wheel-highlight"></div>
       <div id="loop_duration" class="wheel-scroll"></div>
     </div>
-
+<!--
       <span
         class="wheel-label"
         data-jp="MIN"
         data-en="MIN">
         MIN
       </span>
-
+-->
     </div>
 
     <div class="btn-group">
@@ -1320,7 +1379,12 @@
 
 <!-- focus -->  
   <div class="upper-controls focus-setup">    
-
+  <div
+    class="source-title"
+    data-jp="Symphoroid Aiから音楽を選ぶ"
+    data-en="Choose from Symphoroid Ai">
+    Symphoroid Aiから音楽を選ぶ
+  </div>
   <div class="video-carousel-wrapper">
 
     <button
@@ -1338,7 +1402,12 @@
     </button>
 
   </div>
-
+  <div
+    class="source-title sub"
+    data-jp="YouTubeリンクを貼り付け"
+    data-en="Paste YouTube URL">
+    YouTubeリンクを貼り付け
+  </div>
   <input
     type="text"
     id="focus_ytUrl"
@@ -1355,7 +1424,7 @@
           <div class="wheel-highlight"></div>
           <div id="focus_duration" class="wheel-scroll"></div>
         </div>
-
+<!--
         <span
           class="wheel-label"
           data-jp="MIN"
@@ -1368,7 +1437,10 @@
           data-en="FOCUS">
           FOCUS
         </span>        
-
+-->
+        <span class="wheel-label">
+          FOCUS
+        </span>
       </div>
 
       <div class="time-input">
@@ -1377,7 +1449,7 @@
           <div class="wheel-highlight"></div>
           <div id="focus_breakDuration" class="wheel-scroll"></div>
         </div>
-
+<!--
         <span
           class="wheel-label"
           data-jp="MIN"
@@ -1389,7 +1461,11 @@
           data-jp="BREAK"
           data-en="BREAK">
           BREAK
-        </span>  
+        </span> 
+--> 
+        <span class="wheel-label">
+          BREAK
+        </span>
       </div>
 
     </div>
@@ -2868,8 +2944,11 @@ function createWheelPicker(id, min, max, defaultValue){
 
     item.dataset.value = i;
 
-    item.textContent = i;
-
+//  item.textContent = i;
+    item.innerHTML = `
+      <span class="wheel-number">${i}</span>
+      <span class="wheel-unit">MIN</span>
+    `;
     wheel.appendChild(item);
 
   }
