@@ -5,7 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>sympho tune</title>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+function openSettings(mode){
+
+  document
+    .getElementById("settingsPanel")
+    .classList.add("show");
+
+  document
+    .getElementById("settingsOverlay")
+    .classList.add("show");
+
+  document
+    .getElementById("loopSettings")
+    .style.display =
+      mode === "loop"
+      ? "block"
+      : "none";
+
+  document
+    .getElementById("focusSettings")
+    .style.display =
+      mode === "focus"
+      ? "block"
+      : "none";
+}
+
+/*
+
+function closeSettings(){
+
+  document
+    .getElementById("settingsPanel")
+    .classList.remove("show");
+
+  document
+    .getElementById("settingsOverlay")
+    .classList.remove("show");
+}
+*/
+function closeSettings(){
+/*
+  updateModeUI("loop");
+  updateModeUI("focus");
+
+  applyTimerPosition("loop");
+  applyTimerPosition("focus");
+
+  updateTimerDisplay("loop");
+  updateTimerDisplay("focus");
+*/
+  document
+    .getElementById("settingsPanel")
+    .classList.remove("show");
+
+  document
+    .getElementById("settingsOverlay")
+    .classList.remove("show");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const overlay =
+    document.getElementById("settingsOverlay");
+
+  if(overlay){
+
+    overlay.addEventListener(
+      "click",
+      closeSettings
+    );
+
+  }
+  updateModeUI("loop");
+  updateModeUI("focus");
+});
+
+</script>
 
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -338,6 +416,7 @@
     }
 
 /***********************************/    
+/*
     .wheel-picker{
       position:relative;
       width:140px;
@@ -356,7 +435,33 @@
         inset 0 1px 1px rgba(255,255,255,0.25),
         0 10px 30px rgba(0,0,0,0.35);
     }
+*/
+    .wheel-picker{
 
+      position:relative;
+
+      height:180px;
+
+      overflow:hidden;
+
+      display:flex;
+
+      justify-content:center;
+      align-items:center;
+
+      border-radius:24px;
+
+      background:
+        rgba(255,255,255,0.04);
+
+      border:
+        1px solid rgba(255,255,255,0.08);
+
+      box-shadow:
+        inset 0 0 12px rgba(255,255,255,0.05);
+
+      backdrop-filter:blur(10px);
+    }
     /* 上下フェード */
     .wheel-picker::before,
     .wheel-picker::after{
@@ -390,6 +495,7 @@
     }
 
     /* 中央発光ライン */
+/*
     .wheel-highlight{
       position:absolute;
 
@@ -414,8 +520,38 @@
       pointer-events:none;
       z-index:4;
     }
+*/
+    .wheel-highlight{
 
+      position:absolute;
+
+      top:50%;
+      left:50%;
+
+      transform:translate(-50%, -50%);
+
+      width:90%;
+
+      height:42px;
+
+      border-radius:16px;
+
+      background:
+        rgba(255,255,255,0.12);
+
+      border:
+        1px solid rgba(255,255,255,0.16);
+
+      box-shadow:
+        0 0 18px rgba(255,255,255,0.08),
+        inset 0 0 8px rgba(255,255,255,0.08);
+
+      pointer-events:none;
+
+      z-index:2;
+    }
     /* スクロール本体 */
+/*
     .wheel-scroll{
       height:100%;
 
@@ -439,11 +575,35 @@
       padding-bottom:84px;
       box-sizing:border-box;
     }
+*/
+    .wheel-scroll{
+
+      position:relative;
+
+      z-index:3;
+
+      height:100%;
+
+      width:100%;
+
+      overflow-y:scroll;
+
+      scroll-snap-type:y mandatory;
+
+      padding-top:69px;
+      padding-bottom:69px;
+
+      box-sizing:border-box;
+
+      scrollbar-width:none;
+    }
+
     .wheel-scroll::-webkit-scrollbar{
       display:none;
     }
 
     /* 各項目 */
+/*    
     .wheel-item{
       height:52px;
       min-height:52px;
@@ -471,8 +631,30 @@
 
       opacity:0.45;
     }
+*/
+    .wheel-item{
+
+      height:42px;
+
+      display:flex;
+
+      align-items:center;
+      justify-content:center;
+
+      scroll-snap-align:center;
+
+      font-size:24px;
+
+      color:rgba(255,255,255,0.45);
+
+      transition:
+        transform 0.2s,
+        opacity 0.2s,
+        color 0.2s;
+    }
 
     /* 選択中 */
+/*    
     .wheel-item.active{
       opacity:1;
 
@@ -480,6 +662,22 @@
         0 0 12px rgba(255,255,255,0.9),
         0 0 25px rgba(120,200,255,0.8);
     }
+*/
+    .wheel-item.active{
+
+      color:white;
+
+      font-weight:700;
+
+      transform:scale(1.15);
+
+      text-shadow:
+        0 0 12px rgba(255,255,255,0.75),
+        0 0 22px rgba(180,220,255,0.55);
+
+      opacity:1;
+    }
+
     .wheel-number{
 
       display:inline-block;
@@ -509,6 +707,10 @@
 
       opacity:0.72;
 
+    }
+    .wheel-item:not(.active){
+
+      opacity:0.45;
     }
     .video-select-grid{
       width:100%;
@@ -916,6 +1118,269 @@
     display:flex;
   }
 
+
+#settingsOverlay{
+
+  position:fixed;
+  inset:0;
+
+  background:
+    rgba(10,15,25,0.35);
+
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+
+  opacity:0;
+  pointer-events:none;
+
+  transition:0.3s;
+
+  z-index:999;
+}
+
+  opacity:0;
+  pointer-events:none;
+
+  transition:0.3s;
+
+  z-index:999;
+}
+
+#settingsOverlay.show{
+
+  opacity:1;
+  pointer-events:auto;
+}
+
+#settingsPanel{
+
+  position:fixed;
+
+  left:0;
+  bottom:0;
+
+  width:100%;
+  max-height:82vh;
+
+  overflow-y:auto;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.16),
+      rgba(255,255,255,0.08)
+    );
+
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+
+  border:
+    1px solid rgba(255,255,255,0.18);
+
+  box-shadow:
+    0 -10px 40px rgba(0,0,0,0.45),
+    inset 0 1px 1px rgba(255,255,255,0.18);
+
+  border-radius:28px 28px 0 0;
+
+  transform:translateY(100%);
+
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+
+  z-index:1000;
+
+  padding:22px;
+  box-sizing:border-box;
+}
+
+#settingsPanel.show{
+
+  transform:translateY(0);
+}
+
+.settings-handle{
+
+  width:64px;
+  height:6px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,0.4);
+
+  margin:0 auto 20px;
+}
+
+.settings-header{
+
+  position:relative;
+
+  z-index:1001;
+
+  text-align:center;
+
+  font-size:1.25rem;
+  font-weight:700;
+
+  margin-bottom:26px;
+
+  color:#dff6ff;
+}
+
+.settings-section-title{
+
+  font-size:1rem;
+  font-weight:700;
+
+  color:#bfe9ff;
+
+  margin-bottom:24px;
+
+  text-align:center;
+}
+
+.settings-group{
+
+  margin-bottom:40px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:16px;
+}
+
+.settings-row{
+
+  margin-bottom:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:14px;
+
+  padding:18px;
+
+  border-radius:20px;
+
+  background:
+    rgba(255,255,255,0.06);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.08);
+}
+
+.settings-row label{
+
+  font-size:0.92rem;
+  font-weight:600;
+
+  letter-spacing:0.08em;
+
+  opacity:0.85;
+}
+
+.small-wheel{
+
+  width:120px;
+  height:180px;
+}
+
+.settings-open-btn{
+
+  min-width:160px;
+}
+.settings-header{
+
+  position:relative;
+
+  text-align:center;
+
+  font-size:1.25rem;
+  font-weight:700;
+
+  margin-bottom:26px;
+
+  color:#dff6ff;
+}
+
+.settings-close-btn{
+
+  position:absolute;
+
+  z-index:1002;
+
+  right:0;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  width:42px;
+  height:42px;
+
+  border:none;
+  border-radius:50%;
+
+  background:rgba(255,255,255,0.08);
+
+  color:white;
+
+  font-size:20px;
+
+  cursor:pointer;
+
+  backdrop-filter:blur(10px);
+
+  box-shadow:
+    0 0 12px rgba(255,255,255,0.08);
+
+  transition:0.2s;
+}
+
+.settings-close-btn:hover{
+
+  transform:
+    translateY(-50%)
+    scale(1.06);
+
+  background:rgba(255,255,255,0.14);
+}
+.focus-time-row{
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:flex-start;
+
+  gap:18px;
+
+  flex-wrap:wrap;
+}
+
+.focus-time-row .settings-row{
+
+  flex:1;
+
+  min-width:140px;
+
+  margin-bottom:14;
+}
+@media (max-width:768px){
+
+  #settingsPanel{
+
+    padding-bottom:40px;
+  }
+}
+
 </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -1160,23 +1625,13 @@
     data-jp="YouTube動画のURLを入力"
     data-en="Enter YouTube video URL">
     
-    <div class="time-input">
-
-    <div class="wheel-picker">
-      <div class="wheel-highlight"></div>
-      <div id="loop_duration" class="wheel-scroll"></div>
-    </div>
-<!--
-      <span
-        class="wheel-label"
-        data-jp="MIN"
-        data-en="MIN">
-        MIN
-      </span>
--->
-    </div>
-
     <div class="btn-group">
+
+      <button
+        class="btn settings-open-btn"
+        onclick="openSettings('loop')">
+        ⚙ Settings
+      </button>
 
       <button
         class="btn"
@@ -1207,7 +1662,7 @@
         data-jp="表示位置：左上"
         data-en="Position: Top-Left">
       </button>
--->
+
       <div
         class="timer-switch"
         onclick="toggleTimerType('loop')">
@@ -1243,7 +1698,8 @@
           data-en="Position: Top-Left">
         </button>
       </div>
-  </div>
+-->  
+    </div>
 
   </div>
 
@@ -1336,63 +1792,17 @@
     data-jp="YouTube動画のURLを入力"
     data-en="Enter YouTube video URL">
 
-    <div class="focus-time-row">
-
-      <div class="time-input">
-
-        <div class="wheel-picker">
-          <div class="wheel-highlight"></div>
-          <div id="focus_duration" class="wheel-scroll"></div>
-        </div>
-<!--
-        <span
-          class="wheel-label"
-          data-jp="MIN"
-          data-en="MIN">
-          MIN
-        </span>
-        <span
-          class="wheel-label"
-          data-jp="FOCUS"
-          data-en="FOCUS">
-          FOCUS
-        </span>        
--->
-        <span class="wheel-label">
-          FOCUS
-        </span>
-      </div>
-
-      <div class="time-input">
-
-        <div class="wheel-picker">
-          <div class="wheel-highlight"></div>
-          <div id="focus_breakDuration" class="wheel-scroll"></div>
-        </div>
-<!--
-        <span
-          class="wheel-label"
-          data-jp="MIN"
-          data-en="MIN">
-          MIN
-        </span>
-        <span
-          class="wheel-label"
-          data-jp="BREAK"
-          data-en="BREAK">
-          BREAK
-        </span> 
---> 
-        <span class="wheel-label">
-          BREAK
-        </span>
-      </div>
-
-    </div>
-
+    
     <div id="focus_phaseDisplay"></div>
+</div>
 
     <div class="btn-group">
+
+      <button
+        class="btn settings-open-btn"
+        onclick="openSettings('focus')">
+        ⚙ Settings
+      </button>
 
       <button
         class="btn"
@@ -1423,7 +1833,7 @@
         data-jp="表示位置：左上"
         data-en="Position: Top-Left">
       </button>
--->
+
     <div
       class="timer-switch"
       onclick="toggleTimerType('focus')">
@@ -1462,7 +1872,7 @@
 
 
       </div>
-
+-->
     </div>
 
   </div>
@@ -1502,6 +1912,216 @@
   </div>
 
 </section>
+
+
+<!-- settings panel -->
+
+<div id="settingsOverlay"></div>
+
+<div id="settingsPanel">
+
+  <div class="settings-handle"></div>
+
+  <div class="settings-header">
+
+    <span
+      id="settingsTitle"
+      data-jp="設定"
+      data-en="Settings">
+      設定
+    </span>
+
+    <button
+      class="settings-close-btn"
+      onclick="closeSettings()">
+      ✕
+    </button>
+
+  </div>
+
+  <div class="settings-content">
+
+    <div id="loopSettings" class="settings-group">
+
+      <div
+        class="settings-section-title"
+        data-jp="Sympho Loop"
+        data-en="Sympho Loop">
+        Sympho Loop
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="タイマー"
+          data-en="Timer">
+          タイマー
+        </label>
+
+        <div class="wheel-picker small-wheel">
+          <div class="wheel-highlight"></div>
+          <div id="loop_duration_settings" class="wheel-scroll"></div>
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="タイマー表示"
+          data-en="Timer Type">
+          タイマー表示
+        </label>
+
+        <div
+          class="timer-switch"
+          onclick="toggleTimerType('loop')">
+
+          <span
+            data-jp="シンプルタイマー"
+            data-en="Simple Timer">
+            シンプルタイマー
+          </span>
+
+          <div
+            class="switch-track"
+            id="loop_switchTrack_settings">
+
+            <div class="switch-thumb"></div>
+
+          </div>
+
+          <span
+            data-jp="体感タイマー"
+            data-en="Circle Timer">
+            体感タイマー
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="表示位置"
+          data-en="Position">
+          表示位置
+        </label>
+
+        <button
+          class="btn"
+          id="loop_positionBtn_settings"
+          onclick="toggleTimerPosition('loop')">
+          Position
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="focusSettings" class="settings-group">
+
+      <div
+        class="settings-section-title"
+        data-jp="Sympho Focus"
+        data-en="Sympho Focus">
+        Sympho Focus
+      </div>
+
+    <div class="focus-time-row">
+
+      <div class="settings-row">
+
+        <label
+          data-jp="集中"
+          data-en="Focus">
+          集中
+        </label>
+
+        <div class="wheel-picker small-wheel">
+          <div class="wheel-highlight"></div>
+          <div id="focus_duration_settings" class="wheel-scroll"></div>
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="休憩"
+          data-en="Break">
+          休憩
+        </label>
+
+        <div class="wheel-picker small-wheel">
+          <div class="wheel-highlight"></div>
+          <div id="focus_breakDuration_settings" class="wheel-scroll"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="タイマー表示"
+          data-en="Timer Type">
+          タイマー表示
+        </label>
+
+        <div
+          class="timer-switch"
+          onclick="toggleTimerType('focus')">
+
+          <span
+            data-jp="シンプルタイマー"
+            data-en="Simple Timer">
+            シンプルタイマー
+          </span>
+
+          <div
+            class="switch-track"
+            id="focus_switchTrack_settings">
+
+            <div class="switch-thumb"></div>
+
+          </div>
+
+          <span
+            data-jp="体感タイマー"
+            data-en="Circle Timer">
+            体感タイマー
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="表示位置"
+          data-en="Position">
+          表示位置
+        </label>
+
+        <button
+          class="btn"
+          id="focus_positionBtn_settings"
+          onclick="toggleTimerPosition('focus')">
+          Position
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
 
 <footer>
 
@@ -1771,9 +2391,9 @@ document.addEventListener("DOMContentLoaded", () => {
     getEl("loop", "duration").value = savedLoop;
   }
 
-  createWheelPicker("loop_duration", 1, 180, 10);
-  createWheelPicker("focus_duration", 1, 180, 25);
-  createWheelPicker("focus_breakDuration", 1, 60, 5);
+  createWheelPicker("loop_duration_settings", 1, 180, 10);
+  createWheelPicker("focus_duration_settings", 1, 180, 25);
+  createWheelPicker("focus_breakDuration_settings", 1, 60, 5);
 
   createVideoList("loop");
   createVideoList("focus");
@@ -1782,11 +2402,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   checkYTApiReady();
 
-  document.getElementById("loop_positionWrap")
-  .style.display = "block";
+  updateModeUI("loop");
+  updateModeUI("focus");
 
-  document.getElementById("focus_positionWrap")
-  .style.display = "block";
 });
 
 document.getElementById("langToggle")
@@ -1810,18 +2428,109 @@ function updateLanguage(){
   .forEach(el => {
 
     if("placeholder" in el){
+
       el.placeholder =
         el.getAttribute(`data-${currentLang}`);
+
     }
     else{
+
       el.textContent =
         el.getAttribute(`data-${currentLang}`);
+
     }
 
   });
 
-}
+  updateModeUI("loop");
+  updateModeUI("focus");
 
+}
+function updateModeUI(mode){
+
+  const state = appStates[mode];
+
+  if(!state) return;
+
+  /* =========================
+     スイッチ同期
+  ========================= */
+
+  const switchTracks = [
+
+//    document.getElementById(`${mode}_switchTrack`),
+
+    document.getElementById(`${mode}_switchTrack_settings`)
+
+  ];
+
+  switchTracks.forEach(track => {
+
+    if(!track) return;
+
+    track.classList.toggle(
+      "active",
+      state.isCircular
+    );
+
+  });
+
+  /* =========================
+     Position表示制御
+  ========================= */
+
+  const positionTargets = [
+
+//    document.getElementById(`${mode}_positionWrap`),
+
+    document.getElementById(`${mode}_positionBtn_settings`)
+      ?.closest(".settings-row")
+
+  ];
+
+  positionTargets.forEach(el => {
+
+    if(!el) return;
+
+    el.style.display =
+      state.isCircular
+        ? "none"
+        : "flex";
+
+  });
+
+  /* =========================
+     Positionボタン文言
+  ========================= */
+
+  const labels =
+    currentLang === 'jp'
+    ? ["左上","右上","左下","右下","中央"]
+    : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"];
+
+  const positionButtons = [
+
+//    document.getElementById(`${mode}_positionBtn`),
+
+    document.getElementById(`${mode}_positionBtn_settings`)
+
+  ];
+
+  positionButtons.forEach(btn => {
+
+    if(!btn) return;
+
+    btn.textContent =
+      (currentLang === 'jp'
+        ? "表示位置："
+        : "Position: ")
+      + labels[state.positionIndex];
+
+  });
+
+
+
+}
 function showSection(section){
 
   // 表示切替
@@ -1988,18 +2697,7 @@ function toggleTimerPosition(mode){
     }
 
   }
-
-  const labels =
-    currentLang === 'jp'
-    ? ["左上","右上","左下","右下","中央"]
-    : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"];
-
-  document.getElementById(`${mode}_positionBtn`)
-  .textContent =
-    (currentLang === 'jp'
-      ? "表示位置："
-      : "Position: ")
-      + labels[state.positionIndex];
+  updateModeUI(mode);
 }
 
 function toggleTimerType(mode){
@@ -2009,26 +2707,6 @@ function toggleTimerType(mode){
   state.isCircular =
     !state.isCircular;
 
-  const positionWrap =
-    document.getElementById(`${mode}_positionWrap`);
-
-  positionWrap.style.display =
-    state.isCircular
-      ? "none"
-      : "block";
-  const switchTrack =
-    document.getElementById(`${mode}_switchTrack`);
-
-  if(switchTrack){
-
-    if(state.isCircular){
-      switchTrack.classList.add("active");
-    }
-    else{
-      switchTrack.classList.remove("active");
-    }
-
-  }
   const numeric =
     getEl(mode, "timerDisplay");
 
@@ -2067,7 +2745,7 @@ function toggleTimerType(mode){
       : "none";
 
   }
-
+  updateModeUI(mode);
 }
 
 function createCircularTimer(mode){
@@ -2373,7 +3051,7 @@ function loadVideo(mode){
   const duration =
 //  parseInt(getEl(mode, "duration").value, 10);
     parseInt(
-      getEl(mode, "duration").dataset.value,
+      document.getElementById(`${mode}_duration_settings`).dataset.value,
       10
     )
   if(!duration || duration <= 0){
@@ -2410,7 +3088,7 @@ function loadVideo(mode){
     state.breakDuration =
       (
         parseInt(
-          getEl(mode, "breakDuration").dataset.value,
+          document.getElementById("focus_breakDuration_settings").dataset.value,
           10
         ) || 5
       ) * 60;
@@ -3123,7 +3801,8 @@ function restoreSavedSettings(){
     getEl("focus", "ytUrl").value =
       focusVideo;
   }
-
+  updateModeUI("loop");
+  updateModeUI("focus");
 }
 
 function toggleUrlInput(mode){
