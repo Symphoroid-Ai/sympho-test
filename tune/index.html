@@ -33,30 +33,8 @@ function openSettings(mode){
       : "none";
 }
 
-/*
-
 function closeSettings(){
 
-  document
-    .getElementById("settingsPanel")
-    .classList.remove("show");
-
-  document
-    .getElementById("settingsOverlay")
-    .classList.remove("show");
-}
-*/
-function closeSettings(){
-/*
-  updateModeUI("loop");
-  updateModeUI("focus");
-
-  applyTimerPosition("loop");
-  applyTimerPosition("focus");
-
-  updateTimerDisplay("loop");
-  updateTimerDisplay("focus");
-*/
   document
     .getElementById("settingsPanel")
     .classList.remove("show");
@@ -415,27 +393,6 @@ document.addEventListener("DOMContentLoaded", () => {
         0 0 12px rgba(255,255,255,0.3);
     }
 
-/***********************************/    
-/*
-    .wheel-picker{
-      position:relative;
-      width:140px;
-      height:220px;
-      margin:auto;
-
-      border-radius:28px;
-
-      overflow:hidden;
-
-      background:rgba(255,255,255,0.08);
-
-      backdrop-filter:blur(20px);
-
-      box-shadow:
-        inset 0 1px 1px rgba(255,255,255,0.25),
-        0 10px 30px rgba(0,0,0,0.35);
-    }
-*/
     .wheel-picker{
 
       position:relative;
@@ -497,32 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* 中央発光ライン */
-/*
-    .wheel-highlight{
-      position:absolute;
 
-      top:50%;
-      left:10px;
-      right:10px;
-
-      height:52px;
-
-      transform:translateY(-50%);
-
-      border-radius:16px;
-
-      background:rgba(255,255,255,0.12);
-
-      box-shadow:
-        0 0 18px rgba(120,200,255,0.45),
-        inset 0 0 12px rgba(255,255,255,0.25);
-
-      border:1px solid rgba(255,255,255,0.18);
-
-      pointer-events:none;
-      z-index:4;
-    }
-*/
     .wheel-highlight{
 
       position:absolute;
@@ -553,31 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
       z-index:2;
     }
     /* スクロール本体 */
-/*
-    .wheel-scroll{
-      height:100%;
 
-      overflow-y:auto;
-
-      scroll-snap-type:y mandatory;
-
-      -webkit-overflow-scrolling:touch;
-
-      scrollbar-width:none;
-
-      position:relative;
-      z-index:2;
-
-      padding:0;
-
-      scroll-behavior:auto;
-    }
-    .wheel-scroll{
-      padding-top:84px;
-      padding-bottom:84px;
-      box-sizing:border-box;
-    }
-*/
     .wheel-scroll{
 
       position:relative;
@@ -612,37 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
       display:none;
     }
 
-    /* 各項目 */
-/*    
-    .wheel-item{
-      height:52px;
-      min-height:52px;
-
-      display:flex;
-      align-items:center;
-      justify-content:center;
-
-      line-height:52px;
-
-      box-sizing:border-box;
-
-      scroll-snap-align:center;
-
-      color:white;
-
-      font-size:28px;
-      font-weight:600;
-
-      letter-spacing:1px;
-
-      transition:
-        opacity 0.2s,
-        text-shadow 0.2s;
-
-      opacity:0.45;
-    }
-*/
-    .wheel-item{
+      .wheel-item{
 
       height:42px;
 
@@ -666,17 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
         opacity 0.2s,
         color 0.2s;
     }
-
-    /* 選択中 */
-/*    
-    .wheel-item.active{
-      opacity:1;
-
-      text-shadow:
-        0 0 12px rgba(255,255,255,0.9),
-        0 0 25px rgba(120,200,255,0.8);
-    }
-*/
+  
     .wheel-item.active{
 
       color:white;
@@ -701,20 +569,13 @@ document.addEventListener("DOMContentLoaded", () => {
     .wheel-unit{
 
       margin-left:5px;
-
       font-size:0.34em;
-
       font-weight:600;
-
       letter-spacing:0.18em;
-
       opacity:0;
-
       transform:translateY(1px);
-
       transition:
         opacity 0.2s ease;
-
     }
 
     .wheel-item.active .wheel-unit{
@@ -844,15 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
       object-fit:cover;
       display:block;
     }
-/*
-  .mode-buttons{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:14px;
-    margin-top:2rem;
-  }
-*/
+
   .mode-buttons{
 
     display:flex;
@@ -1262,12 +1115,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   flex-direction:column;
 
-  gap:16px;
+  gap:0;
 }
 
 .settings-row{
 
-  margin-bottom:0;
+  margin-bottom:16px;
 
   display:flex;
 
@@ -1379,6 +1232,7 @@ document.addEventListener("DOMContentLoaded", () => {
   flex-wrap:nowrap;
 
   width:100%;
+  margin-bottom:0px;
 }
 
 .focus-time-row .settings-row{
@@ -1389,7 +1243,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   width:50%;
 
-  margin-bottom:14px;
+  margin-bottom:16px;
 }
 
 @media (max-width:768px){
@@ -1665,59 +1519,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data-jp="リセット"
         data-en="Reset">
       </button>
-<!--
-      <button
-        class="btn"
-        id="loop_timerTypeBtn"
-        onclick="toggleTimerType('loop')"
-        data-jp="シンプルタイマー"
-        data-en="Simple Timer">
-      </button>
 
-      <button
-        class="btn"
-        id="loop_positionBtn"
-        onclick="toggleTimerPosition('loop')"
-        data-jp="表示位置：左上"
-        data-en="Position: Top-Left">
-      </button>
-
-      <div
-        class="timer-switch"
-        onclick="toggleTimerType('loop')">
-
-        <span
-          data-jp="シンプルタイマー"
-          data-en="Simple Timer">
-          シンプル
-        </span>
-
-        <div
-          class="switch-track"
-          id="loop_switchTrack">
-
-          <div class="switch-thumb"></div>
-
-        </div>
-
-        <span
-          data-jp="体感タイマー"
-          data-en="Circle Timer">
-          円形
-        </span>
-
-      </div>
-
-      <div id="loop_positionWrap">
-        <button
-          class="btn"
-          id="loop_positionBtn"
-          onclick="toggleTimerPosition('loop')"
-          data-jp="表示位置：左上"
-          data-en="Position: Top-Left">
-        </button>
-      </div>
--->  
     </div>
 
   </div>
@@ -1836,62 +1638,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data-jp="リセット"
         data-en="Reset">
       </button>
-<!--
-      <button
-        class="btn"
-        id="focus_timerTypeBtn"
-        onclick="toggleTimerType('focus')"
-        data-jp="シンプルタイマー"
-        data-en="Simple Timer">
-      </button>
 
-      <button
-        class="btn"
-        id="focus_positionBtn"
-        onclick="toggleTimerPosition('focus')"
-        data-jp="表示位置：左上"
-        data-en="Position: Top-Left">
-      </button>
-
-    <div
-      class="timer-switch"
-      onclick="toggleTimerType('focus')">
-
-      <span
-        data-jp="シンプルタイマー"
-        data-en="Simple Timer">
-        シンプル
-      </span>
-
-      <div
-        class="switch-track"
-        id="focus_switchTrack">
-
-        <div class="switch-thumb"></div>
-
-      </div>
-
-      <span
-        data-jp="体感タイマー"
-        data-en="Circle Timer">
-        円形
-      </span>
-
-    </div>
-
-      <div id="focus_positionWrap">
-
-        <button
-          class="btn"
-          id="focus_positionBtn"
-          onclick="toggleTimerPosition('focus')"
-          data-jp="表示位置：左上"
-          data-en="Position: Top-Left">          
-        </button>
-
-
-      </div>
--->
     </div>
 
   </div>
@@ -3655,48 +3402,71 @@ function createWheelPicker(id, min, max, defaultValue){
 
   }
 
-  wheel.addEventListener("scroll", () => {
+wheel.addEventListener("scroll", () => {
 
-    if(ticking) return;
+  if(ticking) return;
 
-    ticking = true;
+  ticking = true;
 
-    requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
 
-      const closest =
-        getClosestItem();
+    const closest =
+      getClosestItem();
 
-      if(closest){
+    if(closest){
 
-        setActive(
-          parseInt(closest.dataset.value, 10)
-        );
+      setActive(
+        parseInt(closest.dataset.value, 10)
+      );
 
-      }
+    }
 
-      ticking = false;
-
-    });
-
-    clearTimeout(snapTimeout);
-
-    snapTimeout = setTimeout(() => {
-
-      const closest =
-        getClosestItem();
-
-      if(!closest) return;
-
-      const value =
-        parseInt(closest.dataset.value, 10);
-
-      scrollToValue(value);
-
-      setActive(value);
-
-    }, 80);
+    ticking = false;
 
   });
+
+  clearTimeout(snapTimeout);
+
+  snapTimeout = setTimeout(() => {
+
+    const closest =
+      getClosestItem();
+
+    if(!closest) return;
+
+    const value =
+      parseInt(closest.dataset.value, 10);
+
+    scrollToValue(value);
+
+    setActive(value);
+
+  }, 80);
+
+});
+
+wheel.addEventListener("wheel", (e) => {
+
+  e.preventDefault();
+
+  const itemHeight = 42;
+
+  const direction =
+    e.deltaY > 0 ? 1 : -1;
+
+  wheel.scrollTo({
+
+    top:
+      Math.round(
+        wheel.scrollTop / itemHeight
+      ) * itemHeight
+      + direction * itemHeight,
+
+    behavior:"smooth"
+
+  });
+
+}, { passive:false });
 
 }
 function scrollCarousel(mode, direction){
