@@ -274,7 +274,71 @@ document.addEventListener("DOMContentLoaded", () => {
       align-items: center;
       justify-content: center;
     }
+@media screen and (orientation: landscape)
+and (max-height: 600px){
 
+  body{
+
+    overflow:hidden;
+  }
+
+  .upper-controls,
+  .lower-controls,
+  header,
+  footer,
+  .mode-buttons,
+  .source-title,
+  .video-carousel-wrapper,
+  .btn-group,
+  .settings-open-btn{
+
+    opacity:0;
+
+    pointer-events:none;
+
+    height:0;
+
+    overflow:hidden;
+
+    margin:0;
+    padding:0;
+  }
+
+  .video-wrapper{
+
+    position:fixed;
+
+    inset:0;
+
+    width:100vw;
+
+    height:100dvh;
+
+    max-width:none;
+
+    aspect-ratio:auto;
+
+    z-index:9999;
+
+    background:black;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+  }
+
+  .video-wrapper iframe,
+  .video-wrapper > #loop_ytPlayer,
+  .video-wrapper > #focus_ytPlayer{
+
+    width:100vw;
+
+    height:100dvh;
+  }
+
+}
     .video-wrapper iframe,
     .video-wrapper > #loop_ytPlayer,
     .video-wrapper > #focus_ytPlayer {
