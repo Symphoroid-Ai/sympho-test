@@ -1253,7 +1253,55 @@ document.addEventListener("DOMContentLoaded", () => {
     padding-bottom:40px;
   }
 }
+@media screen and (orientation:landscape)
+and (max-height:600px){
 
+  section#loop,
+  section#focus{
+
+    min-height:100dvh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+
+  section#loop h2,
+  section#loop p,
+  section#focus h2,
+  section#focus p{
+
+    margin-top:6px;
+    margin-bottom:6px;
+  }
+
+  .upper-controls,
+  .lower-controls{
+
+    transform:scale(0.92);
+  }
+
+  .video-wrapper{
+
+    width:min(92vw, 1100px);
+
+    margin:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+  }
+
+}
 </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
