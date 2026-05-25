@@ -440,6 +440,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       position:relative;
 
+      width:100%;
+
       height:180px;
 
       overflow:hidden;
@@ -588,6 +590,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       overflow-y:scroll;
 
+      overflow-x:hidden;
+
+      overscroll-behavior-y:contain;
+
+      touch-action:pan-y;
+
       scroll-snap-type:y mandatory;
 
       padding-top:69px;
@@ -596,6 +604,8 @@ document.addEventListener("DOMContentLoaded", () => {
       box-sizing:border-box;
 
       scrollbar-width:none;
+
+      -ms-overflow-style:none;
     }
 
     .wheel-scroll::-webkit-scrollbar{
@@ -635,6 +645,10 @@ document.addEventListener("DOMContentLoaded", () => {
     .wheel-item{
 
       height:42px;
+
+      width:100%;
+
+      flex-shrink:0;
 
       display:flex;
 
@@ -1360,19 +1374,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   align-items:flex-start;
 
-  gap:18px;
+  gap:14px;
 
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
+
+  width:100%;
 }
 
 .focus-time-row .settings-row{
 
   flex:1;
 
-  min-width:140px;
+  min-width:0;
 
-  margin-bottom:14;
+  width:50%;
+
+  margin-bottom:14px;
 }
+
 @media (max-width:768px){
 
   #settingsPanel{
