@@ -59,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   updateModeUI("loop");
   updateModeUI("focus");
+  setupLandscapeVideoFocus();
+
 });
 
 </script>
@@ -1253,7 +1255,146 @@ document.addEventListener("DOMContentLoaded", () => {
     padding-bottom:40px;
   }
 }
+/* ========================================
+   Mobile Landscape Video Focus Mode
+======================================== */
 
+@media screen
+and (orientation: landscape)
+and (max-width: 1024px){
+
+  html,
+  body{
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    overscroll-behavior:none;
+
+    touch-action:manipulation;
+
+    background:#000;
+  }
+
+  body.landscape-video-focus{
+
+    position:fixed;
+
+    inset:0;
+
+    width:100vw;
+    height:100dvh;
+
+    overflow:hidden;
+  }
+
+  body.landscape-video-focus
+  header,
+
+  body.landscape-video-focus
+  .btn-group,
+
+  body.landscape-video-focus
+  .lower-controls,
+
+  body.landscape-video-focus
+  .settings-open-btn,
+
+  body.landscape-video-focus
+  .video-carousel-wrapper,
+
+  body.landscape-video-focus
+  .source-title,
+
+  body.landscape-video-focus
+  input,
+
+  body.landscape-video-focus
+  .video-select-grid,
+
+  body.landscape-video-focus
+  #focus_phaseDisplay{
+
+    opacity:0;
+
+    pointer-events:none;
+
+    visibility:hidden;
+  }
+
+  body.landscape-video-focus
+  section{
+
+    padding:0;
+
+    margin:0;
+
+    min-height:100dvh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+  }
+
+  body.landscape-video-focus
+  .video-wrapper{
+
+    position:fixed;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%, -50%);
+
+    width:100vw;
+
+    height:100dvh;
+
+    max-width:none;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+    background:#000;
+  }
+
+  body.landscape-video-focus
+  .video-wrapper iframe,
+
+  body.landscape-video-focus
+  .video-wrapper #loop_ytPlayer,
+
+  body.landscape-video-focus
+  .video-wrapper #focus_ytPlayer{
+
+    width:100vw !important;
+
+    height:100dvh !important;
+
+    aspect-ratio:auto !important;
+
+    border:none;
+  }
+
+  body.landscape-video-focus
+  .timer-display,
+
+  body.landscape-video-focus
+  .circular-timer{
+
+    z-index:10001;
+  }
+
+}
 </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
@@ -2418,7 +2559,72 @@ window.onYouTubeIframeAPIReady = function(){
   appStates.focus.playerReady = true;
 
 };
+function setupLandscapeVideoFocus(){
 
+  const applyLandscapeMode = () => {
+
+    const isMobile =
+      window.matchMedia("(max-width: 1024px)").matches;
+
+    const isLandscape =
+      window.matchMedia("(orientation: landscape)").matches;
+
+    if(isMobile && isLandscape){
+
+      document.body.classList.add(
+        "landscape-video-focus"
+      );
+
+      requestAnimationFrame(() => {
+
+        window.scrollTo(0, 0);
+
+      });
+
+    }
+    else{
+
+      document.body.classList.remove(
+        "landscape-video-focus"
+      );
+
+    }
+
+  };
+
+  applyLandscapeMode();
+
+  window.addEventListener(
+    "orientationchange",
+    () => {
+
+      setTimeout(() => {
+
+        applyLandscapeMode();
+
+        window.scrollTo(0,0);
+
+      }, 250);
+
+    }
+  );
+
+  window.addEventListener(
+    "resize",
+    applyLandscapeMode
+  );
+
+  if(window.visualViewport){
+
+    window.visualViewport
+    .addEventListener(
+      "resize",
+      applyLandscapeMode
+    );
+
+  }
+
+}
 function toggleTimerPosition(mode){
 
   const state = appStates[mode];
