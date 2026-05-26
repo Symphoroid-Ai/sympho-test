@@ -276,9 +276,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 @media screen and (orientation: landscape){
 
+  html,
   body{
 
+    margin:0;
+    width:100%;
+    height:100%;
     overflow:hidden;
+
+    overscroll-behavior:none;
+    -webkit-overflow-scrolling:touch;
+
+    background:black;
+  }
+
+  body{
+
+    min-height:100svh;
   }
 
   .upper-controls,
@@ -303,80 +317,74 @@ document.addEventListener("DOMContentLoaded", () => {
     padding:0;
   }
 
+  section{
+
+    padding:0;
+  }
+
   .video-wrapper{
 
-    position:relative;
+    position:fixed;
 
-    width:100%;
+    inset:0;
 
-    height:auto;
+    width:100vw;
 
-    min-height:100dvh;
-
-    max-width:none;
-
-    z-index:9999;
-
-    background:black;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
+    height:100svh;
 
     max-width:none;
 
     aspect-ratio:auto;
 
-    z-index:9999;
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     background:black;
 
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-    
-     overflow:hidden;
+    z-index:9999;
   }
 
   .video-wrapper iframe,
-  .video-wrapper > #loop_ytPlayer,
-  .video-wrapper > #focus_ytPlayer{
-    position:fixed;
-    top:0;
-    left:0;
-    
-  	width:100vw;
 
- 	 height:100dvh;
- 	 
- 	  border:none;
+  .video-wrapper > #loop_ytPlayer iframe,
 
- 	 z-index:9999;
+  .video-wrapper > #focus_ytPlayer iframe{
 
-  	background:black;;
+    position:absolute;
 
-    object-fit:cover;
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:100%;
+    height:100%;
+
+    border:none;
+
+    background:black;
   }
 
-html,
-body{
+  .video-wrapper > #loop_ytPlayer,
 
-  margin:0;
+  .video-wrapper > #focus_ytPlayer{
 
-  width:100%;
+    position:absolute;
 
-  height:100dvh;
+    inset:0;
 
-  overflow:hidden;
+    width:100%;
+    height:100%;
+  }
 
-  overscroll-behavior:none;
+  /* 縦動画対策 */
+  .video-wrapper iframe{
 
-  touch-action:manipulation;
-}
+    object-fit:contain;
+  }
 }
 body.landscape-video-mode{
 
@@ -386,9 +394,11 @@ body.landscape-video-mode{
 
   width:100%;
 
-  height:100dvh;
+  height:100svh;
 
   overflow:hidden;
+
+  background:black;
 }
 /*    .video-wrapper iframe,
     .video-wrapper > #loop_ytPlayer,
@@ -2265,8 +2275,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function updateLandscapeMode(){
 
   const isLandscape =
-    window.innerWidth >
-    window.innerHeight;
+    window.matchMedia("(orientation: landscape)").matches;
 
   document.body.classList.toggle(
     "landscape-video-mode",
