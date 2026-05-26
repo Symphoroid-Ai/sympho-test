@@ -274,91 +274,8 @@ document.addEventListener("DOMContentLoaded", () => {
       align-items: center;
       justify-content: center;
     }
-@media screen and (orientation: landscape){
 
-  body{
-
-    overflow:hidden;
-  }
-
-  .upper-controls,
-  .lower-controls,
-  header,
-  footer,
-  .mode-buttons,
-  .source-title,
-  .video-carousel-wrapper,
-  .btn-group,
-  .settings-open-btn{
-
-    opacity:0;
-
-    pointer-events:none;
-
-    height:0;
-
-    overflow:hidden;
-
-    margin:0;
-    padding:0;
-  }
-
-  .video-wrapper{
-
-    position:fixed;
-    inset:0;
-
-    width:100%;
-
-    height:100dvh;
-
-    min-height:100dvh;
-
-    max-width:none;
-
-    z-index:9999;
-
-    background:black;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    max-width:none;
-
-    aspect-ratio:auto;
-
-    z-index:9999;
-
-    background:black;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-  }
-
-  .video-wrapper iframe,
-  .video-wrapper > #loop_ytPlayer,
-  .video-wrapper > #focus_ytPlayer{
-    position:absolute;
-    top:50%;
-    left:50%;
-
-    width:100%;
-
-    height:100%;
-
-    transform:translate(-50%, -50%);
-
-    object-fit:cover;
-  }
-
-}
-/*    .video-wrapper iframe,
+    .video-wrapper iframe,
     .video-wrapper > #loop_ytPlayer,
     .video-wrapper > #focus_ytPlayer {
       position: absolute;
@@ -366,7 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
       width: 100%;
       height: 100%;
     }
-*/
+
     #videoArea_choice {
       scroll-margin-top: 80px;
     }
@@ -1827,9 +1744,9 @@ document.addEventListener("DOMContentLoaded", () => {
           onclick="toggleTimerType('loop')">
 
           <span
-            data-jp="シンプル"
-            data-en="Simple">
-            シンプル
+            data-jp="シンプルタイマー"
+            data-en="Simple Timer">
+            シンプルタイマー
           </span>
 
           <div
@@ -1841,9 +1758,9 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <span
-            data-jp="体感"
-            data-en="Circle">
-            体感
+            data-jp="体感タイマー"
+            data-en="Circle Timer">
+            体感タイマー
           </span>
 
         </div>
@@ -1925,9 +1842,9 @@ document.addEventListener("DOMContentLoaded", () => {
           onclick="toggleTimerType('focus')">
 
           <span
-            data-jp="シンプル"
-            data-en="Simple">
-            シンプル
+            data-jp="シンプルタイマー"
+            data-en="Simple Timer">
+            シンプルタイマー
           </span>
 
           <div
@@ -1939,9 +1856,9 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <span
-            data-jp="体感"
-            data-en="Circle">
-            体感
+            data-jp="体感タイマー"
+            data-en="Circle Timer">
+            体感タイマー
           </span>
 
         </div>
