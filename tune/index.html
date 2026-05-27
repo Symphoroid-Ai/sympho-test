@@ -989,33 +989,38 @@ document.addEventListener("DOMContentLoaded", () => {
       0 0 8px rgba(120,220,255,0.35);
 
   }
-  #focus_breakOverlay{
-    position:absolute;
+#focus_breakOverlay{
 
-    inset:0;
+  position:absolute;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  top:18%;
+  left:50%;
 
-    pointer-events:none;
+  transform:translateX(-50%);
 
-    font-size:clamp(2rem, 6vw, 5rem);
-    font-weight:700;
-    letter-spacing:0.25em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-    color:#bfe9ff;
+  pointer-events:none;
 
-    text-shadow:
- 
-      0 0 6px rgba(0,0,0,0.6),
-      0 0 12px rgba(255,255,255,0.3);
-    opacity:0;
+  font-size:clamp(1.4rem, 4vw, 3rem);
+  font-weight:700;
 
-    transition:opacity 0.4s ease;
+  letter-spacing:0.22em;
 
-    z-index:16;
-  }
+  color:#bfe9ff;
+
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.75),
+    0 0 18px rgba(120,220,255,0.65);
+
+  z-index:9999;
+
+  opacity:0;
+
+  transition:opacity 0.4s ease;
+}
   .source-title{
 
     font-size:0.95rem;
