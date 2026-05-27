@@ -35,6 +35,9 @@ function openSettings(mode){
 
 function closeSettings(){
 
+  applySettings("loop");
+  applySettings("focus");
+
   document
     .getElementById("settingsPanel")
     .classList.remove("show");
@@ -43,7 +46,43 @@ function closeSettings(){
     .getElementById("settingsOverlay")
     .classList.remove("show");
 }
+function applySettings(mode){
 
+  const state = appStates[mode];
+
+  if(mode === "loop"){
+
+    state.loopDuration =
+      parseInt(
+        document.getElementById(
+          "loop_duration_settings"
+        ).dataset.value,
+        10
+      ) * 60;
+
+  }
+
+  if(mode === "focus"){
+
+    state.focusDuration =
+      parseInt(
+        document.getElementById(
+          "focus_duration_settings"
+        ).dataset.value,
+        10
+      ) * 60;
+
+    state.breakDuration =
+      parseInt(
+        document.getElementById(
+          "focus_breakDuration_settings"
+        ).dataset.value,
+        10
+      ) * 60;
+
+  }
+
+}
 document.addEventListener("DOMContentLoaded", () => {
 
   const overlay =
@@ -1647,20 +1686,6 @@ and (max-width: 1024px){
         ⚙ Settings
       </button>
 
-      <button
-        class="btn"
-        onclick="loadVideo('loop')"
-        data-jp="動画とタイマーをセット"
-        data-en="Set Video & Timer">
-      </button>
-
-      <button
-        class="btn"
-        onclick="resetLoop('loop')"
-        data-jp="リセット"
-        data-en="Reset">
-      </button>
-
     </div>
 
   </div>
@@ -1681,16 +1706,24 @@ and (max-width: 1024px){
 
     <button
       class="btn"
-      onclick="playLoop('loop')"
+      id="focus_playBtn"
+      onclick="playLoop('focus')"
       data-jp="再生"
       data-en="Play">
     </button>
 
     <button
       class="btn"
-      onclick="stopLoop('loop')"
+      onclick="stopLoop('focus')"
       data-jp="ストップ"
       data-en="Stop">
+    </button>
+
+    <button
+      class="btn"
+      onclick="resetLoop('focus')"
+      data-jp="リセット"
+      data-en="Reset">
     </button>
 
   </div>
@@ -1760,27 +1793,13 @@ and (max-width: 1024px){
 
     <div class="btn-group">
 
-      <button
-        class="btn settings-open-btn"
-        onclick="openSettings('focus')">
-        ⚙ Settings
-      </button>
+  <button
+    class="btn settings-open-btn"
+    onclick="openSettings('focus')">
+    ⚙ Settings
+  </button>
 
-      <button
-        class="btn"
-        onclick="loadVideo('focus')"
-        data-jp="動画とタイマーをセット"
-        data-en="Set Video & Timer">
-      </button>
-
-      <button
-        class="btn"
-        onclick="resetLoop('focus')"
-        data-jp="リセット"
-        data-en="Reset">
-      </button>
-
-    </div>
+</div>
 
   </div>
 
@@ -1804,6 +1823,7 @@ and (max-width: 1024px){
 
     <button
       class="btn"
+      id="focus_playBtn"
       onclick="playLoop('focus')"
       data-jp="再生"
       data-en="Play">
@@ -1814,6 +1834,13 @@ and (max-width: 1024px){
       onclick="stopLoop('focus')"
       data-jp="ストップ"
       data-en="Stop">
+    </button>
+
+    <button
+      class="btn"
+      onclick="resetLoop('focus')"
+      data-jp="リセット"
+      data-en="Reset">
     </button>
 
   </div>
@@ -1885,9 +1912,9 @@ and (max-width: 1024px){
           onclick="toggleTimerType('loop')">
 
           <span
-            data-jp="シンプルタイマー"
-            data-en="Simple Timer">
-            シンプルタイマー
+            data-jp="シンプル"
+            data-en="Simple">
+            シンプル
           </span>
 
           <div
@@ -1899,9 +1926,9 @@ and (max-width: 1024px){
           </div>
 
           <span
-            data-jp="体感タイマー"
-            data-en="Circle Timer">
-            体感タイマー
+            data-jp="体感"
+            data-en="Circle">
+            体感
           </span>
 
         </div>
@@ -1983,9 +2010,9 @@ and (max-width: 1024px){
           onclick="toggleTimerType('focus')">
 
           <span
-            data-jp="シンプルタイマー"
-            data-en="Simple Timer">
-            シンプルタイマー
+            data-jp="シンプル"
+            data-en="Simple">
+            シンプル
           </span>
 
           <div
@@ -1997,9 +2024,9 @@ and (max-width: 1024px){
           </div>
 
           <span
-            data-jp="体感タイマー"
-            data-en="Circle Timer">
-            体感タイマー
+            data-jp="体感"
+            data-en="Circle">
+            体感
           </span>
 
         </div>
@@ -2262,8 +2289,8 @@ function createState() {
     currentPhase: "focus",
     focusDuration: 0,
     breakDuration: 0,
-    loopDuration: 0
-
+    loopDuration: 0,
+    videoLoaded: false
   };
 
 }
@@ -2351,7 +2378,32 @@ function updateLanguage(){
 
   updateModeUI("loop");
   updateModeUI("focus");
+["loop","focus"].forEach(mode => {
 
+  const state = appStates[mode];
+
+  const playBtn =
+    document.getElementById(`${mode}_playBtn`);
+
+  if(!playBtn) return;
+
+  if(state.isPaused){
+
+    playBtn.textContent =
+      currentLang === "jp"
+      ? "再開"
+      : "Resume";
+
+  }else{
+
+    playBtn.textContent =
+      currentLang === "jp"
+      ? "再生"
+      : "Play";
+
+  }
+
+});
 }
 function updateModeUI(mode){
 
@@ -3128,126 +3180,90 @@ function loadVideo(mode){
     state.ytPlayer.cueVideoById(videoId);
 
   }
-
+  state.videoLoaded = true;
 }
 
   function playLoop(mode){
 
-    const state =
-      appStates[mode];
+  const state = appStates[mode];
 
-    if(!state.ytPlayer){
-      return;
-    }
+  const playBtn =
+    document.getElementById(`${mode}_playBtn`);
 
-    state.ytPlayer.unMute();
+  // 初回再生時のみ動画セット
+  if(!state.videoLoaded){
 
-    // focus休憩中は動画を再生しない
-    if(!(mode === "focus" && state.currentPhase === "break")){
+    loadVideo(mode);
+
+    state.videoLoaded = true;
+  }
+
+  // pause状態なら再開
+  if(state.isPaused){
+
+    state.isPaused = false;
+
+    if(state.ytPlayer){
       state.ytPlayer.playVideo();
     }
 
-    state.isPlaying = true;
+    startTimer(mode);
 
-    if(mode === "focus"){
-      document
-        .getElementById("focus")
-        .classList.add("focus-running");
+  }
+  else{
+
+    // 通常再生
+    if(state.ytPlayer){
+      state.ytPlayer.playVideo();
     }
 
-    if(mode === "loop"){
-      document
-        .getElementById("loop")
-        .classList.add("loop-running");
-    }
-    if(state.timerInterval){
-      clearInterval(state.timerInterval);
-    }
+    startTimer(mode);
+  }
 
-    state.timerInterval =
-      setInterval(() => {
-        
-      state.remainingTime--;
+  state.isPlaying = true;
 
-      updateTimerDisplay(mode);
+  if(playBtn){
 
-      if(state.remainingTime <= 0){
+    playBtn.dataset.jp = "再生";
+    playBtn.dataset.en = "Play";
 
-        if(mode === "focus"){
-
-          if(state.currentPhase === "focus"){
-
-            state.currentPhase = "break";
-
-            state.remainingTime =
-              state.breakDuration;
-
-            state.ytPlayer.pauseVideo();
-
-            document
-              .getElementById("focus_breakOverlay")
-              ?.classList.add("show");
-
-          }
-          else{
-
-            state.currentPhase = "focus";
-
-            state.remainingTime =
-              state.focusDuration;
-
-            state.ytPlayer.playVideo();
-
-            document
-              .getElementById("focus_breakOverlay")
-              ?.classList.remove("show");
-
-          }
-
-          updateTimerDisplay(mode);
-
-          return;
-
-        }
-
-        clearInterval(state.timerInterval);
-
-        state.ytPlayer.stopVideo();
-
-        state.isPlaying = false;
-
-      }
-
-    }, 1000);
+    playBtn.textContent =
+      currentLang === "jp"
+      ? "再生"
+      : "Play";
+  }
 
 }
 
+
 function stopLoop(mode){
 
-  const state =
-    appStates[mode];
-
-  state.ytPlayer?.pauseVideo();
+  const state = appStates[mode];
 
   clearInterval(state.timerInterval);
 
+  if(state.ytPlayer){
+    state.ytPlayer.pauseVideo();
+  }
+
   state.isPlaying = false;
-  
-  if(mode === "focus"){
-    document
-      .getElementById("focus")
-      .classList.remove("focus-running");
+  state.isPaused = true;
 
-    document
-      .getElementById("focus_breakOverlay")
-      ?.classList.remove("show");
+  const playBtn =
+    document.getElementById(`${mode}_playBtn`);
+
+  if(playBtn){
+
+    // data属性も更新
+    playBtn.dataset.jp = "再開";
+    playBtn.dataset.en = "Resume";
+
+    playBtn.textContent =
+      currentLang === "jp"
+      ? "再開"
+      : "Resume";
   }
 
-  if(mode === "loop"){
-    document
-      .getElementById("loop")
-      .classList.remove("loop-running");
-  }
 }
 
 function resetLoop(mode){
@@ -3295,6 +3311,22 @@ function resetLoop(mode){
     document
       .getElementById("loop")
       .classList.remove("loop-running");
+  }
+  state.videoLoaded = false;
+  state.isPaused = false;
+
+  const playBtn =
+    document.getElementById(`${mode}_playBtn`);
+
+  if(playBtn){
+
+    playBtn.dataset.jp = "再生";
+    playBtn.dataset.en = "Play";
+
+    playBtn.textContent =
+      currentLang === "jp"
+      ? "再生"
+      : "Play";
   }  
 }
 
