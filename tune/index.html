@@ -35,9 +35,6 @@ function openSettings(mode){
 
 function closeSettings(){
 
-  applySettings("loop");
-  applySettings("focus");
-
   document
     .getElementById("settingsPanel")
     .classList.remove("show");
@@ -45,44 +42,23 @@ function closeSettings(){
   document
     .getElementById("settingsOverlay")
     .classList.remove("show");
-}
-function applySettings(mode){
 
-  const state = appStates[mode];
+  const loopUrl =
+    document.getElementById("loop_ytUrl")?.value?.trim();
 
-  if(mode === "loop"){
+  const focusUrl =
+    document.getElementById("focus_ytUrl")?.value?.trim();
 
-    state.loopDuration =
-      parseInt(
-        document.getElementById(
-          "loop_duration_settings"
-        ).dataset.value,
-        10
-      ) * 60;
-
+  if(loopUrl){
+    loadVideo("loop");
   }
 
-  if(mode === "focus"){
-
-    state.focusDuration =
-      parseInt(
-        document.getElementById(
-          "focus_duration_settings"
-        ).dataset.value,
-        10
-      ) * 60;
-
-    state.breakDuration =
-      parseInt(
-        document.getElementById(
-          "focus_breakDuration_settings"
-        ).dataset.value,
-        10
-      ) * 60;
-
+  if(focusUrl){
+    loadVideo("focus");
   }
 
 }
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const overlay =
@@ -1706,22 +1682,21 @@ and (max-width: 1024px){
 
     <button
       class="btn"
-      id="focus_playBtn"
-      onclick="playLoop('focus')"
+      onclick="playLoop('loop')"
       data-jp="再生"
       data-en="Play">
     </button>
 
     <button
       class="btn"
-      onclick="stopLoop('focus')"
+      onclick="stopLoop('loop')"
       data-jp="ストップ"
       data-en="Stop">
     </button>
 
     <button
       class="btn"
-      onclick="resetLoop('focus')"
+      onclick="resetLoop('loop')"
       data-jp="リセット"
       data-en="Reset">
     </button>
@@ -1793,13 +1768,13 @@ and (max-width: 1024px){
 
     <div class="btn-group">
 
-  <button
-    class="btn settings-open-btn"
-    onclick="openSettings('focus')">
-    ⚙ Settings
-  </button>
+      <button
+        class="btn settings-open-btn"
+        onclick="openSettings('focus')">
+        ⚙ Settings
+      </button>
 
-</div>
+    </div>
 
   </div>
 
@@ -1823,7 +1798,6 @@ and (max-width: 1024px){
 
     <button
       class="btn"
-      id="focus_playBtn"
       onclick="playLoop('focus')"
       data-jp="再生"
       data-en="Play">
@@ -2289,8 +2263,8 @@ function createState() {
     currentPhase: "focus",
     focusDuration: 0,
     breakDuration: 0,
-    loopDuration: 0,
-    videoLoaded: false
+    loopDuration: 0
+
   };
 
 }
@@ -2378,32 +2352,7 @@ function updateLanguage(){
 
   updateModeUI("loop");
   updateModeUI("focus");
-["loop","focus"].forEach(mode => {
 
-  const state = appStates[mode];
-
-  const playBtn =
-    document.getElementById(`${mode}_playBtn`);
-
-  if(!playBtn) return;
-
-  if(state.isPaused){
-
-    playBtn.textContent =
-      currentLang === "jp"
-      ? "再開"
-      : "Resume";
-
-  }else{
-
-    playBtn.textContent =
-      currentLang === "jp"
-      ? "再生"
-      : "Play";
-
-  }
-
-});
 }
 function updateModeUI(mode){
 
@@ -3180,90 +3129,126 @@ function loadVideo(mode){
     state.ytPlayer.cueVideoById(videoId);
 
   }
-  state.videoLoaded = true;
+
 }
 
   function playLoop(mode){
 
-  const state = appStates[mode];
+    const state =
+      appStates[mode];
 
-  const playBtn =
-    document.getElementById(`${mode}_playBtn`);
+    if(!state.ytPlayer){
+      return;
+    }
 
-  // 初回再生時のみ動画セット
-  if(!state.videoLoaded){
+    state.ytPlayer.unMute();
 
-    loadVideo(mode);
-
-    state.videoLoaded = true;
-  }
-
-  // pause状態なら再開
-  if(state.isPaused){
-
-    state.isPaused = false;
-
-    if(state.ytPlayer){
+    // focus休憩中は動画を再生しない
+    if(!(mode === "focus" && state.currentPhase === "break")){
       state.ytPlayer.playVideo();
     }
 
-    startTimer(mode);
+    state.isPlaying = true;
 
-  }
-  else{
-
-    // 通常再生
-    if(state.ytPlayer){
-      state.ytPlayer.playVideo();
+    if(mode === "focus"){
+      document
+        .getElementById("focus")
+        .classList.add("focus-running");
     }
 
-    startTimer(mode);
-  }
+    if(mode === "loop"){
+      document
+        .getElementById("loop")
+        .classList.add("loop-running");
+    }
+    if(state.timerInterval){
+      clearInterval(state.timerInterval);
+    }
 
-  state.isPlaying = true;
+    state.timerInterval =
+      setInterval(() => {
+        
+      state.remainingTime--;
 
-  if(playBtn){
+      updateTimerDisplay(mode);
 
-    playBtn.dataset.jp = "再生";
-    playBtn.dataset.en = "Play";
+      if(state.remainingTime <= 0){
 
-    playBtn.textContent =
-      currentLang === "jp"
-      ? "再生"
-      : "Play";
-  }
+        if(mode === "focus"){
+
+          if(state.currentPhase === "focus"){
+
+            state.currentPhase = "break";
+
+            state.remainingTime =
+              state.breakDuration;
+
+            state.ytPlayer.pauseVideo();
+
+            document
+              .getElementById("focus_breakOverlay")
+              ?.classList.add("show");
+
+          }
+          else{
+
+            state.currentPhase = "focus";
+
+            state.remainingTime =
+              state.focusDuration;
+
+            state.ytPlayer.playVideo();
+
+            document
+              .getElementById("focus_breakOverlay")
+              ?.classList.remove("show");
+
+          }
+
+          updateTimerDisplay(mode);
+
+          return;
+
+        }
+
+        clearInterval(state.timerInterval);
+
+        state.ytPlayer.stopVideo();
+
+        state.isPlaying = false;
+
+      }
+
+    }, 1000);
 
 }
 
-
 function stopLoop(mode){
 
-  const state = appStates[mode];
+  const state =
+    appStates[mode];
+
+  state.ytPlayer?.pauseVideo();
 
   clearInterval(state.timerInterval);
 
-  if(state.ytPlayer){
-    state.ytPlayer.pauseVideo();
-  }
-
   state.isPlaying = false;
-  state.isPaused = true;
+  
+  if(mode === "focus"){
+    document
+      .getElementById("focus")
+      .classList.remove("focus-running");
 
-  const playBtn =
-    document.getElementById(`${mode}_playBtn`);
-
-  if(playBtn){
-
-    // data属性も更新
-    playBtn.dataset.jp = "再開";
-    playBtn.dataset.en = "Resume";
-
-    playBtn.textContent =
-      currentLang === "jp"
-      ? "再開"
-      : "Resume";
+    document
+      .getElementById("focus_breakOverlay")
+      ?.classList.remove("show");
   }
 
+  if(mode === "loop"){
+    document
+      .getElementById("loop")
+      .classList.remove("loop-running");
+  }
 }
 
 function resetLoop(mode){
@@ -3311,22 +3296,6 @@ function resetLoop(mode){
     document
       .getElementById("loop")
       .classList.remove("loop-running");
-  }
-  state.videoLoaded = false;
-  state.isPaused = false;
-
-  const playBtn =
-    document.getElementById(`${mode}_playBtn`);
-
-  if(playBtn){
-
-    playBtn.dataset.jp = "再生";
-    playBtn.dataset.en = "Play";
-
-    playBtn.textContent =
-      currentLang === "jp"
-      ? "再生"
-      : "Play";
   }  
 }
 
