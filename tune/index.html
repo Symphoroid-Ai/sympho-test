@@ -2364,7 +2364,7 @@ async function fadeVolume(player, from, to, duration = 1200){
   }
 }
 
-function fadeOutAndPause(player){
+async function fadeOutAndPause(player){
 
   if(!player) return;
 
@@ -2373,7 +2373,7 @@ function fadeOutAndPause(player){
       ? player.getVolume()
       : 100;
 
-  fadeVolume(
+  await fadeVolume(
     player,
     currentVolume,
     0,
@@ -2385,7 +2385,7 @@ function fadeOutAndPause(player){
   player.setVolume(currentVolume);
 }
 
-function fadeInAndPlay(player){
+async function fadeInAndPlay(player){
 
   if(!player) return;
 
@@ -2398,7 +2398,7 @@ function fadeInAndPlay(player){
 
   player.playVideo();
 
-  fadeVolume(
+  await fadeVolume(
     player,
     0,
     targetVolume,
@@ -3281,7 +3281,7 @@ function loadVideo(mode){
     // focus休憩中は動画を再生しない
     if(!(mode === "focus" && state.currentPhase === "break")){
     //  state.ytPlayer.playVideo();
-      fadeInAndPlay(state.ytPlayer);
+      await fadeInAndPlay(state.ytPlayer);
     }
 
     state.isPlaying = true;
@@ -3320,7 +3320,7 @@ function loadVideo(mode){
               state.breakDuration;
 
           //state.ytPlayer.pauseVideo();
-            fadeOutAndPause(state.ytPlayer);
+            await fadeOutAndPause(state.ytPlayer);
 
             document
               .getElementById("focus_breakOverlay")
@@ -3335,7 +3335,7 @@ function loadVideo(mode){
               state.focusDuration;
 
           //state.ytPlayer.playVideo();
-            fadeInAndPlay(state.ytPlayer);
+            await fadeInAndPlay(state.ytPlayer);
             document
               .getElementById("focus_breakOverlay")
               ?.classList.remove("show");
