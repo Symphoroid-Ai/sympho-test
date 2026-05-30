@@ -2338,7 +2338,73 @@ const appStates = {
   focus: createState()
 
 };
+async function fadeVolume(player, from, to, duration = 1200){
 
+  if(!player || typeof player.setVolume !== "function"){
+    return;
+  }
+
+  const steps = 24;
+  const interval = duration / steps;
+
+  for(let i = 0; i <= steps; i++){
+
+    const progress = i / steps;
+
+    const volume =
+      from + ((to - from) * progress);
+
+    player.setVolume(
+      Math.max(0, Math.min(100, volume))
+    );
+
+    await new Promise(resolve =>
+      setTimeout(resolve, interval)
+    );
+  }
+}
+
+function fadeOutAndPause(player){
+
+  if(!player) return;
+
+  const currentVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+
+  fadeVolume(
+    player,
+    currentVolume,
+    0,
+    1000
+  );
+
+  player.pauseVideo();
+
+  player.setVolume(currentVolume);
+}
+
+function fadeInAndPlay(player){
+
+  if(!player) return;
+
+  const targetVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+
+  player.setVolume(0);
+
+  player.playVideo();
+
+  fadeVolume(
+    player,
+    0,
+    targetVolume,
+    1200
+  );
+}
 let currentLang =
   localStorage.getItem('lang') || 'jp';
 
@@ -3055,32 +3121,6 @@ timerDisplay.textContent =
   }
 }
 
-
-function fadeYoutubeVolume(player, fromVolume, toVolume, duration, onComplete){
-
-  if(!player || typeof player.setVolume !== "function"){
-    onComplete?.();
-    return;
-  }
-
-  const steps = 20;
-  const interval = duration / steps;
-  let current = 0;
-
-  player.setVolume(fromVolume);
-
-  const timer = setInterval(() => {
-    current++;
-    const volume = fromVolume + ((toVolume - fromVolume) * current / steps);
-    player.setVolume(Math.max(0, Math.min(100, volume)));
-
-    if(current >= steps){
-      clearInterval(timer);
-      onComplete?.();
-    }
-  }, interval);
-}
-
 function loadVideo(mode){
 
   const state =
@@ -3092,7 +3132,8 @@ function loadVideo(mode){
     state.isPaused = false;
 
     if(state.ytPlayer){
-      state.ytPlayer.pauseVideo();
+ //   state.ytPlayer.pauseVideo();
+      fadeOutAndPause(state.ytPlayer);
     }
 
 
@@ -3204,7 +3245,8 @@ function loadVideo(mode){
               setTimeout(() => {
 
                 state.ytPlayer.seekTo(0, true);
-                state.ytPlayer.playVideo();
+            //    state.ytPlayer.playVideo();
+                fadeInAndPlay(state.ytPlayer);
 
               }, 300);
 
@@ -3238,7 +3280,8 @@ function loadVideo(mode){
 
     // focus休憩中は動画を再生しない
     if(!(mode === "focus" && state.currentPhase === "break")){
-      state.ytPlayer.playVideo();
+    //  state.ytPlayer.playVideo();
+      fadeInAndPlay(state.ytPlayer);
     }
 
     state.isPlaying = true;
@@ -3276,16 +3319,8 @@ function loadVideo(mode){
             state.remainingTime =
               state.breakDuration;
 
-            fadeYoutubeVolume(
-              state.ytPlayer,
-              state.ytPlayer.getVolume ? state.ytPlayer.getVolume() : 100,
-              0,
-              1200,
-              () => {
-                state.ytPlayer.pauseVideo();
-                state.ytPlayer.setVolume?.(100);
-              }
-            );
+          //state.ytPlayer.pauseVideo();
+            fadeOutAndPause(state.ytPlayer);
 
             document
               .getElementById("focus_breakOverlay")
@@ -3299,16 +3334,8 @@ function loadVideo(mode){
             state.remainingTime =
               state.focusDuration;
 
-            state.ytPlayer.setVolume?.(0);
-            state.ytPlayer.playVideo();
-
-            fadeYoutubeVolume(
-              state.ytPlayer,
-              0,
-              100,
-              1200
-            );
-
+          //state.ytPlayer.playVideo();
+            fadeInAndPlay(state.ytPlayer);
             document
               .getElementById("focus_breakOverlay")
               ?.classList.remove("show");
