@@ -3142,9 +3142,14 @@ function loadVideo(mode){
       circle.style.stroke = "#ff0000";
     }
   }
+  if(
+    state.isCircular &&
+    !document.getElementById(`${mode}_circularTimer`)
+  ){
+    createCircularTimer(mode);
+  }
 
   updateTimerDisplay(mode);
-
   adjustTimerSizes(mode);
 
   if(!state.ytPlayer && state.playerReady){
