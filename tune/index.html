@@ -2338,7 +2338,7 @@ const appStates = {
   focus: createState()
 
 };
-async function fadeVolume(player, from, to, duration = 1200){
+function fadeVolume(player, from, to, duration = 1200){
 
   if(!player || typeof player.setVolume !== "function"){
     return;
@@ -2347,24 +2347,34 @@ async function fadeVolume(player, from, to, duration = 1200){
   const steps = 24;
   const interval = duration / steps;
 
-  for(let i = 0; i <= steps; i++){
+  let currentStep = 0;
 
-    const progress = i / steps;
+  const timer = setInterval(() => {
+
+    currentStep++;
+
+    const progress =
+      currentStep / steps;
 
     const volume =
       from + ((to - from) * progress);
 
     player.setVolume(
-      Math.max(0, Math.min(100, volume))
+      Math.max(
+        0,
+        Math.min(100, volume)
+      )
     );
 
-    await new Promise(resolve =>
-      setTimeout(resolve, interval)
-    );
-  }
+    if(currentStep >= steps){
+      clearInterval(timer);
+    }
+
+  }, interval);
+
 }
 
-async function fadeOutAndPause(player){
+function fadeOutAndPause(player){
 
   if(!player) return;
 
@@ -2373,19 +2383,24 @@ async function fadeOutAndPause(player){
       ? player.getVolume()
       : 100;
 
-  await fadeVolume(
+  fadeVolume(
     player,
     currentVolume,
     0,
     1000
   );
 
-  player.pauseVideo();
+  setTimeout(() => {
 
-  player.setVolume(currentVolume);
+    player.pauseVideo();
+
+    player.setVolume(currentVolume);
+
+  }, 1000);
+
 }
 
-async function fadeInAndPlay(player){
+function fadeInAndPlay(player){
 
   if(!player) return;
 
@@ -2398,12 +2413,13 @@ async function fadeInAndPlay(player){
 
   player.playVideo();
 
-  await fadeVolume(
+  fadeVolume(
     player,
     0,
     targetVolume,
     1200
   );
+
 }
 let currentLang =
   localStorage.getItem('lang') || 'jp';
@@ -3281,7 +3297,7 @@ function loadVideo(mode){
     // focus休憩中は動画を再生しない
     if(!(mode === "focus" && state.currentPhase === "break")){
     //  state.ytPlayer.playVideo();
-      await fadeInAndPlay(state.ytPlayer);
+      fadeInAndPlay(state.ytPlayer);
     }
 
     state.isPlaying = true;
@@ -3320,7 +3336,7 @@ function loadVideo(mode){
               state.breakDuration;
 
           //state.ytPlayer.pauseVideo();
-            await fadeOutAndPause(state.ytPlayer);
+            fadeOutAndPause(state.ytPlayer);
 
             document
               .getElementById("focus_breakOverlay")
@@ -3335,7 +3351,7 @@ function loadVideo(mode){
               state.focusDuration;
 
           //state.ytPlayer.playVideo();
-            await fadeInAndPlay(state.ytPlayer);
+            fadeInAndPlay(state.ytPlayer);
             document
               .getElementById("focus_breakOverlay")
               ?.classList.remove("show");
