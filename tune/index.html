@@ -3055,6 +3055,32 @@ timerDisplay.textContent =
   }
 }
 
+
+function fadeYoutubeVolume(player, fromVolume, toVolume, duration, onComplete){
+
+  if(!player || typeof player.setVolume !== "function"){
+    onComplete?.();
+    return;
+  }
+
+  const steps = 20;
+  const interval = duration / steps;
+  let current = 0;
+
+  player.setVolume(fromVolume);
+
+  const timer = setInterval(() => {
+    current++;
+    const volume = fromVolume + ((toVolume - fromVolume) * current / steps);
+    player.setVolume(Math.max(0, Math.min(100, volume)));
+
+    if(current >= steps){
+      clearInterval(timer);
+      onComplete?.();
+    }
+  }, interval);
+}
+
 function loadVideo(mode){
 
   const state =
@@ -3250,7 +3276,16 @@ function loadVideo(mode){
             state.remainingTime =
               state.breakDuration;
 
-            state.ytPlayer.pauseVideo();
+            fadeYoutubeVolume(
+              state.ytPlayer,
+              state.ytPlayer.getVolume ? state.ytPlayer.getVolume() : 100,
+              0,
+              1200,
+              () => {
+                state.ytPlayer.pauseVideo();
+                state.ytPlayer.setVolume?.(100);
+              }
+            );
 
             document
               .getElementById("focus_breakOverlay")
@@ -3264,7 +3299,15 @@ function loadVideo(mode){
             state.remainingTime =
               state.focusDuration;
 
+            state.ytPlayer.setVolume?.(0);
             state.ytPlayer.playVideo();
+
+            fadeYoutubeVolume(
+              state.ytPlayer,
+              0,
+              100,
+              1200
+            );
 
             document
               .getElementById("focus_breakOverlay")
