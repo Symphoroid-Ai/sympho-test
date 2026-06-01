@@ -1086,9 +1086,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   width:min(100%, 600px);
 
-  translate:-50% 0;
-
-  transform:translateY(100%);
+  margin-left:max(-300px,-50vw);
 
 
 
@@ -1096,6 +1094,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   max-height:95svh;
   overflow-y:auto;
+  transform:translateY(100%);
 
   background:
     linear-gradient(
@@ -1518,6 +1517,18 @@ body.landscape-video-focus
 
   .settings-section-title{
     margin-bottom:12px;
+  }
+
+}
+@media (max-width:600px){
+
+  #settingsPanel{
+
+    left:0;
+
+    width:100%;
+
+    margin-left:0;
   }
 
 }
