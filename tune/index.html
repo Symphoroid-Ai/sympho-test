@@ -1081,10 +1081,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   position:fixed;
 
-  left:0;
+  left:50%;
   bottom:0;
 
-  width:100%;
+  width:min(100%, 600px);
+
+   transform:
+   translateX(-50%)
+   translateY(100%);
+
+  border-radius:28px 28px 0 0;
+
   max-height:82vh;
 
   overflow-y:auto;
@@ -1122,7 +1129,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 #settingsPanel.show{
 
-  transform:translateY(0);
+   transform:
+    translateX(-50%)
+    translateY(0);
 }
 
 .settings-handle{
@@ -1464,6 +1473,42 @@ body.landscape-video-focus
   .circular-timer{
 
     z-index:10001;
+  }
+
+}
+@media (max-width:480px){
+
+  #settingsPanel{
+    max-height:95svh;
+    padding:12px;
+  }
+
+  .small-wheel{
+    width:90px;
+    height:120px;
+  }
+
+  .wheel-picker{
+    height:120px;
+  }
+
+  .wheel-scroll{
+    padding-top:39px;
+    padding-bottom:39px;
+  }
+
+  .settings-row{
+    padding:10px;
+    gap:8px;
+    margin-bottom:10px;
+  }
+
+  .settings-group{
+    margin-bottom:16px;
+  }
+
+  .settings-section-title{
+    margin-bottom:12px;
   }
 
 }
