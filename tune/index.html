@@ -1081,14 +1081,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   position:fixed;
 
-  left:0;
+  left:50%;
   bottom:0;
 
-  width:100%;
+  width:min(100%, 600px);
+
+  transform:translateX(-50%) translateY(100%);
 
 
-
-  transform:translateY(100%);
 
   border-radius:28px 28px 0 0;
 
@@ -1128,7 +1128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 #settingsPanel.show{
 
-   transform:translateY(0);
+  transform:translateX(-50%) translateY(0);
 }
 
 .settings-handle{
@@ -1314,8 +1314,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   #settingsPanel{
 
-    padding-bottom:40px;
+    left:0;
+
+    width:100%;
+
+    transform:translateY(100%);
   }
+
+  #settingsPanel.show{
+
+    transform:translateY(0);
+  }
+
 }
 /* ========================================
    Mobile Landscape Video Focus Mode
