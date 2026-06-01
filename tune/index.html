@@ -2338,7 +2338,73 @@ const appStates = {
   focus: createState()
 
 };
+async function fadeVolume(player, from, to, duration = 1200){
 
+  if(!player || typeof player.setVolume !== "function"){
+    return;
+  }
+
+  const steps = 24;
+  const interval = duration / steps;
+
+  for(let i = 0; i <= steps; i++){
+
+    const progress = i / steps;
+
+    const volume =
+      from + ((to - from) * progress);
+
+    player.setVolume(
+      Math.max(0, Math.min(100, volume))
+    );
+
+    await new Promise(resolve =>
+      setTimeout(resolve, interval)
+    );
+  }
+}
+
+function fadeOutAndPause(player){
+
+  if(!player) return;
+
+  const currentVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+
+  fadeVolume(
+    player,
+    currentVolume,
+    0,
+    1000
+  );
+
+  player.pauseVideo();
+
+  player.setVolume(currentVolume);
+}
+
+function fadeInAndPlay(player){
+
+  if(!player) return;
+
+  const targetVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+
+  player.setVolume(0);
+
+  player.playVideo();
+
+  fadeVolume(
+    player,
+    0,
+    targetVolume,
+    1200
+  );
+}
 let currentLang =
   localStorage.getItem('lang') || 'jp';
 
@@ -3066,7 +3132,8 @@ function loadVideo(mode){
     state.isPaused = false;
 
     if(state.ytPlayer){
-      state.ytPlayer.pauseVideo();
+ //   state.ytPlayer.pauseVideo();
+      fadeOutAndPause(state.ytPlayer);
     }
 
 
@@ -3142,14 +3209,15 @@ function loadVideo(mode){
       circle.style.stroke = "#ff0000";
     }
   }
-  if(
+ if(
     state.isCircular &&
     !document.getElementById(`${mode}_circularTimer`)
   ){
     createCircularTimer(mode);
   }
-
+  
   updateTimerDisplay(mode);
+
   adjustTimerSizes(mode);
 
   if(!state.ytPlayer && state.playerReady){
@@ -3183,7 +3251,8 @@ function loadVideo(mode){
               setTimeout(() => {
 
                 state.ytPlayer.seekTo(0, true);
-                state.ytPlayer.playVideo();
+            //    state.ytPlayer.playVideo();
+                fadeInAndPlay(state.ytPlayer);
 
               }, 300);
 
@@ -3217,7 +3286,8 @@ function loadVideo(mode){
 
     // focus休憩中は動画を再生しない
     if(!(mode === "focus" && state.currentPhase === "break")){
-      state.ytPlayer.playVideo();
+    //  state.ytPlayer.playVideo();
+      fadeInAndPlay(state.ytPlayer);
     }
 
     state.isPlaying = true;
@@ -3255,7 +3325,8 @@ function loadVideo(mode){
             state.remainingTime =
               state.breakDuration;
 
-            state.ytPlayer.pauseVideo();
+          //state.ytPlayer.pauseVideo();
+            fadeOutAndPause(state.ytPlayer);
 
             document
               .getElementById("focus_breakOverlay")
@@ -3269,8 +3340,8 @@ function loadVideo(mode){
             state.remainingTime =
               state.focusDuration;
 
-            state.ytPlayer.playVideo();
-
+          //state.ytPlayer.playVideo();
+            fadeInAndPlay(state.ytPlayer);
             document
               .getElementById("focus_breakOverlay")
               ?.classList.remove("show");
