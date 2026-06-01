@@ -1086,9 +1086,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   width:min(100%, 600px);
 
-   transform:
-   translateX(-50%)
-   translateY(100%);
+  margin-left:-300px; /* 600pxの半分 */
+
+  transform:translateY(100%);
 
   border-radius:28px 28px 0 0;
 
@@ -1129,9 +1129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 #settingsPanel.show{
 
-   transform:
-    translateX(-50%)
-    translateY(0);
+   transform:translateY(0);
 }
 
 .settings-handle{
