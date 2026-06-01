@@ -1069,13 +1069,7 @@ document.addEventListener("DOMContentLoaded", () => {
   z-index:999;
 }
 
-  opacity:0;
-  pointer-events:none;
 
-  transition:0.3s;
-
-  z-index:999;
-}
 
 #settingsOverlay.show{
 
@@ -2364,7 +2358,7 @@ async function fadeVolume(player, from, to, duration = 1200){
   }
 }
 
-function fadeOutAndPause(player){
+async function fadeOutAndPause(player){
 
   if(!player) return;
 
@@ -2373,7 +2367,7 @@ function fadeOutAndPause(player){
       ? player.getVolume()
       : 100;
 
-  fadeVolume(
+  await fadeVolume(
     player,
     currentVolume,
     0,
@@ -2425,7 +2419,11 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.getItem("loopDuration");
 
   if(savedLoop){
-    getEl("loop", "duration").value = savedLoop;
+
+    document.getElementById(
+      "loop_duration_settings"
+    ).dataset.value = savedLoop;
+
   }
 
   createWheelPicker("loop_duration_settings", 1, 180, 10);
@@ -3209,13 +3207,12 @@ function loadVideo(mode){
       circle.style.stroke = "#ff0000";
     }
   }
- if(
+  if(
     state.isCircular &&
     !document.getElementById(`${mode}_circularTimer`)
   ){
     createCircularTimer(mode);
   }
-  
   updateTimerDisplay(mode);
 
   adjustTimerSizes(mode);
@@ -3902,25 +3899,25 @@ function restoreSavedSettings(){
 
   if(loopDuration){
 
-    document
-      .getElementById("loop_duration")
-      .setValue(loopDuration);
+    document.getElementById(
+      "loop_duration_settings"
+    ).dataset.value = loopDuration;
 
   }
 
   if(focusDuration){
 
-    document
-      .getElementById("focus_duration")
-      .setValue(focusDuration);
+    document.getElementById(
+      "focus_duration_settings"
+    ).dataset.value = focusDuration;
 
   }
 
   if(breakDuration){
 
-    document
-      .getElementById("focus_breakDuration")
-      .setValue(breakDuration);
+    document.getElementById(
+      "focus_breakDuration_settings"
+    ).dataset.value = breakDuration;
 
   }
 
