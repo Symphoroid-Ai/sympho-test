@@ -2338,73 +2338,7 @@ const appStates = {
   focus: createState()
 
 };
-async function fadeVolume(player, from, to, duration = 1200){
 
-  if(!player || typeof player.setVolume !== "function"){
-    return;
-  }
-
-  const steps = 24;
-  const interval = duration / steps;
-
-  for(let i = 0; i <= steps; i++){
-
-    const progress = i / steps;
-
-    const volume =
-      from + ((to - from) * progress);
-
-    player.setVolume(
-      Math.max(0, Math.min(100, volume))
-    );
-
-    await new Promise(resolve =>
-      setTimeout(resolve, interval)
-    );
-  }
-}
-
-async function fadeOutAndPause(player){
-
-  if(!player) return;
-
-  const currentVolume =
-    typeof player.getVolume === "function"
-      ? player.getVolume()
-      : 100;
-
-  await fadeVolume(
-    player,
-    currentVolume,
-    0,
-    1000
-  );
-
-  player.pauseVideo();
-
-  player.setVolume(currentVolume);
-}
-
-async function fadeInAndPlay(player){
-
-  if(!player) return;
-
-  const targetVolume =
-    typeof player.getVolume === "function"
-      ? player.getVolume()
-      : 100;
-
-  player.setVolume(0);
-
-  player.playVideo();
-
-  await fadeVolume(
-    player,
-    0,
-    targetVolume,
-    1200
-  );
-}
 let currentLang =
   localStorage.getItem('lang') || 'jp';
 
@@ -3270,7 +3204,7 @@ function loadVideo(mode){
 
 }
 
-async function playLoop(mode){
+  function playLoop(mode){
 
     const state =
       appStates[mode];
@@ -3321,8 +3255,7 @@ async function playLoop(mode){
             state.remainingTime =
               state.breakDuration;
 
-        //  state.ytPlayer.pauseVideo();
-            await fadeOutAndPause(state.ytPlayer);
+            state.ytPlayer.pauseVideo();
 
             document
               .getElementById("focus_breakOverlay")
@@ -3336,8 +3269,7 @@ async function playLoop(mode){
             state.remainingTime =
               state.focusDuration;
 
-        //  state.ytPlayer.playVideo();
-            await fadeInAndPlay(state.ytPlayer);
+            state.ytPlayer.playVideo();
 
             document
               .getElementById("focus_breakOverlay")
