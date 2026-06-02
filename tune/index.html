@@ -2501,7 +2501,7 @@ async function fadeVolume(player, from, to, duration = 1200){
   }
 }
 
-
+/*
 async function fadeOutAndPause(player){
 
   if(!player) return;
@@ -2542,8 +2542,8 @@ function fadeInAndPlay(player){
     1200
   );
 }
-/*
-async function fadeOutAndMute(player){
+*/
+async function fadeOutAndPause(player){
 
   if(!player) return;
 
@@ -2552,6 +2552,8 @@ async function fadeOutAndMute(player){
       ? player.getVolume()
       : 100;
 
+  player._savedVolume = currentVolume;
+
   await fadeVolume(
     player,
     currentVolume,
@@ -2559,27 +2561,31 @@ async function fadeOutAndMute(player){
     1000
   );
 
-  player.mute();
+  player.pauseVideo();
 }
-
 function fadeInAndPlay(player){
 
   if(!player) return;
 
-  player.unMute();
-
-  const targetVolume = 100;
-
+  const targetVolume =
+    player._savedVolume ?? 100;
+    
+  player.unMute?.();
   player.setVolume(0);
 
-  fadeVolume(
-    player,
-    0,
-    targetVolume,
-    1200
-  );
+  player.playVideo();
+
+  setTimeout(() => {
+
+    fadeVolume(
+      player,
+      0,
+      targetVolume,
+      1200
+    );
+
+  }, 300);
 }
-*/
 let currentLang =
   localStorage.getItem('lang') || 'jp';
 
