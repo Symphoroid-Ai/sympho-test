@@ -2500,6 +2500,10 @@ async function fadeVolume(player, from, to, duration = 1200){
       setTimeout(resolve, interval)
     );
   }
+  // ← 追加
+  player.setVolume(
+    Math.max(0, Math.min(100, to))
+  );
 }
 
 async function fadeOutAndPause(player){
@@ -2554,7 +2558,10 @@ function fadeInAndPlay(player){
       targetVolume,
       1200
     );
-
+    console.log(
+      "volume after resume",
+      player.getVolume()
+    );
   }, 500);
 }
 /*
