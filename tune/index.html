@@ -2481,7 +2481,8 @@ async function fadeVolume(player, from, to, duration = 1200){
     return;
   }
 
-  const steps = 24;
+//  const steps = 24;
+  const steps = 10;
   const interval = duration / steps;
 
   for(let i = 0; i <= steps; i++){
@@ -2546,6 +2547,8 @@ function fadeInAndPlay(player){
 
 async function fadeOutAndPause(player){
 
+  console.log("currentVolume", currentVolume);
+
   if(!player) return;
 
   const currentVolume =
@@ -2553,7 +2556,8 @@ async function fadeOutAndPause(player){
       ? player.getVolume()
       : 100;
 
-  player._savedVolume = currentVolume;
+//  player._savedVolume = currentVolume;
+  player._savedVolume = 100;
 
   await fadeVolume(
     player,
