@@ -2564,27 +2564,8 @@ async function fadeOutAndPause(player){
 
   player.pauseVideo();
 }
-function fadeInAndPlay(player){
 
-  if(!player) return;
 
-  const targetVolume =
-    typeof player.getVolume === "function"
-      ? player.getVolume()
-      : 100;
-
-  player.setVolume(0);
-
-  player.playVideo();
-
-  fadeVolume(
-    player,
-    0,
-    targetVolume,
-    1200
-  );
-}
-/*
 function fadeInAndPlay(player){
 
   if(!player) return;
@@ -2609,7 +2590,7 @@ function fadeInAndPlay(player){
 
   }, 500);
 }
-*/
+
 
 let currentLang =
   localStorage.getItem('lang') || 'jp';
