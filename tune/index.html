@@ -2502,6 +2502,61 @@ async function fadeVolume(player, from, to, duration = 1200){
   }
 }
 
+async function fadeOutAndPause(player){
+
+
+
+  if(!player) return;
+
+  const currentVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+  console.log("currentVolume", currentVolume);
+  player._savedVolume = currentVolume;
+//  player._savedVolume = 100;
+
+  try{
+
+    await fadeVolume(
+      player,
+      currentVolume,
+      0,
+      1500
+    );
+
+  } finally {
+
+    player.pauseVideo();
+
+  }
+}
+
+
+function fadeInAndPlay(player){
+
+  if(!player) return;
+
+  const targetVolume =
+    player._savedVolume || 100;
+
+  player.unMute();
+
+  player.playVideo();
+
+  setTimeout(() => {
+
+    player.setVolume(0);
+
+    fadeVolume(
+      player,
+      0,
+      targetVolume,
+      1200
+    );
+
+  }, 500);
+}
 /*
 async function fadeOutAndPause(player){
 
@@ -2544,57 +2599,6 @@ function fadeInAndPlay(player){
   );
 }
 */
-
-async function fadeOutAndPause(player){
-
-  console.log("currentVolume", currentVolume);
-
-  if(!player) return;
-
-  const currentVolume =
-    typeof player.getVolume === "function"
-      ? player.getVolume()
-      : 100;
-
-//  player._savedVolume = currentVolume;
-  player._savedVolume = 100;
-
-  await fadeVolume(
-    player,
-    currentVolume,
-    0,
-    1500
-  );
-
-  player.pauseVideo();
-}
-
-
-function fadeInAndPlay(player){
-
-  if(!player) return;
-
-  const targetVolume =
-    player._savedVolume || 100;
-
-  player.unMute();
-
-  player.playVideo();
-
-  setTimeout(() => {
-
-    player.setVolume(0);
-
-    fadeVolume(
-      player,
-      0,
-      targetVolume,
-      1200
-    );
-
-  }, 500);
-}
-
 
 let currentLang =
   localStorage.getItem('lang') || 'jp';
