@@ -2568,8 +2568,34 @@ function fadeInAndPlay(player){
   if(!player) return;
 
   const targetVolume =
+    player._savedVolume || 100;
+
+  player.unMute();
+
+  player.playVideo();
+
+  setTimeout(() => {
+
+    player.setVolume(0);
+
+    fadeVolume(
+      player,
+      0,
+      targetVolume,
+      1200
+    );
+
+  }, 500);
+
+}
+/*
+function fadeInAndPlay(player){
+
+  if(!player) return;
+
+  const targetVolume =
     player._savedVolume ?? 100;
-    
+
   player.unMute?.();
   player.setVolume(0);
 
@@ -2586,6 +2612,7 @@ function fadeInAndPlay(player){
 
   }, 300);
 }
+*/
 let currentLang =
   localStorage.getItem('lang') || 'jp';
 
