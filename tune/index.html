@@ -2501,6 +2501,7 @@ async function fadeVolume(player, from, to, duration = 1200){
   }
 }
 
+/*
 async function fadeOutAndPause(player){
 
   if(!player) return;
@@ -2518,7 +2519,6 @@ async function fadeOutAndPause(player){
   );
 
   player.pauseVideo();
-
   player.setVolume(currentVolume);
 }
 
@@ -2534,6 +2534,43 @@ function fadeInAndPlay(player){
   player.setVolume(0);
 
   player.playVideo();
+
+  fadeVolume(
+    player,
+    0,
+    targetVolume,
+    1200
+  );
+}
+*/
+async function fadeOutAndMute(player){
+
+  if(!player) return;
+
+  const currentVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+
+  await fadeVolume(
+    player,
+    currentVolume,
+    0,
+    1000
+  );
+
+  player.mute();
+}
+
+function fadeInAndPlay(player){
+
+  if(!player) return;
+
+  player.unMute();
+
+  const targetVolume = 100;
+
+  player.setVolume(0);
 
   fadeVolume(
     player,
