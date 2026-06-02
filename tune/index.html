@@ -2508,17 +2508,16 @@ async function fadeVolume(player, from, to, duration = 1200){
 
 async function fadeOutAndPause(player){
 
-
-
   if(!player) return;
 
   const currentVolume =
     typeof player.getVolume === "function"
       ? player.getVolume()
       : 100;
+
   console.log("currentVolume", currentVolume);
+
   player._savedVolume = currentVolume;
-//  player._savedVolume = 100;
 
   try{
 
@@ -2531,11 +2530,13 @@ async function fadeOutAndPause(player){
 
   } finally {
 
+    // 停止前に音量を戻す
+    player.setVolume(currentVolume);
+
     player.pauseVideo();
 
   }
 }
-
 
 function fadeInAndPlay(player){
 
@@ -2558,10 +2559,7 @@ function fadeInAndPlay(player){
       targetVolume,
       1200
     );
-    console.log(
-      "volume after resume",
-      player.getVolume()
-    );
+    player.setVolume(100);
   }, 500);
 }
 /*
