@@ -2543,7 +2543,7 @@ function fadeInAndPlay(player){
   );
 }
 */
-/*
+
 async function fadeOutAndPause(player){
 
   if(!player) return;
@@ -2569,6 +2569,27 @@ function fadeInAndPlay(player){
   if(!player) return;
 
   const targetVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+
+  player.setVolume(0);
+
+  player.playVideo();
+
+  fadeVolume(
+    player,
+    0,
+    targetVolume,
+    1200
+  );
+}
+/*
+function fadeInAndPlay(player){
+
+  if(!player) return;
+
+  const targetVolume =
     player._savedVolume || 100;
 
   player.unMute();
@@ -2587,52 +2608,9 @@ function fadeInAndPlay(player){
     );
 
   }, 500);
-
 }
 */
-function fadeInAndPlay(player){
 
-  if(!player) return;
-
-  const targetVolume =
-    player._savedVolume || 100;
-
-  player.unMute();
-
-  player.setVolume(0);
-
-  player.playVideo();
-
-  setTimeout(() => {
-
-    fadeVolume(
-      player,
-      0,
-      targetVolume,
-      2000
-    );
-
-  }, 100);
-
-}
-async function fadeOutAndPause(player){
-
-  if(!player) return;
-
-  player._savedVolume =
-    typeof player.getVolume === "function"
-      ? player.getVolume()
-      : 100;
-
-  await fadeVolume(
-    player,
-    player._savedVolume,
-    0,
-    2000
-  );
-
-  player.pauseVideo();
-}
 let currentLang =
   localStorage.getItem('lang') || 'jp';
 
