@@ -2475,14 +2475,14 @@ const appStates = {
   focus: createState()
 
 };
-async function fadeVolume(player, from, to, duration = 3000){
+async function fadeVolume(player, from, to, duration = 1200){
 
   if(!player || typeof player.setVolume !== "function"){
     return;
   }
 
 //  const steps = 24;
-  const steps = 5;
+  const steps = 10;
   const interval = duration / steps;
 
   for(let i = 0; i <= steps; i++){
@@ -2525,7 +2525,7 @@ async function fadeOutAndPause(player){
       player,
       currentVolume,
       0,
-      3000
+      1500
     );
 
   } finally {
@@ -2557,7 +2557,7 @@ function fadeInAndPlay(player){
       player,
       0,
       targetVolume,
-      3000
+      1200
     );
     player.setVolume(100);
   }, 500);
