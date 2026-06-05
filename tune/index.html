@@ -1410,10 +1410,17 @@ document.addEventListener("DOMContentLoaded", () => {
    Mobile Landscape Video Focus Mode
 ======================================== */
 
+/*
 @media screen
 and (orientation: landscape)
 and (max-width: 1024px){
+*/
 
+@media screen
+and (orientation: landscape)
+and (max-width: 1024px)
+and (pointer: coarse){
+  
   html,
   body{
 
@@ -2897,10 +2904,13 @@ function setupLandscapeVideoFocus(){
 
   const applyLandscapeMode = () => {
 
-    const isMobile =
+/*    const isMobile =
       window.matchMedia("(max-width: 1024px)").matches;
+*/
+    const isMobile =
+      /iPhone|iPad|Android/i.test(navigator.userAgent);
 
-    const isLandscape =
+      const isLandscape =
       window.matchMedia("(orientation: landscape)").matches;
 
     if(isMobile && isLandscape){
