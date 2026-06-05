@@ -2,446 +2,4085 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symphoroid Ai</title>
-  <script src="https://www.youtube.com/iframe_api"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>sympho tune</title>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+function openSettings(mode){
+
+  document
+    .getElementById("settingsPanel")
+    .classList.add("show");
+
+  document
+    .getElementById("settingsOverlay")
+    .classList.add("show");
+
+  document
+    .getElementById("loopSettings")
+    .style.display =
+      mode === "loop"
+      ? "block"
+      : "none";
+
+  document
+    .getElementById("focusSettings")
+    .style.display =
+      mode === "focus"
+      ? "block"
+      : "none";
+}
+
+function closeSettings(){
+
+  document
+    .getElementById("settingsPanel")
+    .classList.remove("show");
+
+  document
+    .getElementById("settingsOverlay")
+    .classList.remove("show");
+
+  const loopUrl =
+    document.getElementById("loop_ytUrl")?.value?.trim();
+
+  const focusUrl =
+    document.getElementById("focus_ytUrl")?.value?.trim();
+
+  if(loopUrl){
+    loadVideo("loop");
+  }
+
+  if(focusUrl){
+    loadVideo("focus");
+  }
+
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const overlay =
+    document.getElementById("settingsOverlay");
+
+  if(overlay){
+
+    overlay.addEventListener(
+      "click",
+      closeSettings
+    );
+
+  }
+  updateModeUI("loop");
+  updateModeUI("focus");
+  setupLandscapeVideoFocus();
+
+});
+
+</script>
+
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
-    html, body {
+
+    body {
       margin: 0;
-      padding: 0;
       font-family: 'Comfortaa', 'Helvetica Neue', 'Segoe UI', sans-serif;
       background-color: #0d1b2a;
       color: white;
     }
 
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100%;
-      min-height: 100%;
-      object-fit: cover;
-      z-index: -1;
+    header, section {
+      padding: 2em;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 3rem);
     }
 
     #langToggle {
       position: absolute;
       top: 1rem;
-      right: 1rem; 
+      right: 1rem;
+
       background: #00bcd4;
       color: white;
+
       border: 1px solid white;
       border-radius: 5px;
+
       padding: 0.5rem 1rem;
-      z-index: 2;
+
+      z-index: 10;
       cursor: pointer;
+
       font-size: 1rem;
-    }
 
-     header {
-      position: relative;
-      height: 60vh;
-      min-height: 400px;
-      overflow: hidden;
+      min-width: unset;
+      min-height: unset;
+      font-weight:400;
     }
-
-    .header-video {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    .header-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 1;
-      color: white;
-      background: rgba(0, 0, 0, 0.0); /* 半透明の背景で文字が見やすく */
-      padding: 2rem;
-      border-radius: 10px;
-    }
-    .header-content p {
-      text-shadow: 0 0 10px black;
-    }
-    .header-content h1 {
-      width: 100%;
-      font-size: clamp(2rem, 6vw, 5rem);
-      text-align: center;
-      letter-spacing: 0.1em;
-      margin: 0 auto;
-      text-shadow: 0 0 10px black;
-      white-space: nowrap;
-    }
-
-    .btn-group {
-      margin-top: 2rem;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
     .btn {
       background: #00bcd4;
       border: none;
       padding: 0.8em 1.5em;
       margin: 0.5em;
       color: white;
-      border: 1px solid white;      
+      border: 1px solid white;
       font-size: 1em;
       border-radius: 5px;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease;
       position: relative;
       z-index: 1;
     }
-    /* ---------------- クリック時の軽い反応 ---------------- */
-    .btn:active{
+
+    .btn:active {
       transform: scale(1.05);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 12px rgba(255,255,255,0.6);
     }
 
-    /* ---------------- ポップエフェクトクラス ---------------- */
     .btn.pop {
       animation: popGlow 0.25s ease forwards;
     }
 
-    /* ---------------- ポップ＋光＋色変化アニメーション ---------------- */
     @keyframes popGlow {
+
       0% {
         transform: scale(1);
-        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 rgba(255,255,255,0);
         background-color: inherit;
         color: inherit;
       }
+
       30% {
         transform: scale(1.3);
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.5);
+        box-shadow:
+          0 0 20px rgba(255,255,255,0.8),
+          0 0 40px rgba(0,188,212,0.5);
       }
+
       60% {
         transform: scale(1.1);
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(0, 188, 212, 0.4);
+        box-shadow:
+          0 0 15px rgba(255,255,255,0.6),
+          0 0 30px rgba(0,188,212,0.4);
         background-color: #00e0ff;
         color: #fff;
       }
+
       100% {
         transform: scale(1);
         box-shadow: 0 0 0 rgba(255,255,255,0);
-        background-color: #00bcd4; /* btn用 */
+        background-color: #00bcd4;
         color: white;
       }
     }
 
-    section {
-      padding: 2rem;
-      background: rgba(0,0,0,0.4);
+    iframe {
+      display: block;
+      border: none;
     }
 
-    nav {
-      text-align: center;
-      margin-bottom: 1rem;
+    section h2 {
+      font-size: clamp(1rem, 5vw, 1.5rem);
+      margin-bottom: 20px;
     }
 
-    nav a {
-      margin: 0 1rem;
-      color: #ccc;
+    header {
+      background-color: #EAEEF6;
+      color: #01BEE3;
+    }
+
+    .sns-links a {
+      color: #7FDBFF;
+      text-decoration: none;
+      font-size: 32px;
+      margin: 0 10px;
+    }
+
+    .sns-links a:hover {
+      color: #00bcd4;
+    }
+
+    .footer-links {
+      margin: 0 5px;
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.9rem;
+    }
+
+    .footer-links:hover {
       text-decoration: underline;
     }
 
     footer {
       text-align: center;
-      padding: 2rem;
-      font-size: 0.9rem;
-      background: rgba(0,0,0,0.6);
-    }
-    .sns-links a {
-      color: #7FDBFF;
-      text-decoration: none;
-      font-size: 32px;
-      margin: 0 10px;     
+      padding: 20px;
     }
 
-    .sns-links a:hover {
-      color: #00bcd4; /* ホバー時に少し強めのシアンに */
+    header img,
+    .responsive-img {
+      max-width: 600px;
+      width: 80%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .loop-controls,
+    .upper-controls,
+    .lower-controls,
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5em;
+      justify-content: center;
+    }
+
+    .lower-controls {
+
+      display:flex;
+      flex-direction:row;
+
+      justify-content:center;
+      align-items:center;
+
+      gap:10px;
+
+      flex-wrap:wrap;
+
+      margin-top:1em;
+    }
+
+    /* 下部操作ボタン */
+    .lower-controls .btn{
+
+      min-width:90px;
+      min-height:44px;
+
+      padding:0.7em 1em;
+
+      font-size:0.9rem;
+
+      border-radius:12px;
+
+      flex:0 1 auto;
+    }
+
+    /* iPhone向け最適化 */
+    @media (max-width:480px){
+
+      .lower-controls{
+
+        gap:8px;
+      }
+
+      .lower-controls .btn{
+
+        min-width:78px;
+
+        padding:0.65em 0.8em;
+
+        font-size:0.82rem;
+      }
+
+    }
+
+    .focus-time-row{
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:nowrap;
+    }
+
+    .time-input {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5em;
+
+      min-width: 120px;
+      flex-shrink: 0;
+    }
+    .btn-group {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .time-input {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
     }
 
 
-    .background-container {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .video-wrapper {
+      position: relative;
+      isolation:isolate;
       width: 100%;
-      height: 100%;
-      z-index: 0;
+      max-width: 800px;
+      aspect-ratio: 16 / 9;
+      margin: auto;
       overflow: hidden;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .bg-image {
+    .video-wrapper iframe,
+    .video-wrapper > #loop_ytPlayer,
+    .video-wrapper > #focus_ytPlayer {
       position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 2s ease-in-out, transform 5s ease-in-out; /* transform 追加 */
- 
     }
 
-    .bg-image.active {
-      opacity: 1;
-
+    #videoArea_choice {
+      scroll-margin-top: 80px;
     }
-    
 
-    @media (max-height: 500px) and (orientation: landscape) {
-      header {
-        height: auto;
-        min-height: 400px;
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-      }
-     /* h1 { font-size: 2rem; }*/
-     .header-content h1 {
-      font-size: 8vw;
-      }
+    .top-left {
+      top: 10px;
+      left: 10px;
     }
-  </style>
+
+    .top-right {
+      top: 10px;
+      right: 10px;
+    }
+
+    .bottom-left {
+      bottom: 10px;
+      left: 10px;
+    }
+
+    .bottom-right {
+      bottom: 10px;
+      right: 10px;
+    }
+
+    .center {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+
+    .timer-display {
+      position: absolute;
+      color: #ffffff;
+      z-index: 10;
+      pointer-events: none;
+      text-shadow:
+        0 0 10px rgba(200,230,255,0.9),
+        0 0 18px rgba(120,180,255,0.6);
+
+      background: rgba(255,255,255,0.12);
+
+      border-radius: 12px;
+      padding: 0.35em 0.7em;
+
+      backdrop-filter: blur(12px);
+
+      box-shadow:
+        0 0 18px rgba(255,255,255,0.45),
+        0 0 30px rgba(135,206,250,0.35),
+        0 6px 25px rgba(0,0,0,0.45);
+    }
+
+    .circular-timer {
+      position: absolute;
+
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      width: 60%;
+      aspect-ratio: 1 / 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      pointer-events: none;
+      z-index: 15;
+    }
+
+
+    .circular-timer svg {
+      width: 100%;
+      height: 100%;
+
+      overflow: visible;
+      display: block;
+
+      transform: rotate(-90deg);
+    }
+
+    .circular-timer circle {
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .circular-timer .bg {
+      stroke: rgba(255,255,255,0.5);
+    }
+
+    .circular-timer .progress {
+      stroke: #ff0000;
+      transition: stroke-dashoffset 0.1s linear;
+      transform-origin: 50% 50%;      
+    }
+
+    .circular-timer svg text {
+      font-size: 2.5em;
+      fill: white;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+
+      text-shadow:
+        0 0 6px rgba(0,0,0,0.6),
+        0 0 12px rgba(255,255,255,0.3);
+    }
+
+    .wheel-picker{
+
+      position:relative;
+
+      width:100%;
+
+      height:180px;
+
+      overflow:hidden;
+
+      display:flex;
+
+      justify-content:center;
+      align-items:center;
+
+      border-radius:24px;
+
+      background:
+        rgba(255,255,255,0.04);
+
+      border:
+        1px solid rgba(255,255,255,0.08);
+
+      box-shadow:
+        inset 0 0 12px rgba(255,255,255,0.05);
+
+      backdrop-filter:blur(10px);
+   
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+
+      -webkit-mask-image:
+        -webkit-radial-gradient(white, black);
+    }
+    /* 上下フェード */
+    .wheel-picker::before,
+    .wheel-picker::after{
+      content:"";
+      position:absolute;
+      left:0;
+      width:100%;
+      height:70px;
+      z-index:5;
+      pointer-events:none;
+    }
+
+    .wheel-picker::before{
+      top:0;
+
+      background:linear-gradient(
+        to bottom,
+        rgba(13,27,42,0.95),
+        rgba(13,27,42,0)
+      );
+    }
+
+    .wheel-picker::after{
+      bottom:0;
+
+      background:linear-gradient(
+        to top,
+        rgba(13,27,42,0.95),
+        rgba(13,27,42,0)
+      );
+    }
+
+    /* 中央発光ライン */
+
+    .wheel-highlight{
+
+      position:absolute;
+
+      top:50%;
+      left:50%;
+
+      transform:translate(-50%, -50%);
+
+      width:90%;
+
+      height:42px;
+
+      border-radius:16px;
+
+      background:
+        rgba(255,255,255,0.12);
+
+      border:
+        1px solid rgba(255,255,255,0.16);
+
+      box-shadow:
+        0 0 18px rgba(255,255,255,0.08),
+        inset 0 0 8px rgba(255,255,255,0.08);
+
+      pointer-events:none;
+
+      z-index:2;
+    }
+    /* スクロール本体 */
+
+    .wheel-scroll{
+
+      position:relative;
+
+      z-index:3;
+
+      height:100%;
+
+      width:100%;
+
+      overflow-y:scroll;
+
+      overflow-x:hidden;
+
+      overscroll-behavior-y:contain;
+
+      touch-action:pan-y;
+
+      scroll-snap-type:y mandatory;
+
+      padding-top:69px;
+      padding-bottom:69px;
+
+      box-sizing:border-box;
+
+      scrollbar-width:none;
+
+      -ms-overflow-style:none;
+    }
+
+    .wheel-scroll::-webkit-scrollbar{
+      display:none;
+    }
+
+      .wheel-item{
+
+      height:42px;
+
+      width:100%;
+
+      flex-shrink:0;
+
+      display:flex;
+
+      align-items:center;
+      justify-content:center;
+
+      scroll-snap-align:center;
+
+      font-size:24px;
+
+      color:rgba(255,255,255,0.45);
+
+      transition:
+        transform 0.2s,
+        opacity 0.2s,
+        color 0.2s;
+    }
   
-  <!-- Google tag (gtag.js) -->
+    .wheel-item.active{
+
+      color:white;
+
+      font-weight:700;
+
+      transform:scale(1.15);
+
+      text-shadow:
+        0 0 12px rgba(255,255,255,0.75),
+        0 0 22px rgba(180,220,255,0.55);
+
+      opacity:1;
+    }
+
+    .wheel-number{
+
+      display:inline-block;
+
+    }
+
+    .wheel-unit{
+
+      margin-left:5px;
+      font-size:0.34em;
+      font-weight:600;
+      letter-spacing:0.18em;
+      opacity:0;
+      transform:translateY(1px);
+      transition:
+        opacity 0.2s ease;
+    }
+
+    .wheel-item.active .wheel-unit{
+
+      opacity:0.72;
+
+    }
+    .wheel-item:not(.active){
+
+      opacity:0.45;
+    }
+    .video-select-grid{
+      width:100%;
+      max-width:1000px;
+
+      display:flex;
+
+      gap:16px;
+      cursor: grab;
+
+      overflow-x:auto;
+      overflow-y:hidden;
+
+      padding:10px 6px 20px;
+
+      margin:0px auto 20px;
+
+      scroll-snap-type:x mandatory;
+
+      -webkit-overflow-scrolling:touch;
+
+      scrollbar-width:none;
+    }
+
+    .video-select-grid::-webkit-scrollbar{
+      display:none;
+    }
+
+    .video-carousel-wrapper{
+      position:relative;
+      width:100%;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    .carousel-btn{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:20;
+
+      width:48px;
+      height:48px;
+
+      border:none;
+      border-radius:50%;
+
+      background:rgba(255,255,255,0.15);
+
+      color:white;
+      font-size:22px;
+
+      cursor:pointer;
+
+      backdrop-filter:blur(10px);
+
+      box-shadow:
+        0 0 15px rgba(255,255,255,0.15);
+
+      transition:0.2s;
+    }
+
+    .carousel-btn:hover{
+      transform:translateY(-50%) scale(1.08);
+
+      box-shadow:
+        0 0 20px rgba(120,200,255,0.5);
+    }
+
+    .carousel-btn.left{
+      left:-10px;
+    }
+
+    .carousel-btn.right{
+      right:-10px;
+    }
+
+    .video-card.active{
+
+      border:2px solid rgba(120,220,255,0.9);
+
+      box-shadow:
+        0 0 18px rgba(120,220,255,0.7),
+        0 0 35px rgba(120,220,255,0.45);
+
+      transform:scale(1.04);
+    }    
+
+    .video-select-grid.dragging{
+      cursor: grabbing;
+    }
+    .video-card{
+      flex:0 0 280px;
+      scroll-snap-align:center;
+      
+      background:rgba(255,255,255,0.08);
+      border-radius:16px;
+      overflow:hidden;
+      cursor:pointer;
+      transition:0.25s;
+      backdrop-filter:blur(10px);
+      padding:0;
+    }
+
+    .video-card:hover{
+      transform:scale(1.03);
+
+      box-shadow:
+        0 0 20px rgba(255,255,255,0.2);
+    }
+
+    .video-card img{
+      width:100%;
+      aspect-ratio:16/9;
+      object-fit:cover;
+      display:block;
+    }
+
+  .mode-buttons{
+
+    display:flex;
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:20px;
+
+    width:100%;
+    max-width:1000px;
+
+    margin:2rem auto 0;
+
+  }
+  .mode-card{ 
+    flex:1 1 240px;
+    max-width:320px;
+    width:100%;
+
+    padding:18px;
+    border-radius:20px;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(14px);
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+      0 10px 30px rgba(0,0,0,0.18);
+
+    transition:0.25s;
+  }
+
+  .mode-card:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+      0 0 25px rgba(120,220,255,0.3);
+  }
+
+  .mode-title{
+    font-size:1.1rem;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+
+  .mode-desc{
+    font-size:0.9rem;
+    opacity:0.8;
+  }
+
+  .focus-setup{
+    transition:0.35s ease;
+  }
+
+  .focus-running .focus-setup{
+    opacity:0;
+    visibility:hidden;
+    height:0;
+    overflow:hidden;
+    margin:0;
+    padding:0;
+  }
+
+  .focus-running .video-wrapper{
+    margin-top:0;
+  }
+
+  .loop-running .upper-controls{
+    opacity:0;
+    visibility:hidden;
+    height:0;
+    overflow:hidden;
+    margin:0;
+    padding:0;
+  }
+
+  .loop-running .responsive-img,
+  .loop-running h2,
+  .loop-running p{
+    display:none;
+  }
+
+  .loop-running .video-wrapper{
+    margin-top:0;
+  }
+  
+  .focus-running .responsive-img,
+  .focus-running h2,
+  .focus-running p{
+    display:none;
+  }
+
+  #focus_phaseDisplay{
+    font-size:1.1rem;
+    font-weight:700;
+    letter-spacing:2px;
+
+    margin:14px 0;
+
+    color:#bfe9ff;
+
+    text-shadow:
+      0 0 10px rgba(120,220,255,0.8);
+  }
+
+  .video-wrapper{
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:
+      0 20px 50px rgba(0,0,0,0.45);
+  }
+
+  .btn{
+    min-width:220px;
+    min-height:48px;
+
+    border-radius:14px;
+
+    font-weight:600;
+  }
+  .timer-switch{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    user-select:none;
+    cursor:pointer;
+
+    color:white;
+
+    font-size:0.95rem;
+  }
+
+  .switch-track{
+    width:64px;
+    height:34px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,0.25);
+
+    position:relative;
+
+    transition:0.25s ease;
+
+    border:1px solid rgba(255,255,255,0.35);
+
+    backdrop-filter:blur(10px);
+  }
+
+  .switch-thumb{
+    position:absolute;
+
+    top:3px;
+    left:3px;
+
+    width:28px;
+    height:28px;
+
+    border-radius:50%;
+
+    background:white;
+
+    transition:0.25s ease;
+
+    box-shadow:
+      0 0 10px rgba(255,255,255,0.5);
+  }
+
+  .switch-track.active{
+    background:#00bcd4;
+  }
+
+  .switch-track.active .switch-thumb{
+    transform:translateX(30px);
+  }
+
+  .sns-links{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+  }
+
+  .sns-links a{
+    width:48px;
+    height:48px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(8px);
+  }    
+  .wheel-label{
+
+    margin-top:10px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    letter-spacing:0.22em;
+
+    opacity:0.82;
+
+    color:#d8f3ff;
+
+    text-transform:uppercase;
+
+    text-shadow:
+      0 0 8px rgba(120,220,255,0.35);
+
+  }
+  #focus_breakOverlay{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    pointer-events:none;
+
+    font-size:clamp(2rem, 6vw, 5rem);
+    font-weight:700;
+    letter-spacing:0.25em;
+
+    color:#bfe9ff;
+
+    text-shadow:
+      0 0 6px rgba(0,0,0,0.6),
+      0 0 12px rgba(255,255,255,0.3);
+
+    opacity:0;
+
+    transition:opacity 0.4s ease;
+
+    z-index:99999;
+
+    transform:translateZ(0);
+
+    will-change:opacity;
+
+  }
+  .source-title{
+
+    font-size:0.95rem;
+    font-weight:700;
+
+    margin:
+      6px 0 0px;
+
+    color:#dff6ff;
+
+    letter-spacing:0.04em;
+
+    text-align:left;
+
+    width:100%;
+    max-width:1000px;
+
+    padding-left:8px;
+
+    box-sizing:border-box;
+  }
+
+  #focus_breakOverlay.show{
+    display:flex;
+  }
+
+
+#settingsOverlay{
+
+  position:fixed;
+  inset:0;
+
+  background:
+    rgba(10,15,25,0.35);
+
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+
+  opacity:0;
+  pointer-events:none;
+
+  transition:0.3s;
+
+  z-index:999;
+}
+
+
+
+#settingsOverlay.show{
+
+  opacity:1;
+  pointer-events:auto;
+}
+
+#settingsPanel{
+
+  position:fixed;
+
+  left:0;
+  right:0;
+  bottom:0;
+  
+  width:min(92vw, 640px);
+  margin:0 auto;
+
+  max-height:95svh;
+  overflow-y:auto;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.16),
+      rgba(255,255,255,0.08)
+    );
+
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+
+  border:
+    1px solid rgba(255,255,255,0.18);
+
+  box-shadow:
+    0 -10px 40px rgba(0,0,0,0.45),
+    inset 0 1px 1px rgba(255,255,255,0.18);
+
+  border-radius:28px 28px 0 0;
+
+  transform:translateY(100%);
+
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+
+  z-index:1000;
+
+  padding:22px;
+
+  box-sizing:border-box;
+}
+
+#settingsPanel.show{
+
+  transform:
+    translateY(0);
+}
+
+#settingsPanel.show{
+
+  transform:translateY(0);
+}
+
+.settings-handle{
+
+  width:64px;
+  height:6px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,0.4);
+
+  margin:0 auto 20px;
+}
+
+.settings-header{
+
+  position:relative;
+
+  z-index:1001;
+
+  text-align:center;
+
+  font-size:1.25rem;
+  font-weight:700;
+
+  margin-bottom:26px;
+
+  color:#dff6ff;
+}
+
+.settings-section-title{
+
+  font-size:1rem;
+  font-weight:700;
+
+  color:#bfe9ff;
+
+  margin-bottom:24px;
+
+  text-align:center;
+}
+
+.settings-group{
+
+  margin-bottom:40px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:0;
+}
+
+.settings-row{
+
+  margin-bottom:16px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:14px;
+
+  padding:18px;
+
+  border-radius:20px;
+
+  background:
+    rgba(255,255,255,0.06);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.08);
+}
+
+.settings-row label{
+
+  font-size:0.92rem;
+  font-weight:600;
+
+  letter-spacing:0.08em;
+
+  opacity:0.85;
+}
+
+.small-wheel{
+
+  width:120px;
+  height:180px;
+}
+
+.settings-open-btn{
+
+  min-width:160px;
+}
+.settings-header{
+
+  position:relative;
+
+  text-align:center;
+
+  font-size:1.25rem;
+  font-weight:700;
+
+  margin-bottom:26px;
+
+  color:#dff6ff;
+}
+
+.settings-close-btn{
+
+  position:absolute;
+
+  z-index:1002;
+
+  right:0;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  width:42px;
+  height:42px;
+
+  border:none;
+  border-radius:50%;
+
+  background:rgba(255,255,255,0.08);
+
+  color:white;
+
+  font-size:20px;
+
+  cursor:pointer;
+
+  backdrop-filter:blur(10px);
+
+  box-shadow:
+    0 0 12px rgba(255,255,255,0.08);
+
+  transition:0.2s;
+}
+
+.settings-close-btn:hover{
+
+  transform:
+    translateY(-50%)
+    scale(1.06);
+
+  background:rgba(255,255,255,0.14);
+}
+.focus-time-row{
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:flex-start;
+
+  gap:14px;
+
+  flex-wrap:nowrap;
+
+  width:100%;
+  margin-bottom:0px;
+}
+
+.focus-time-row .settings-row{
+
+  flex:1;
+
+  min-width:0;
+
+  width:50%;
+
+  margin-bottom:16px;
+}
+
+@media (max-width:768px){
+
+  #settingsPanel{
+
+    width:100%;
+    left:0;
+
+    transform:translateY(100%);
+  }
+
+  #settingsPanel.show{
+
+    transform:translateY(0);
+  }
+
+}
+
+/* ========================================
+   Mobile Landscape Video Focus Mode
+======================================== */
+
+@media screen
+and (orientation: landscape)
+and (max-width: 1024px)
+and (pointer: coarse){
+
+  html,
+  body{
+
+    width:100%;
+    min-height:100svh;
+
+    margin:0;
+    padding:0;
+
+    background:#000;
+
+    overscroll-behavior:none;
+
+    -webkit-text-size-adjust:100%;
+  }
+
+  body.landscape-video-focus{
+
+    width:100vw;
+    min-height:100svh;
+
+    overflow:auto;
+
+    overscroll-behavior:none;
+
+    -webkit-overflow-scrolling:touch;
+  }
+
+  body.landscape-video-focus
+  header,
+
+  body.landscape-video-focus
+  .btn-group,
+
+  body.landscape-video-focus
+  .lower-controls,
+
+  body.landscape-video-focus
+  .settings-open-btn,
+
+  body.landscape-video-focus
+  .video-carousel-wrapper,
+
+  body.landscape-video-focus
+  .source-title,
+
+  body.landscape-video-focus
+  input,
+
+  body.landscape-video-focus
+  .video-select-grid,
+
+  body.landscape-video-focus
+  #focus_phaseDisplay{
+
+    opacity:0;
+
+    pointer-events:none;
+
+    visibility:hidden;
+
+    height:0;
+    overflow:hidden;
+  }
+
+  body.landscape-video-focus
+  section{
+
+    padding:0;
+
+    margin:0;
+
+    min-height:100svh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+  }
+
+ body.landscape-video-focus
+.video-wrapper{
+
+  position:fixed;
+
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100svh;
+
+  max-width:none;
+
+  margin:0;
+  padding:0;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  overflow:hidden;
+
+  z-index:9999;
+
+  background:#000;
+}
+
+body.landscape-video-focus
+.video-wrapper iframe,
+
+body.landscape-video-focus
+.video-wrapper #loop_ytPlayer,
+
+body.landscape-video-focus
+.video-wrapper #focus_ytPlayer{
+
+  position:absolute;
+
+  top:50%;
+  left:50%;
+
+  transform:translate(-50%, -50%);
+
+  width:100%;
+  height:100%;
+
+  min-width:100%;
+  min-height:100%;
+
+  border:none;
+}
+  body.landscape-video-focus section{
+
+    width:100%;
+    overflow:hidden;
+  }
+  body.landscape-video-focus
+  .timer-display,
+
+  body.landscape-video-focus
+  .circular-timer{
+
+    z-index:10001;
+  }
+
+}
+@media (max-width:480px){
+
+  .small-wheel{
+    width:90px;
+    height:120px;
+  }
+
+  .wheel-picker{
+    height:120px;
+  }
+
+  .wheel-scroll{
+    padding-top:39px;
+    padding-bottom:39px;
+  }
+
+  .settings-row{
+    padding:10px;
+    gap:8px;
+    margin-bottom:10px;
+  }
+
+  .settings-group{
+    margin-bottom:16px;
+  }
+
+  .settings-section-title{
+    margin-bottom:12px;
+  }
+
+}
+@media (max-width:600px){
+
+  #settingsPanel{
+
+    left:0;
+
+    width:100%;
+
+    margin-left:0;
+  }
+
+}
+</style>
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag(){
+      dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
-  
     gtag('config', 'G-DC85V6L5MK');
   </script>
-  
+
 </head>
+
 <body>
 
-
-<!-- ヘッダー -->
 <header>
 
-<div class="background-container">
-  <img src="images/starry_sky.jpg" class="bg-image active" alt="星空">
-  <img src="images/floating_island.jpg" class="bg-image" alt="浮遊島">
-  <img src="images/sunset.jpg" class="bg-image" alt="夕焼け">
-  <img src="images/ocean.jpg" class="bg-image" alt="海">
-  <img src="images/title_icon.jpg" class="bg-image" alt="タイトルアイコン">
-</div>
-  
-  <!-- 言語切り替えボタン（左上固定） -->
-  <button id="langToggle" class="btn" data-jp="English" data-en="日本語">English</button>
+  <button id="langToggle" class="btn">English</button>
 
-  <!-- 背景動画
-  <video class="header-video" autoplay muted loop playsinline>
-    <source src="bg.mp4" type="video/mp4">
-  </video> -->
+  <img src="Symphotune.png" alt="sympho tune logo" class="responsive-img" />
 
-  <!-- 前面中央コンテンツ -->
-  <div class="header-content">
-    <h1>Symphoroid Ai</h1>
-    <p class="lang-text" data-jp="癒しの音楽と物語を、あなたへ。" data-en="Delivering healing music and stories to you.">
-      癒しの音楽と物語を、あなたへ。
-    </p>
-    <div class="btn-group">
-      <a href="tune" class="btn lang-text" data-jp="Sympho tune を体験する" data-en="Try Sympho tune">Sympho tune を体験する</a>
+  <h1
+    data-jp="心と時間に寄り添う、癒しの音楽体験。"
+    data-en="Soothing music that cares for your heart and time.">
+  </h1>
+
+  <p
+    data-jp="Focus your time. Tune your mind."
+    data-en="Focus your time. Tune your mind.">
+  </p>
+
+<div class="mode-buttons">
+
+  <div class="mode-card">
+
+    <div class="mode-title"
+      data-jp="Sympho Choice"
+      data-en="Sympho Choice">
+      Sympho Choice
     </div>
+
+    <div class="mode-desc"
+      data-jp="気分に合わせて音楽を探す"
+      data-en="Find music for your mood">
+      気分に合わせて音楽を探す
+    </div>
+
+    <button
+      class="btn"
+      onclick="showSection('choice')"
+      data-jp="スタート"
+      data-en="Start">
+      スタート
+    </button>
+
   </div>
+
+  <div class="mode-card">
+
+    <div class="mode-title"
+      data-jp="Sympho Loop"
+      data-en="Sympho Loop">
+      Sympho Loop
+    </div>
+
+    <div class="mode-desc"
+      data-jp="動画にタイマーを追加"
+      data-en="Add a timer to videos">
+      動画にタイマーを追加
+    </div>
+
+    <button
+      class="btn"
+      onclick="showSection('loop')"
+      data-jp="スタート"
+      data-en="Start">
+      スタート
+    </button>
+
+  </div>
+
+  <div class="mode-card">
+
+    <div class="mode-title"
+      data-jp="Sympho Focus"
+      data-en="Sympho Focus">
+      Sympho Focus
+    </div>
+
+    <div class="mode-desc"
+      data-jp="集中と休憩を管理"
+      data-en="Manage focus and breaks">
+      集中と休憩を管理
+    </div>
+
+    <button
+      class="btn"
+      onclick="showSection('focus')"
+      data-jp="スタート"
+      data-en="Start">
+      スタート
+    </button>
+
+  </div>
+
+</div>
+
 </header>
 
-  <!-- ナビゲーション -->
-  <nav>
-    <a href="tune" class="lang-text" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
-    <a href="privacy.html" class="lang-text" data-jp="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
-    <a href="terms.html" class="lang-text" data-jp="利用規約" data-en="Terms">利用規約</a>
-    <a href="contact.html" class="lang-text" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
-  </nav>
+<!-- choice -->
 
-  <!-- 紹介 -->
-  <section>
-    <h2 class="lang-text" data-jp="Symphoroid Ai について" data-en="About Symphoroid Ai">Symphoroid Ai について</h2>
-    <p class="lang-text" data-jp="Symphoroid Ai は、癒しの音楽をテーマに活動するバーチャルアーティストです。ピアノとバイオリンの音色を中心に、星空のように静かで優しい音楽を届けています。YouTube・Instagram・TikTok・Xなどで活動中。" data-en="symphoroid Ai is a virtual artist focused on healing music. Delivering gentle piano and violin melodies inspired by the night sky. Active on YouTube, Instagram, TikTok, and X.">
-    </p>
-  </section>
+<section id="choice" style="display:none;">
 
-  <!-- SNSリンク -->
-  <section>
-    <h2>Follow Us</h2>
-    <p class="sns-links">
+  <img src="Symphochoice.png" class="responsive-img" />
+
+  <h2
+    data-jp="今日の気分にぴったりの音楽を。"
+    data-en="Music that fits your mood today.">
+  </h2>
+
+  <p
+    data-jp="選んだ気分に合わせて、Symphoroid Aiの癒し音楽をお届けします。"
+    data-en="Choose your mood, and Symphoroid Ai will bring you calming music to match.">
+  </p>
+
+  <br><br>
+
+  <p
+    data-jp="今日の気分は？"
+    data-en="How do you feel today?">
+  </p>
+
+  <div>
+
+    <button class="btn"
+      onclick="playRandomVideo('元気')"
+      data-jp="元気"
+      data-en="Energetic">
+      元気
+    </button>
+
+    <button class="btn"
+      onclick="playRandomVideo('癒し')"
+      data-jp="癒し"
+      data-en="Healing">
+      癒し
+    </button>
+
+    <button class="btn"
+      onclick="playRandomVideo('集中')"
+      data-jp="集中"
+      data-en="Focus">
+      集中
+    </button>
+
+    <button class="btn"
+      onclick="playRandomVideo('切ない')"
+      data-jp="切ない"
+      data-en="Melancholy">
+      切ない
+    </button>
+
+    <button class="btn"
+      onclick="playRandomVideo('おやすみ')"
+      data-jp="おやすみ🌙"
+      data-en="Bedtime🌙">
+      おやすみ
+    </button>
+
+    <button class="btn"
+      onclick="playRandomVideo('ロック')"
+      data-jp="ロック🎸"
+      data-en="Rock🎸">
+      ロック
+    </button>
+
+  </div>
+
+  <div id="videoArea_choice"></div>
+
+</section>
+
+<!-- loop -->
+
+<section id="loop" style="display:none;">
+
+  <img src="Sympholoop.png" class="responsive-img" />
+
+  <h2
+    data-jp="好きな動画を、集中タイムに。"
+    data-en="Turn your favorite videos into focus time.">
+  </h2>
+
+  <p
+    data-jp="タイマーと繰り返し再生で、作業用動画をもっと自分仕様に。"
+    data-en="Customize your work videos with a timer and loop playback.">
+  </p>
+
+<!--  <div class="upper-controls"> -->
+  <div class="upper-controls focus-setup">
+  <div
+    class="source-title"
+    data-jp="♪ 公式動画から選ぶ"
+    data-en="♪ Choose from Official Videos">
+    公式動画から選ぶ
+  </div>
+  <div class="video-carousel-wrapper">
+
+    <button
+      class="carousel-btn left"
+      onclick="scrollCarousel('loop', -1)">
+      ❮
+    </button>
+
+    <div id="loop_videoList" class="video-select-grid"></div>
+
+    <button
+      class="carousel-btn right"
+      onclick="scrollCarousel('loop', 1)">
+      ❯
+    </button>
+
+  </div>
+  <div
+    class="source-title"
+    data-jp="▶ YouTubeリンクを使う"
+    data-en="▶ Custom YouTube URL">
+    YouTubeリンクを使う
+  </div>
+  <input
+    type="text"
+    id="loop_ytUrl"
+    placeholder="YouTube動画のURLを入力"
+    style="width:100%; 
+    max-width:1000px;
+    padding:0.5em;"
+    box-sizing:border-box;
+    data-jp="YouTube動画のURLを入力"
+    data-en="Enter YouTube video URL">
+    
+    <div class="btn-group">
+
+      <button
+        class="btn settings-open-btn"
+        onclick="openSettings('loop')">
+        ⚙ Settings
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="video-wrapper">
+
+    <div id="loop_ytPlayer"></div>
+
+    <div
+      id="loop_timerDisplay"
+      class="timer-display top-left"
+      style="display:none;">
+    </div>
+
+  </div>
+
+  <div class="lower-controls">
+
+    <button
+      class="btn"
+      onclick="playLoop('loop')"
+      data-jp="▶ 再生"
+      data-en="▶ Play">
+    </button>
+
+    <button
+      class="btn"
+      onclick="stopLoop('loop')"
+      data-jp="■ 停止"
+      data-en="■ Stop">
+    </button>
+
+    <button
+      class="btn"
+      onclick="resetLoop('loop')"
+      data-jp="↺ リセット"
+      data-en="↺ Reset">
+    </button>
+
+  </div>
+
+</section>
+
+<!-- focus -->
+
+<section id="focus" style="display:none;">
+
+  <img src="Symphofocus.png" class="responsive-img" />
+
+  <h2
+    data-jp="集中と休憩を、心地よく。"
+    data-en="Balance focus and breaks comfortably.">
+  </h2>
+
+  <p
+    data-jp="ポモドーロタイマーで、無理なく集中。"
+    data-en="Stay productive with a Pomodoro timer.">
+  </p>
+
+<!-- focus -->  
+  <div class="upper-controls focus-setup">    
+  <div
+    class="source-title"
+    data-jp="♪ 公式動画から選ぶ"
+    data-en="♪ Choose from Official Videos">
+    公式動画から選ぶ
+  </div>
+  <div class="video-carousel-wrapper">
+
+    <button
+      class="carousel-btn left"
+      onclick="scrollCarousel('focus', -1)">
+      ❮
+    </button>
+
+    <div id="focus_videoList" class="video-select-grid"></div>
+
+    <button
+      class="carousel-btn right"
+      onclick="scrollCarousel('focus', 1)">
+      ❯
+    </button>
+
+  </div>
+  <div
+    class="source-title"
+    data-jp="▶ YouTubeリンクを使う"
+    data-en="▶ Custom YouTube URL">
+    YouTubeリンクを使う
+  </div>
+  <input
+    type="text"
+    id="focus_ytUrl"
+    placeholder="YouTube動画のURLを入力"
+    style="width:100%; 
+    max-width:1000px;
+    padding:0.5em;"
+    data-jp="YouTube動画のURLを入力"
+    data-en="Enter YouTube video URL">
+
+    
+    <div id="focus_phaseDisplay"></div>
+</div>
+
+    <div class="btn-group">
+
+      <button
+        class="btn settings-open-btn"
+        onclick="openSettings('focus')">
+        ⚙ Settings
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="video-wrapper">
+
+    <div id="focus_ytPlayer"></div>
+
+    <div id="focus_breakOverlay">
+      BREAK TIME
+    </div>
+
+    <div
+      id="focus_timerDisplay"
+      class="timer-display top-left"
+      style="display:none;">
+    </div>
+
+  </div>
+
+  <div class="lower-controls">
+
+    <button
+      class="btn"
+      onclick="playLoop('focus')"
+      data-jp="▶ 再生"
+      data-en="▶ Play">
+    </button>
+
+    <button
+      class="btn"
+      onclick="stopLoop('focus')"
+      data-jp="■ 停止"
+      data-en="■ Stop">
+    </button>
+
+    <button
+      class="btn"
+      onclick="resetLoop('focus')"
+      data-jp="↺ リセット"
+      data-en="↺ Reset">
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- settings panel -->
+
+<div id="settingsOverlay"></div>
+
+<div id="settingsPanel">
+
+  <div class="settings-handle"></div>
+
+  <div class="settings-header">
+
+    <span
+      id="settingsTitle"
+      data-jp="設定"
+      data-en="Settings">
+      設定
+    </span>
+
+    <button
+      class="settings-close-btn"
+      onclick="closeSettings()">
+      ✕
+    </button>
+
+  </div>
+
+  <div class="settings-content">
+
+    <div id="loopSettings" class="settings-group">
+
+      <div
+        class="settings-section-title"
+        data-jp="Sympho Loop"
+        data-en="Sympho Loop">
+        Sympho Loop
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="タイマー"
+          data-en="Timer">
+          タイマー
+        </label>
+
+        <div class="wheel-picker small-wheel">
+          <div class="wheel-highlight"></div>
+          <div id="loop_duration_settings" class="wheel-scroll"></div>
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="タイマー表示"
+          data-en="Timer Type">
+          タイマー表示
+        </label>
+
+        <div
+          class="timer-switch"
+          onclick="toggleTimerType('loop')">
+
+          <span
+            data-jp="シンプル"
+            data-en="Simple">
+            シンプル
+          </span>
+
+          <div
+            class="switch-track"
+            id="loop_switchTrack_settings">
+
+            <div class="switch-thumb"></div>
+
+          </div>
+
+          <span
+            data-jp="体感"
+            data-en="Circle">
+            体感
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="表示位置"
+          data-en="Position">
+          表示位置
+        </label>
+
+        <button
+          class="btn"
+          id="loop_positionBtn_settings"
+          onclick="toggleTimerPosition('loop')">
+          Position
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="focusSettings" class="settings-group">
+
+      <div
+        class="settings-section-title"
+        data-jp="Sympho Focus"
+        data-en="Sympho Focus">
+        Sympho Focus
+      </div>
+
+    <div class="focus-time-row">
+
+      <div class="settings-row">
+
+        <label
+          data-jp="集中"
+          data-en="Focus">
+          集中
+        </label>
+
+        <div class="wheel-picker small-wheel">
+          <div class="wheel-highlight"></div>
+          <div id="focus_duration_settings" class="wheel-scroll"></div>
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="休憩"
+          data-en="Break">
+          休憩
+        </label>
+
+        <div class="wheel-picker small-wheel">
+          <div class="wheel-highlight"></div>
+          <div id="focus_breakDuration_settings" class="wheel-scroll"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="タイマー表示"
+          data-en="Timer Type">
+          タイマー表示
+        </label>
+
+        <div
+          class="timer-switch"
+          onclick="toggleTimerType('focus')">
+
+          <span
+            data-jp="シンプル"
+            data-en="Simple">
+            シンプル
+          </span>
+
+          <div
+            class="switch-track"
+            id="focus_switchTrack_settings">
+
+            <div class="switch-thumb"></div>
+
+          </div>
+
+          <span
+            data-jp="体感"
+            data-en="Circle">
+            体感
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="settings-row">
+
+        <label
+          data-jp="表示位置"
+          data-en="Position">
+          表示位置
+        </label>
+
+        <button
+          class="btn"
+          id="focus_positionBtn_settings"
+          onclick="toggleTimerPosition('focus')">
+          Position
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<footer>
+
+  <p class="sns-links">
+
     <a href="https://www.youtube.com/@symphoroidai" target="_blank">
       <i class="fab fa-youtube"></i>
     </a>
+
     <a href="https://www.instagram.com/symphoroid_ai" target="_blank">
       <i class="fab fa-instagram"></i>
     </a>
+
     <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank">
       <i class="fab fa-tiktok"></i>
     </a>
-    <a href="https://www.x.com/SymphoroidAi" target="_blank">
+
+    <a href="https://www.x.com/@SymphoroidAi" target="_blank">
       <i class="fab fa-x-twitter"></i>
     </a>
-  </section>
 
-<section style="background-color: rgba(0, 30, 60, 0.5); padding: 2rem;">
-  <h2 class="lang-text" data-jp="お知らせ" data-en="News">お知らせ</h2>
-  <ul style="list-style: none; padding-left: 0;">
+  </p>
 
-    <li class="lang-text"
-        data-jp="●2026年6月06日：Sympho choice向けの動画を追加しました。"
-        data-en="●Jne 6, 2026: New videos are now available on Sympho choice."> 
-    </li>     
-    <li class="lang-text"
-        data-jp="●2026年5月06日：Sympho choice向けの動画を追加しました。"
-        data-en="●May 6, 2026: New videos are now available on Sympho choice."> 
-    </li>     
-    <li class="lang-text"
-        data-jp="●2026年4月25日：Sympho choice向けの動画を追加しました。"
-        data-en="●April 25, 2026: New videos are now available on Sympho choice."> 
-    </li>     
-    <li class="lang-text"
-        data-jp="●2026年3月23日：Sympho choice向けの動画を追加しました。"
-        data-en="●March 23, 2026: New videos are now available on Sympho choice."> 
-    </li> 
-    <li class="lang-text"
-        data-jp="●2026年1月3日：あけましておめでとうございます！🎍　Sympho choice向けの動画を追加しました。"
-        data-en="●January 3, 2026: Happy New Year!🎍　 New videos are now available on Sympho choice."> 
-    </li> 
-    <li class="lang-text"
-        data-jp="●2025年11月29日：経過時間と残り時間がわかりやすい”体感タイマー”を追加しました。🌙⏳ "
-        data-en="●November 29, 2025: A new 'Progress Circle' timer has been added to make elapsed and remaining time easier to understand.🌙⏳ "> 
-    </li> 
-    <li class="lang-text"
-        data-jp="●2025年11月23日：Sympho choice向けの動画を追加しました。気分の選択ボタンに「ロック🎸」を追加しました。"
-        data-en="●November 23, 2025: New videos are now on Sympho choice to help you relax. 'Rock🎸' has been added to the mood buttons!"> 
-    </li> 
-    <li class="lang-text"
-        data-jp="●2025年10月19日：Sympho choice向けの動画を追加しました。気分の選択ボタンに🎃「ハロウィン」🎃を追加しました。"
-        data-en="●October 19, 2025: New videos are now on Sympho choice to help you relax. 🎃'Halloween' has been added to the mood buttons!🎃"> 
-    </li>      
-    <li class="lang-text"
-        data-jp="●2025年9月13日：Sympho choice向けの動画を追加しました。気分の選択ボタンに「おやすみ🌙」を追加しました。🎵"
-        data-en="●September 13, 2025: New videos are now available for Sympho Choice, and we've added a 'Bedtime🌙' mood option! 🎵"> 
-    </li>
-    <li class="lang-text"
-        data-jp="●2025年9月7日：Sympho choice向けの動画を追加しました。"
-        data-en="●September 7, 2025: New videos are now available on Sympho choice."> 
-    </li>
-    <li class="lang-text"
-        data-jp="●2025年8月3日：先行公開開始しました。Sympho tune向けの動画を随時公開中です。"
-        data-en="●August 3, 2025: Early access has started. Videos for Sympho tune are being released continuously."> 
-    </li>
-  </ul>
-</section>
-  <!-- フッター -->
-  <footer>
-    &copy; 2025 Symphoroid Ai. All rights reserved.
-    <p class="lang-text" data-jp="次のブラウザの最新版をご利用ください：Google Chrome（バージョン80以降）,Safari（iOS13以降）,Firefox（バージョン75以降）,Microsoft Edge（Chromiumベース）,※Internet Explorerは非対応です。" data-en="We recommend using the latest version of one of the following browsers:Google Chrome (version 80 or later), Safari (iOS 13 or later), Firefox (version 75 or later), or Microsoft Edge (Chromium-based).Please note that Internet Explorer is not supported.">
-    </p>
-  </footer>
+  <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
 
-  <!-- 言語切替スクリプト -->
+  <br>
+
+  <a href="../terms.html"
+    class="footer-links"
+    data-jp="利用規約"
+    data-en="Terms of Use">
+    利用規約
+  </a>
+
+  |
+
+  <a href="../privacy.html"
+    class="footer-links"
+    data-jp="プライバシーポリシー"
+    data-en="Privacy Policy">
+    プライバシーポリシー
+  </a>
+
+  |
+
+  <a href="../"
+    class="footer-links"
+    data-jp="トップページ"
+    data-en="Home">
+    トップページ
+  </a>
+
+</footer>
+
 <script>
-  const langToggle = document.getElementById("langToggle");
-  const langTexts = document.querySelectorAll(".lang-text");
-  let currentLang = localStorage.getItem('lang') || "jp";
 
-  function applyLang() {
-    langToggle.textContent = langToggle.getAttribute(`data-${currentLang}`);
-    langTexts.forEach(el => {
-      el.textContent = el.getAttribute(`data-${currentLang}`);
-    });
+const presetVideos = [
+		
+{ url: 	"https://youtu.be/rHSAzjo4EBo",	},
+{ url: 	"https://youtu.be/voSwa5JAYfk",	},
+{ url: 	"https://youtu.be/Su-82Bh9WCA",	},
+{ url: 	"https://youtu.be/qcZTe4RlUaE",	},
+{ url: 	"https://youtu.be/PRhxPiucwFE",	},
+{ url: 	"https://youtu.be/SWNTo7kJRUQ",	},
+{ url: 	"https://youtu.be/smGKm6QLIXk",	},
+{ url: 	"https://youtu.be/WAnHw3B9xW4",	},
+{ url: 	"https://youtu.be/8MK09clTW4c",	},
+{ url: 	"https://youtu.be/hJBNFtCgqIc",	},
+{ url: 	"https://youtu.be/9Lt3L9Nd920",	},
+{ url: 	"https://youtu.be/sihHol-T93E",	},
+{ url: 	"https://youtu.be/9WcPqO-yXo8",	},
+{ url: 	"https://youtu.be/GFTTCqFhC-U",	},
+{ url: 	"https://youtu.be/B-L-4z4iUC4",	},
+{ url: 	"https://youtu.be/IHooG6syRAE",	},
+{ url: 	"https://youtu.be/QgziKb5akL8",	},
+{ url: 	"https://youtu.be/26Uj9QqVPt8",	},
+{ url: 	"https://youtu.be/0Wb1VtL5kXI",	},
+{ url: 	"https://youtu.be/vm_tydPkfKs",	},
+{ url: 	"https://youtu.be/BRoXbycub0Y",	},
+{ url: 	"https://youtu.be/uoWCz1fteXA",	},
+{ url: 	"https://youtu.be/KJ1v29Cpa9s",	},
+{ url: 	"https://youtu.be/zfZ6XGF-Shw",	},
+{ url: 	"https://youtu.be/CAheVrZrW70",	},
+{ url: 	"https://youtu.be/Z0ZRt8oJC9s",	},
+{ url: 	"https://youtu.be/rxWeR2Fy0Yg",	},
+{ url: 	"https://youtu.be/8ScrdIRt3yY",	},
+{ url: 	"https://youtu.be/Q-Y8Hr-tJCM",	},
+{ url: 	"https://youtu.be/ia5E-0pSXzM",	},
+{ url: 	"https://youtu.be/0hNtvAeIpkw",	},
+{ url: 	"https://youtu.be/bR0h-52ENGo",	},
+{ url: 	"https://youtu.be/FRwGnjycxUs",	},
+{ url: 	"https://youtu.be/8p6-y2e6iKU",	},
+{ url: 	"https://youtu.be/29oPJr2NHWc",	},
+{ url: 	"https://youtu.be/ckoNS4CqPUU",	},
+{ url: 	"https://youtu.be/m9-JXQKRUZw",	},
+{ url: 	"https://youtu.be/5rcWWDd8Aho",	},
+{ url: 	"https://youtu.be/vXDZ9l9HRBo",	},
+{ url: 	"https://youtu.be/w9FEg4Qhw-0",	},
+{ url: 	"https://youtu.be/hTXgKsee-Tk",	},
+{ url: 	"https://youtu.be/s3P7IRnX28Q",	},
+{ url: 	"https://youtu.be/gYA1EumqJxQ",	},
+{ url: 	"https://youtu.be/5xcy1lXNaXQ",	},
+{ url: 	"https://youtu.be/66VmiiviWpw",	},
+{ url: 	"https://youtu.be/iLmc5nj_Ndg",	},
+{ url: 	"https://youtu.be/Y7Yc2zg6qxQ",	},
+{ url: 	"https://youtu.be/kvhlJHJ3ZWE",	},
+{ url: 	"https://youtu.be/pdKhf2VujLs",	},
+{ url: 	"https://youtu.be/Pu8wqo9M_DE",	},
+{ url: 	"https://youtu.be/iCSYXmihJP0",	},
+{ url: 	"https://youtu.be/V8nIGNlt_bI",	},
+{ url: 	"https://youtu.be/utEtROkG3Ac",	},
+{ url: 	"https://youtu.be/Rq8CIOrq8zk",	},
+{ url: 	"https://youtu.be/hBgbDICR480",	},
+{ url: 	"https://youtu.be/KyaQS2LdYhw",	},
+{ url: 	"https://youtu.be/UYtXC0b1oE0",	},
+{ url: 	"https://youtu.be/CbCy34dYeKE",	},
+{ url: 	"https://youtu.be/Y954UcyBH0k",	},
+{ url: 	"https://youtu.be/CLznHs6quuY",	},
+{ url: 	"https://youtu.be/7OqFvfZ1wCE",	},
+{ url: 	"https://youtu.be/yEUGShSnQsg",	},
+{ url: 	"https://youtu.be/uyCBlGmJUCM",	},
+{ url: 	"https://youtu.be/PrOhILKjTWw",	},
+{ url: 	"https://youtu.be/w2lvfApzZBE",	},
+{ url: 	"https://youtu.be/o-XeuclzBwA",	},
+{ url: 	"https://youtu.be/Sdw3xz5bYPI",	},
+{ url: 	"https://youtu.be/cyFRz97cum8",	},
+{ url: 	"https://youtu.be/4iikWioI4I8",	},
+{ url: 	"https://youtu.be/B9-KznhnLJA",	},
+{ url: 	"https://youtu.be/n_38txYNroA",	},
+{ url: 	"https://youtu.be/MbNsLEPFn7k",	},
+{ url: 	"https://youtu.be/UAR28OpnHs4",	},
+{ url: 	"https://youtu.be/-WMo1Jns5Bs",	},
+{ url: 	"https://youtu.be/gYQugsjTDEg",	},
+{ url: 	"https://youtu.be/-hnvAHNU1yo",	},
+{ url: 	"https://youtu.be/4TCdeo2Tf5g",	},
+{ url: 	"https://youtu.be/oEHpxpdgmu4",	},
+{ url: 	"https://youtu.be/whF8MFjUhAM",	},
+{ url: 	"https://youtu.be/BaYraiX13P4",	},
+{ url: 	"https://youtu.be/uibtXLOllUg",	},
+{ url: 	"https://youtu.be/M-mPIkY2bys",	},
+{ url: 	"https://youtu.be/SjWy28WizRc",	},
+{ url: 	"https://youtu.be/ycZlMjVSGR8",	},
+{ url: 	"https://youtu.be/zSjUGy9okN4",	},
+{ url: 	"https://youtu.be/JxhRH_4cj7Y",	},
+{ url: 	"https://youtu.be/gJA0jD1yiTs",	},
+{ url: 	"https://youtu.be/GNgxaSRgsTE",	},
+{ url: 	"https://youtu.be/UHDfDNILu2I",	},
+{ url: 	"https://youtu.be/4QYccSC6_yA",	},
+{ url: 	"https://youtu.be/sdZC7HXbyp8",	},
+{ url: 	"https://youtu.be/YgjnsTpBPKw",	},
+{ url: 	"https://youtu.be/tAR8G7gs6g8",	},
+{ url: 	"https://youtu.be/z335IviVLG8",	},
+{ url: 	"https://youtu.be/UN8oQaPiGO4",	},
+{ url: 	"https://youtu.be/EK_9u4NRr40",	},
+{ url: 	"https://youtu.be/joVHItCJUGU",	},
+{ url: 	"https://youtu.be/2eRBUUc6OaU",	},
+{ url: 	"https://youtu.be/T2zLRO1Uwq8",	},
+{ url: 	"https://youtu.be/-XxZe-oF2-4",	},
+{ url: 	"https://youtu.be/mP5VROJCccE",	},
+{ url: 	"https://youtu.be/YuKHHv21Xg4",	},
+{ url: 	"https://youtu.be/pTdIDysaP4I",	},
+{ url: 	"https://youtu.be/mTF80bH5Q2c",	},
+{ url: 	"https://youtu.be/XTWBzWDzBw0",	},
+{ url: 	"https://youtu.be/PHjRDBjglFs",	},
+{ url: 	"https://youtu.be/xIgnaNOv7uw",	},
+{ url: 	"https://youtu.be/d5AJw_PUTik",	},
+{ url: 	"https://youtu.be/A_-vQzzLBzs",	},
+{ url: 	"https://youtu.be/BdjndTLRRsI",	},
+{ url: 	"https://youtu.be/3QRSikseO3w",	},
+{ url: 	"https://youtu.be/6ocuge79WMk",	},
+{ url: 	"https://youtu.be/qRF_P6Cqe6E",	},
+{ url: 	"https://youtu.be/_h7K743P_bM",	},
+{ url: 	"https://youtu.be/t_xuW6lze1c",	},
+{ url: 	"https://youtu.be/Ndx2P4yYDwQ",	},
+{ url: 	"https://youtu.be/S2HYNlNs6XU",	},
+{ url: 	"https://youtu.be/x_OemJx_Llc",	},
+{ url: 	"https://youtu.be/EKDdsmrQyPw",	},
+{ url: 	"https://youtu.be/P_eeRitrhS0",	},
+{ url: 	"https://youtu.be/mduCNGCKE0I",	},
+{ url: 	"https://youtu.be/UNYo3YL_D8E",	},
+{ url: 	"https://youtu.be/8mf3sbXttlU",	},
+{ url: 	"https://youtu.be/1yiiLjvfMj4"	},
+{ url: 	"https://youtu.be/84gz3P3GlfM",	},
+{ url: 	"https://youtu.be/5fz_mVzXqEY",	},
+{ url: 	"https://youtu.be/N-Ve_wH301Q",	},
+{ url: 	"https://youtu.be/Usqa2M4inQY",	},
+{ url: 	"https://youtu.be/hP60cIiu8aw",	},
+{ url: 	"https://youtu.be/PojIW3iHeOg",	},
+{ url: 	"https://youtu.be/gNadpPsowm8",	},
+{ url: 	"https://youtu.be/q4eKqfJl8Mc",	},
+{ url: 	"https://youtu.be/kr_Lh86c868",	},
+{ url: 	"https://youtu.be/xUZCGhqhyAc",	},
+{ url: 	"https://youtu.be/GBdcUJGDFKk"	},
+{ url: 	"https://youtu.be/O9NChb9F0DY",	},
+{ url: 	"https://youtu.be/pkWjfyvcUV8",	},
+{ url: 	"https://youtu.be/vLhB3D8jNVA",	},
+{ url: 	"https://youtu.be/MUGl-cU-CkY",	},
+{ url: 	"https://youtu.be/zbiCn2AvN5c",	},
+{ url: 	"https://youtu.be/Lb-oV59uqYM",	},
+{ url: 	"https://youtu.be/GtOIxWTzSQ4"	},
+{ url: 	"https://youtu.be/6lbenlZyQlI",	},
+{ url: 	"https://youtu.be/ibWAszeK3F8",	},
+{ url: 	"https://youtu.be/_FmmMDOsDWw"	},
+{ url: 	"https://youtu.be/Z91MOVeiZpY",	},
+{ url: 	"https://youtu.be/2anOY1CZbzA"	},
+{ url: 	"https://youtu.be/heV-4uIat4c"	},
+{ url: 	"https://youtu.be/a4rwQ-irNmQ"	},
+{ url: 	"https://youtu.be/pbzfx5fFMQQ"	},
+{ url: 	"https://youtu.be/idisp0-baEU"	},
+{ url: 	"https://youtu.be/ko5d5HDBej0"	},
+{ url: 	"https://youtu.be/Y9y94a1RtVQ"	}
+];
+
+const positions = [
+  "top-left",
+  "top-right",
+  "bottom-left",
+  "bottom-right",
+  "center"
+];
+
+function createState() {
+
+  return {
+
+    ytPlayer: null,
+    timerInterval: null,
+    remainingTime: 0,
+    isPlaying: false,
+    isPaused: false,
+    isCircular: false,
+    positionIndex: 0,
+    playerReady: false,
+
+    pomodoroMode: false,
+    currentPhase: "focus",
+    focusDuration: 0,
+    breakDuration: 0,
+    loopDuration: 0
+
+  };
+
+}
+
+const appStates = {
+
+  loop: createState(),
+  focus: createState()
+
+};
+async function fadeVolume(player, from, to, duration = 1200){
+
+  if(!player || typeof player.setVolume !== "function"){
+    return;
   }
 
-  langToggle.addEventListener("click", () => {
-    currentLang = currentLang === "jp" ? "en" : "jp";
-    localStorage.setItem('lang', currentLang);
-    applyLang();
-  });
+  const steps = 10;
+  const interval = duration / steps;
 
-  applyLang();
-</script>
+  for(let i = 0; i <= steps; i++){
 
-<script>
-const images = document.querySelectorAll('.bg-image');
-let current = 0;
-const interval = 5000; // 5秒
-const fadeDuration = 2000; // 2秒フェード（CSSで設定済み）
+    const progress = i / steps;
 
-// ページロード直後に最初の画像もズーム開始
-window.addEventListener('load', () => {
+    const volume =
+      from + ((to - from) * progress);
+
+    player.setVolume(
+      Math.max(0, Math.min(100, volume))
+    );
+
+    await new Promise(resolve =>
+      setTimeout(resolve, interval)
+    );
+  }
+  // ← 追加
+  player.setVolume(
+    Math.max(0, Math.min(100, to))
+  );
+}
+
+async function fadeOutAndPause(player){
+
+  if(!player) return;
+
+  const currentVolume =
+    typeof player.getVolume === "function"
+      ? player.getVolume()
+      : 100;
+
+  player._savedVolume = currentVolume;
+
+  try{
+
+    await fadeVolume(
+      player,
+      currentVolume,
+      0,
+      1500
+    );
+
+  } finally {
+
+    // 停止前に音量を戻す
+    player.setVolume(currentVolume);
+
+    player.pauseVideo();
+
+  }
+}
+
+function fadeInAndPlay(player){
+
+  if(!player) return;
+
+  const targetVolume =
+    player._savedVolume || 100;
+
+  player.unMute();
+
+  player.playVideo();
+
   setTimeout(() => {
-    images[current].style.transform = "scale(1.2)";
-    images[current].classList.add('active');
-  }, 50); // 少し遅延させる
+
+    player.setVolume(0);
+
+    fadeVolume(
+      player,
+      0,
+      targetVolume,
+      1200
+    );
+  }, 500);
+}
+
+let currentLang =
+  localStorage.getItem('lang') || 'jp';
+
+let moodVideos = {};
+
+function getEl(mode, id) {
+  return document.getElementById(`${mode}_${id}`);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  updateLanguage();
+
+  document.getElementById("langToggle").textContent =
+    currentLang === 'jp' ? "English" : "日本語";
+
+  const savedLoop =
+    localStorage.getItem("loopDuration");
+
+  if(savedLoop){
+
+    document.getElementById(
+      "loop_duration_settings"
+    ).dataset.value = savedLoop;
+
+  }
+
+  createWheelPicker("loop_duration_settings", 1, 180, 10);
+  createWheelPicker("focus_duration_settings", 1, 180, 25);
+  createWheelPicker("focus_breakDuration_settings", 1, 60, 5);
+
+  createVideoList("loop");
+  createVideoList("focus");
+
+  restoreSavedSettings();
+
+  checkYTApiReady();
+
+  updateModeUI("loop");
+  updateModeUI("focus");
+  setupLandscapeVideoFocus();
 });
 
-// 画像切り替え
-setInterval(() => {
-  const prev = current;
-  current = (current + 1) % images.length;
+document.getElementById("langToggle")
+.addEventListener("click", () => {
 
-  // 新しい画像をactiveにしてフェードイン
-  images[current].classList.add('active');
-  setTimeout(() => {
-    images[current].style.transform = "scale(1.1)";
-  }, 50);
+  currentLang =
+    currentLang === 'jp' ? 'en' : 'jp';
 
-  // 前の画像はフェードアウトしつつズームリセット
-  images[prev].style.opacity = 0;
-  images[prev].style.transform = "scale(1)";
+  localStorage.setItem("lang", currentLang);
 
-  // 完全に非表示にする（次回に備える）
-  setTimeout(() => {
-    images[prev].classList.remove('active');
-    images[prev].style.opacity = "";
-  }, 2000); // フェード時間に合わせる
-}, interval);
+  updateLanguage();
 
-// ---------------- すべてのボタンに豪華ポップエフェクトを追加 ----------------
-document.querySelectorAll('.btn, .btnHW, #positionBtn, #langToggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.classList.remove('pop'); // 念のため一度削除
-    void btn.offsetWidth; // reflowでアニメーションをリセット
-    btn.classList.add('pop');
-  });
+  document.getElementById("langToggle").textContent =
+    currentLang === 'jp' ? "English" : "日本語";
+
 });
 
+function updateLanguage(){
 
-// ===============================
-// Sympho tune への遷移を 0.25秒 遅延
-// （A. ボタン形式、B. メニュー形式 どちらにも対応）
-// ===============================
-document.querySelectorAll('a[href="tune"], a[href="./tune"], a[href="/tune"]').forEach(link => {
-  link.addEventListener("click", function(e) {
-    e.preventDefault(); // すぐ画面が切り替わるのを止める
+  document.querySelectorAll("[data-jp]")
+  .forEach(el => {
 
-    const targetUrl = link.getAttribute("href");
+    if("placeholder" in el){
 
-    // ▼ ボタンタイプなら pop エフェクト付与
-    if (link.classList.contains("btn")) {
-      link.classList.remove("pop");
-      void link.offsetWidth; // アニメリセット
-      link.classList.add("pop");
+      el.placeholder =
+        el.getAttribute(`data-${currentLang}`);
+
+    }
+    else{
+
+      el.textContent =
+        el.getAttribute(`data-${currentLang}`);
+
     }
 
-    // ▼ エフェクト終了後（0.25秒後）にページ遷移
-    setTimeout(() => {
-      window.location.href = targetUrl;
-    }, 250);
   });
+
+  updateModeUI("loop");
+  updateModeUI("focus");
+
+}
+function updateModeUI(mode){
+
+  const state = appStates[mode];
+
+  if(!state) return;
+
+  /* =========================
+     スイッチ同期
+  ========================= */
+
+  const switchTracks = [
+
+   document.getElementById(`${mode}_switchTrack_settings`)
+
+  ];
+
+  switchTracks.forEach(track => {
+
+    if(!track) return;
+
+    track.classList.toggle(
+      "active",
+      state.isCircular
+    );
+
+  });
+
+  /* =========================
+     Position表示制御
+  ========================= */
+
+  const positionTargets = [
+
+    document.getElementById(`${mode}_positionBtn_settings`)
+      ?.closest(".settings-row")
+
+  ];
+
+  positionTargets.forEach(el => {
+
+    if(!el) return;
+
+    el.style.display =
+      state.isCircular
+        ? "none"
+        : "flex";
+
+  });
+
+  /* =========================
+     Positionボタン文言
+  ========================= */
+
+  const labels =
+    currentLang === 'jp'
+    ? ["左上","右上","左下","右下","中央"]
+    : ["Top-Left","Top-Right","Bottom-Left","Bottom-Right","Center"];
+
+  const positionButtons = [
+
+    document.getElementById(`${mode}_positionBtn_settings`)
+
+  ];
+
+  positionButtons.forEach(btn => {
+
+    if(!btn) return;
+
+    btn.textContent =
+      (currentLang === 'jp'
+        ? "表示位置："
+        : "Position: ")
+      + labels[state.positionIndex];
+
+  });
+
+
+
+}
+function showSection(section){
+
+  // 表示切替
+  document.getElementById("choice").style.display =
+    section === "choice" ? "block" : "none";
+
+  document.getElementById("loop").style.display =
+    section === "loop" ? "block" : "none";
+
+  document.getElementById("focus").style.display =
+    section === "focus" ? "block" : "none";
+
+  // loop動画停止
+  if(section !== "loop"){
+
+    const loopState = appStates.loop;
+
+    if(loopState.ytPlayer){
+
+      loopState.ytPlayer.pauseVideo();
+
+    }
+
+    clearInterval(loopState.timerInterval);
+
+    loopState.isPlaying = false;
+
+  }
+
+  // focus動画停止
+  if(section !== "focus"){
+
+    const focusState = appStates.focus;
+
+    if(focusState.ytPlayer){
+
+      focusState.ytPlayer.pauseVideo();
+
+    }
+
+    clearInterval(focusState.timerInterval);
+
+    focusState.isPlaying = false;
+
+  }
+
+  // choice動画停止
+  if(section !== "choice"){
+
+    const choiceArea =
+      document.getElementById("videoArea_choice");
+
+    const iframe =
+      choiceArea.querySelector("iframe");
+
+    if(iframe){
+
+      iframe.src = "";
+
+    }
+
+  }
+
+  // スクロール
+  setTimeout(() => {
+
+    document.getElementById(section)
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+  }, 100);
+  requestAnimationFrame(() => {
+
+    document
+      .querySelectorAll(`#${section} .wheel-scroll`)
+      .forEach(wheel => {
+
+        const value =
+          parseInt(wheel.dataset.value, 10);
+
+        if(!value) return;
+
+        const target =
+          [...wheel.children]
+          .find(el =>
+            parseInt(el.dataset.value, 10) === value
+          );
+
+        if(!target) return;
+
+        wheel.scrollTop =
+          target.offsetTop
+          - (wheel.clientHeight / 2)
+          + (target.clientHeight / 2);
+
+      });
+
+  });
+}
+
+function checkYTApiReady(){
+
+  if(window.YT && window.YT.Player){
+
+    appStates.loop.playerReady = true;
+    appStates.focus.playerReady = true;
+
+  }
+  else{
+    setTimeout(checkYTApiReady, 200);
+  }
+
+}
+
+window.onYouTubeIframeAPIReady = function(){
+
+  appStates.loop.playerReady = true;
+  appStates.focus.playerReady = true;
+
+};
+function setupLandscapeVideoFocus(){
+
+  const applyLandscapeMode = () => {
+
+    const isMobile =
+      /iPhone|iPad|Android/i.test(navigator.userAgent);
+
+      const isLandscape =
+      window.matchMedia("(orientation: landscape)").matches;
+
+    if(isMobile && isLandscape){
+
+      document.body.classList.add(
+        "landscape-video-focus"
+      );
+
+      requestAnimationFrame(() => {
+ 
+          window.scrollTo({
+          top:1,
+          behavior:"instant"
+        });
+
+      });
+
+    }
+    else{
+
+      document.body.classList.remove(
+        "landscape-video-focus"
+      );
+
+    }
+
+  };
+
+  applyLandscapeMode();
+
+  window.addEventListener(
+    "orientationchange",
+    () => {
+
+      setTimeout(() => {
+
+        applyLandscapeMode();
+
+      }, 250);
+
+    }
+  );
+
+  window.addEventListener(
+    "resize",
+    applyLandscapeMode
+  );
+
+  if(window.visualViewport){
+
+    window.visualViewport
+    .addEventListener(
+      "resize",
+      applyLandscapeMode
+    );
+
+  }
+
+}
+function toggleTimerPosition(mode){
+
+  const state = appStates[mode];
+
+  state.positionIndex =
+    (state.positionIndex + 1) % positions.length;
+
+  const timerDisplay =
+    getEl(mode, "timerDisplay");
+
+  timerDisplay.className =
+    `timer-display ${positions[state.positionIndex]}`;
+
+  if(
+    mode === "focus" &&
+    !state.isCircular &&
+    positions[state.positionIndex] === "center" &&
+    state.currentPhase === "break"
+  ){
+
+    timerDisplay.style.transform =
+      "translate(-50%, 70%)";
+
+  }
+  else{
+
+    timerDisplay.style.transform = "";
+
+  }
+ 
+  const circle =
+    document.getElementById(`${mode}_circularTimer`);
+
+  if(circle){
+
+    circle.className = "circular-timer";
+
+    if(positions[state.positionIndex] !== "center"){
+      circle.classList.add(
+        positions[state.positionIndex]
+      );
+    }
+
+  }
+  updateModeUI(mode);
+}
+
+function toggleTimerType(mode){
+
+  const state = appStates[mode];
+
+  state.isCircular =
+    !state.isCircular;
+
+  const numeric =
+    getEl(mode, "timerDisplay");
+
+  let circle =
+    document.getElementById(`${mode}_circularTimer`);
+
+  if(state.isCircular){
+
+    numeric.style.display = "none";
+
+    if(!circle){
+
+      createCircularTimer(mode);
+
+      circle =
+        document.getElementById(`${mode}_circularTimer`);
+
+    }
+
+    circle.style.display = "flex";
+
+    adjustTimerSizes(mode);
+
+    updateTimerDisplay(mode);
+
+  }
+  else{
+
+    if(circle){
+      circle.style.display = "none";
+    }
+
+    numeric.style.display =
+      state.remainingTime > 0
+      ? "block"
+      : "none";
+
+  }
+  updateModeUI(mode);
+}
+
+function createCircularTimer(mode){
+
+  const wrapper =
+    getEl(mode, "ytPlayer").parentElement;
+
+  const div =
+    document.createElement("div");
+
+  div.id =
+    `${mode}_circularTimer`;
+
+  div.className =
+    "circular-timer";
+
+  div.innerHTML = `
+
+    <svg viewBox="0 0 200 200">
+
+      <circle
+        class="bg"
+        cx="100"
+        cy="100"
+        r="90"
+        stroke-width="15">
+      </circle>
+
+      <circle
+        class="progress"
+        cx="100"
+        cy="100"
+        r="90"
+        stroke-width="15">
+      </circle>
+
+      <text
+        id="${mode}_circularTimerText"
+        x="100"
+        y="100"
+
+        text-anchor="middle"
+        dominant-baseline="middle"
+        fill="white"
+        font-size="42"
+        transform="rotate(90 100 100)"
+        style="text-shadow: 0 0 8px black;">
+        00:00
+      </text>
+      <text
+        id="${mode}_phaseText"
+        x="100"
+        y="132"
+        text-anchor="middle"
+        fill="#bfe9ff"
+        font-size="18"
+        transform="rotate(90 100 100)"
+        style="
+          text-shadow:
+            0 0 6px rgba(0,0,0,0.7),
+            0 0 10px rgba(120,200,255,0.5);
+          opacity:0;
+        ">
+        BREAK
+      </text>
+
+    </svg>
+
+  `;
+
+wrapper.appendChild(div);
+
+if(positions[appStates[mode].positionIndex] !== "center"){
+  div.classList.add(
+    positions[appStates[mode].positionIndex]
+  );
+}
+
+  const progress =
+    div.querySelector(".progress");
+
+  const r =
+    parseFloat(progress.getAttribute("r"));
+
+  const circ =
+    2 * Math.PI * r;
+
+  progress.style.strokeDasharray = circ;
+  progress.style.strokeDashoffset = circ;
+
+  div.dataset.circumference = circ;
+
+}
+
+function adjustTimerSizes(mode){
+
+  const wrapper =
+    getEl(mode, "ytPlayer")
+    .parentElement;
+
+  const rect =
+    wrapper.getBoundingClientRect();
+
+  const h = rect.height;
+
+  const circle =
+    document.getElementById(`${mode}_circularTimer`);
+
+  if(circle){
+
+    const size = Math.min(rect.width, rect.height) * 0.75;
+
+    circle.style.width =
+      size + "px";
+
+    circle.style.height =
+      size + "px";
+
+    const txt =
+      document.getElementById(`${mode}_circularTimerText`);
+
+    if(txt){
+
+      txt.setAttribute(
+        "font-size",
+        Math.round(size * 0.14)
+      );
+
+    }
+  }
+
+  const timer =
+    getEl(mode, "timerDisplay");
+
+  if(timer){
+
+    const fontPx =
+      Math.round(h * 0.12);
+
+    timer.style.fontSize =
+      Math.max(
+        12,
+        Math.min(fontPx, 0.25 * rect.width)
+      ) + "px";
+
+  }
+
+}
+
+function updateTimerDisplay(mode){
+
+  const state =
+    appStates[mode];
+
+  const mins =
+    String(Math.floor(state.remainingTime / 60))
+    .padStart(2, '0');
+
+  const secs =
+    String(state.remainingTime % 60)
+    .padStart(2, '0');
+
+const timerDisplay =
+  getEl(mode, "timerDisplay");
+
+timerDisplay.textContent =
+  `${mins}:${secs}`;
+
+  if(mode === "focus" && !state.isCircular){
+
+    const currentPosition =
+      positions[state.positionIndex];
+
+    if(
+      currentPosition === "center" &&
+      state.currentPhase === "break"
+    ){
+
+      timerDisplay.style.transform =
+        "translate(-50%, 70%)";
+
+    }
+    else if(currentPosition === "center"){
+
+      timerDisplay.style.transform =
+        "translate(-50%, -50%)";
+
+    }
+    else{
+
+      timerDisplay.style.transform =
+        "";
+
+    }
+
+  }
+  if(!state.isCircular){
+
+    timerDisplay.style.display =
+      state.remainingTime > 0
+      ? "block"
+      : "none";
+
+  }
+
+  const circle =
+    document.getElementById(`${mode}_circularTimer`);
+
+  if(circle){
+
+  const text =
+    document.getElementById(`${mode}_circularTimerText`);
+
+  text.textContent =
+    `${mins}:${secs}`;
+
+  // 休憩中だけタイマー位置を下げる
+  if(mode === "focus" && state.currentPhase === "break"){
+    text.setAttribute("dy", "45");
+  }
+  else{
+    text.setAttribute("dy", "0");
+  }
+
+    const progress =
+      circle.querySelector(".progress");
+
+    // focusの休憩時間だけ青にする
+    if(mode === "focus" && state.currentPhase === "break"){
+      progress.style.stroke = "#4da6ff";
+    }
+    else{
+      progress.style.stroke = "#ff0000";
+    }
+
+    const total =
+      mode === "focus"
+      ? (
+          state.currentPhase === "break"
+          ? state.breakDuration
+          : state.focusDuration
+        )
+      : state.loopDuration;
+
+    const circ =
+      parseFloat(circle.dataset.circumference);
+
+    const fraction =
+      (total - state.remainingTime) / total;
+
+    progress.style.strokeDashoffset =
+      Math.max(0, circ * (1 - fraction));
+  }
+  if(mode === "focus"){
+
+      const breakOverlay =
+        document.getElementById("focus_breakOverlay");
+
+      if(breakOverlay){
+
+        breakOverlay.style.opacity =
+          state.currentPhase === "break"
+            ? "1"
+            : "0";
+      }
+
+  }
+}
+
+function loadVideo(mode){
+
+  const state =
+    appStates[mode];
+
+  clearInterval(state.timerInterval);
+
+    state.isPlaying = false;
+    state.isPaused = false;
+
+    if(state.ytPlayer){
+      fadeOutAndPause(state.ytPlayer);
+    }
+
+
+  const url =
+    getEl(mode, "ytUrl").value;
+
+  const videoId =
+    url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/)?.[1];
+
+  if(!videoId){
+
+    alert(
+      currentLang === 'jp'
+      ? "正しいURLを入力してください。"
+      : "Please enter a valid URL."
+    );
+
+    return;
+
+  }
+
+  const duration =
+    parseInt(
+      document.getElementById(`${mode}_duration_settings`).dataset.value,
+      10
+    )
+  if(!duration || duration <= 0){
+
+    alert(
+      currentLang === 'jp'
+      ? "タイマーには1分以上の整数を入力してください。"
+      : "Please enter a valid duration."
+    );
+
+    return;
+
+  }
+
+  state.remainingTime =
+    duration * 60;
+
+  if(mode === "loop"){
+    state.loopDuration =
+      duration * 60;
+  }
+
+  if(mode === "focus"){
+
+    state.pomodoroMode = true;
+
+    state.currentPhase = "focus";
+
+    state.focusDuration =
+      duration * 60;
+
+    state.breakDuration =
+      (
+        parseInt(
+          document.getElementById("focus_breakDuration_settings").dataset.value,
+          10
+        ) || 5
+      ) * 60;
+    state.remainingTime =
+      state.focusDuration;
+
+    const circle =
+      document.querySelector(`#${mode}_circularTimer .progress`);
+
+    if(circle){
+      circle.style.stroke = "#ff0000";
+    }
+  }
+  if(
+    state.isCircular &&
+    !document.getElementById(`${mode}_circularTimer`)
+  ){
+    createCircularTimer(mode);
+  }
+  updateTimerDisplay(mode);
+
+  adjustTimerSizes(mode);
+
+  if(!state.ytPlayer && state.playerReady){
+
+    state.ytPlayer =
+      new YT.Player(`${mode}_ytPlayer`, {
+
+        videoId,
+
+        playerVars: {
+          playsinline: 1,
+          fs: 0
+        },
+
+        events: {
+
+          onReady: event => {
+
+            event.target.cueVideoById(videoId);
+
+            setTimeout(() => {
+              adjustTimerSizes(mode);
+            }, 300);
+
+          },
+
+          onStateChange: evt => {
+
+            if(evt.data === YT.PlayerState.ENDED){
+
+              setTimeout(() => {
+
+                state.ytPlayer.seekTo(0, true);
+            //    state.ytPlayer.playVideo();
+                fadeInAndPlay(state.ytPlayer);
+
+              }, 300);
+
+            }
+
+          }
+
+        }
+
+      });
+
+  }
+  else if(state.ytPlayer){
+
+    state.ytPlayer.cueVideoById(videoId);
+
+  }
+
+}
+
+  function playLoop(mode){
+
+    const state =
+      appStates[mode];
+
+    if(!state.ytPlayer){
+      return;
+    }
+
+    state.ytPlayer.unMute();
+
+    // focus休憩中は動画を再生しない
+    if(!(mode === "focus" && state.currentPhase === "break")){
+    //  state.ytPlayer.playVideo();
+      fadeInAndPlay(state.ytPlayer);
+    }
+
+    state.isPlaying = true;
+
+    if(mode === "focus"){
+      document
+        .getElementById("focus")
+        .classList.add("focus-running");
+    }
+
+    if(mode === "loop"){
+      document
+        .getElementById("loop")
+        .classList.add("loop-running");
+    }
+    if(state.timerInterval){
+      clearInterval(state.timerInterval);
+    }
+
+    state.timerInterval =
+      setInterval(() => {
+        
+      state.remainingTime--;
+
+      updateTimerDisplay(mode);
+
+      if(state.remainingTime <= 0){
+
+        if(mode === "focus"){
+
+          if(state.currentPhase === "focus"){
+
+            state.currentPhase = "break";
+
+            state.remainingTime =
+              state.breakDuration;
+
+            fadeOutAndPause(state.ytPlayer);
+
+            document
+              .getElementById("focus_breakOverlay")
+              ?.classList.add("show");
+
+          }
+          else{
+
+            state.currentPhase = "focus";
+
+            state.remainingTime =
+              state.focusDuration;
+
+            fadeInAndPlay(state.ytPlayer);
+            document
+              .getElementById("focus_breakOverlay")
+              ?.classList.remove("show");
+
+          }
+
+          updateTimerDisplay(mode);
+
+          return;
+
+        }
+
+        clearInterval(state.timerInterval);
+
+        state.ytPlayer.stopVideo();
+
+        state.isPlaying = false;
+
+      }
+
+    }, 1000);
+
+}
+
+function stopLoop(mode){
+
+  const state =
+    appStates[mode];
+
+  state.ytPlayer?.pauseVideo();
+
+  clearInterval(state.timerInterval);
+
+  state.isPlaying = false;
+  
+  if(mode === "focus"){
+    document
+      .getElementById("focus")
+      .classList.remove("focus-running");
+
+    document
+      .getElementById("focus_breakOverlay")
+      ?.classList.remove("show");
+  }
+
+  if(mode === "loop"){
+    document
+      .getElementById("loop")
+      .classList.remove("loop-running");
+  }
+}
+
+function resetLoop(mode){
+
+  const state =
+    appStates[mode];
+
+  state.ytPlayer?.destroy();
+
+  state.ytPlayer = null;
+
+  clearInterval(state.timerInterval);
+
+  state.remainingTime = 0;
+  state.isPlaying = false;
+  state.isPaused = false;
+
+  getEl(mode, "ytUrl").value = "";
+
+  const timer =
+    getEl(mode, "timerDisplay");
+
+  timer.textContent = "";
+  timer.style.display = "none";
+
+  getEl(mode, "ytPlayer").innerHTML = "";
+
+  const circle =
+    document.getElementById(`${mode}_circularTimer`);
+
+  if(circle){
+    circle.style.display = "none";
+    circle.remove();
+  }
+  if(mode === "focus"){
+    document
+      .getElementById("focus")
+      .classList.remove("focus-running");
+
+    document
+      .getElementById("focus_breakOverlay")
+      ?.classList.remove("show");
+  }
+  if(mode === "loop"){
+    document
+      .getElementById("loop")
+      .classList.remove("loop-running");
+  }  
+}
+
+fetch("videos.json")
+
+.then(res =>
+  res.ok
+    ? res.json()
+    : Promise.reject(new Error("読み込み失敗"))
+)
+
+.then(data => {
+
+  moodVideos = data;
+
+})
+
+.catch(err => {
+
+  alert("読み込みエラー: " + err.message);
+
 });
 
+function extractVideoId(url){
 
+  const match =
+    url.match(/(?:youtu\.be\/|youtube\.com.*(?:v=|\/embed\/))([a-zA-Z0-9_-]+)/);
+
+  return match ? match[1] : null;
+
+}
+
+function copyToLoop(url){
+
+  getEl("loop", "ytUrl").value = url;
+
+  showSection("loop");
+
+  loadVideo("loop");
+
+}
+
+function copyToFocus(url){
+
+  getEl("focus", "ytUrl").value = url;
+
+  showSection("focus");
+
+  loadVideo("focus");
+
+}
+
+function playRandomVideo(mood){
+
+  const urls =
+    moodVideos[mood];
+
+  if(!urls || urls.length === 0){
+
+    alert(
+      currentLang === 'jp'
+      ? "その気分の動画が見つかりません。"
+      : "No videos found for that mood."
+    );
+
+    return;
+
+  }
+
+  const randomUrl =
+    urls[Math.floor(Math.random() * urls.length)];
+
+  const videoId =
+    extractVideoId(randomUrl);
+
+  const embedUrl =
+    `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`;
+
+  const resultArea =
+    document.getElementById("videoArea_choice");
+
+  resultArea.innerHTML = `
+    <p>
+      ${currentLang === 'jp'
+        ? "あなたにぴったりの音楽を占っています…"
+        : "Fortune-telling your perfect music..."}
+    </p>
+  `;
+
+  setTimeout(() => {
+
+    resultArea.innerHTML = `
+
+      <div class="video-wrapper">
+
+        <iframe
+          src="${embedUrl}"
+          allow="autoplay"
+          allowfullscreen
+          playsinline>
+        </iframe>
+
+      </div>
+
+      <p>
+        ${currentLang === 'jp'
+          ? "あなたの今日の音楽はこちら！"
+          : "Your music for today is here!"}
+      </p>
+
+      <p>
+        URL:
+        <span>${randomUrl}</span>
+      </p>
+
+      <button
+        class="btn"
+        onclick="copyToLoop('${randomUrl}')">
+
+        ${currentLang === 'jp'
+          ? "この動画をSympho loopで使う"
+          : "Use this video with Sympho loop"}
+
+      </button>
+
+      <button
+        class="btn"
+        onclick="copyToFocus('${randomUrl}')">
+
+        ${currentLang === 'jp'
+          ? "この動画をSympho Focusで使う"
+          : "Use this video with Sympho Focus"}
+
+      </button>
+
+    `;
+
+    document.getElementById("videoArea_choice")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+  }, 2000);
+
+}
+
+document.querySelectorAll('.btn')
+.forEach(btn => {
+
+  btn.addEventListener('click', () => {
+
+    btn.classList.remove('pop');
+
+    void btn.offsetWidth;
+
+    btn.classList.add('pop');
+
+  });
+
+});
+
+window.addEventListener('resize', () => {
+
+  adjustTimerSizes("loop");
+  adjustTimerSizes("focus");
+
+});
+
+function createWheelPicker(id, min, max, defaultValue){
+
+  const wheel =
+    document.getElementById(id);
+
+  wheel.innerHTML = "";
+
+  for(let i=min; i<=max; i++){
+
+    const item =
+      document.createElement("div");
+
+    item.className = "wheel-item";
+
+    item.dataset.value = i;
+
+    item.innerHTML = `
+      <span class="wheel-number">${i}</span>
+      <span class="wheel-unit">MIN</span>
+    `;
+    wheel.appendChild(item);
+
+  }
+
+  const saved =
+    localStorage.getItem(id);
+
+  let currentValue =
+    parseInt(saved || defaultValue, 10);
+
+  function setActive(value){
+
+    currentValue = value;
+
+    wheel.dataset.value = value;
+
+    localStorage.setItem(id, value);
+
+    wheel.querySelectorAll(".wheel-item")
+    .forEach(item => {
+
+      item.classList.toggle(
+        "active",
+        parseInt(item.dataset.value, 10) === value
+      );
+
+    });
+
+  }
+
+
+  function scrollToValue(value){
+
+    const target =
+      [...wheel.children]
+      .find(el =>
+        parseInt(el.dataset.value, 10) === value
+      );
+
+    if(!target) return;
+
+    const targetTop =
+      target.offsetTop
+      - (wheel.clientHeight / 2)
+      + (target.clientHeight / 2);
+
+    wheel.scrollTop = targetTop;
+  }
+
+  wheel.setValue = function(value){
+
+    currentValue = parseInt(value, 10);
+
+    requestAnimationFrame(() => {
+
+      const target =
+        [...wheel.children]
+        .find(el =>
+          parseInt(el.dataset.value, 10) === currentValue
+        );
+
+      if(!target) return;
+
+      const targetTop =
+        target.offsetTop
+        - (wheel.clientHeight / 2)
+        + (target.clientHeight / 2);
+
+      wheel.scrollTop = targetTop;
+
+      setActive(currentValue);
+
+    });
+
+  };
+  requestAnimationFrame(() => {
+
+    requestAnimationFrame(() => {
+
+      wheel.setValue(currentValue);
+
+    });
+
+  });
+
+  let ticking = false;
+  let snapTimeout = null;
+
+  function getClosestItem(){
+
+    const wheelRect =
+      wheel.getBoundingClientRect();
+
+    const wheelCenter =
+      wheelRect.top + wheelRect.height / 2;
+
+    let closest = null;
+    let closestDist = Infinity;
+
+    wheel.querySelectorAll(".wheel-item")
+    .forEach(item => {
+
+      const rect =
+        item.getBoundingClientRect();
+
+      const itemCenter =
+        rect.top + rect.height / 2;
+
+      const dist =
+        Math.abs(wheelCenter - itemCenter);
+
+      if(dist < closestDist){
+
+        closestDist = dist;
+        closest = item;
+
+      }
+
+    });
+
+    return closest;
+
+  }
+
+wheel.addEventListener("scroll", () => {
+
+  if(ticking) return;
+
+  ticking = true;
+
+  requestAnimationFrame(() => {
+
+    const closest =
+      getClosestItem();
+
+    if(closest){
+
+      setActive(
+        parseInt(closest.dataset.value, 10)
+      );
+
+    }
+
+    ticking = false;
+
+  });
+
+  clearTimeout(snapTimeout);
+
+  snapTimeout = setTimeout(() => {
+
+    const closest =
+      getClosestItem();
+
+    if(!closest) return;
+
+    const value =
+      parseInt(closest.dataset.value, 10);
+
+    scrollToValue(value);
+
+    setActive(value);
+
+  }, 80);
+
+});
+
+wheel.addEventListener("wheel", (e) => {
+
+  e.preventDefault();
+
+  const itemHeight = 42;
+
+  const direction =
+    e.deltaY > 0 ? 1 : -1;
+
+  wheel.scrollTo({
+
+    top:
+      Math.round(
+        wheel.scrollTop / itemHeight
+      ) * itemHeight
+      + direction * itemHeight,
+
+    behavior:"smooth"
+
+  });
+
+}, { passive:false });
+
+}
+function scrollCarousel(mode, direction){
+
+  const carousel =
+    document.getElementById(`${mode}_videoList`);
+
+  carousel.scrollBy({
+    left: direction * 320,
+    behavior: "smooth"
+  });
+
+}
+
+function createVideoList(mode){
+
+  const area =
+    document.getElementById(`${mode}_videoList`);
+
+  area.innerHTML = "";
+
+  presetVideos.forEach(video => {
+
+    const id =
+      extractVideoId(video.url);
+
+    const card =
+      document.createElement("div");
+
+    card.className = "video-card";
+
+    card.innerHTML = `
+
+      <img
+        src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+
+      </div>
+
+    `;
+    card.onclick = () => {
+
+      area.querySelectorAll(".video-card")
+      .forEach(c =>
+        c.classList.remove("active")
+      );
+
+      card.classList.add("active");
+
+      getEl(mode, "ytUrl").value =
+        video.url;
+
+      localStorage.setItem(
+        `${mode}_selectedVideo`,
+        video.url
+      );
+
+      loadVideo(mode);
+
+      document.querySelector(`#${mode} .video-wrapper`)
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+    };
+
+    area.appendChild(card);
+
+  });
+
+}
+
+function restoreSavedSettings(){
+
+  const loopDuration =
+    localStorage.getItem("loop_duration");
+
+  const focusDuration =
+    localStorage.getItem("focus_duration");
+
+  const breakDuration =
+    localStorage.getItem("focus_breakDuration");
+
+  if(loopDuration){
+
+    document.getElementById(
+      "loop_duration_settings"
+    ).dataset.value = loopDuration;
+
+  }
+
+  if(focusDuration){
+
+    document.getElementById(
+      "focus_duration_settings"
+    ).dataset.value = focusDuration;
+
+  }
+
+  if(breakDuration){
+
+    document.getElementById(
+      "focus_breakDuration_settings"
+    ).dataset.value = breakDuration;
+
+  }
+
+
+  const loopVideo =
+    localStorage.getItem("loop_selectedVideo");
+
+  const focusVideo =
+    localStorage.getItem("focus_selectedVideo");
+
+  if(loopVideo){
+    getEl("loop", "ytUrl").value =
+      loopVideo;
+  }
+
+  if(focusVideo){
+    getEl("focus", "ytUrl").value =
+      focusVideo;
+  }
+  updateModeUI("loop");
+  updateModeUI("focus");
+}
+
+function toggleUrlInput(mode){
+
+  const input =
+    document.getElementById(`${mode}_ytUrl`);
+
+  input.style.display =
+    input.style.display === "none"
+    ? "block"
+    : "none";
+
+}
+
+document.querySelectorAll(".video-select-grid")
+.forEach(carousel => {
+
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  carousel.addEventListener("mousedown", e => {
+
+    isDown = true;
+
+    carousel.classList.add("dragging");
+
+    startX =
+      e.pageX - carousel.offsetLeft;
+
+    scrollLeft =
+      carousel.scrollLeft;
+
+  });
+
+  carousel.addEventListener("mouseleave", () => {
+
+    isDown = false;
+
+    carousel.classList.remove("dragging");
+
+  });
+
+  carousel.addEventListener("mouseup", () => {
+
+    isDown = false;
+
+    carousel.classList.remove("dragging");
+
+  });
+
+  carousel.addEventListener("mousemove", e => {
+
+    if(!isDown) return;
+
+    e.preventDefault();
+
+    const x =
+      e.pageX - carousel.offsetLeft;
+
+    const walk =
+      (x - startX) * 1.5;
+
+    carousel.scrollLeft =
+      scrollLeft - walk;
+
+  });
+
+});
 </script>
 
 </body>
