@@ -482,6 +482,12 @@ document.addEventListener("DOMContentLoaded", () => {
         inset 0 0 12px rgba(255,255,255,0.05);
 
       backdrop-filter:blur(10px);
+   
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+
+      -webkit-mask-image:
+        -webkit-radial-gradient(white, black);
     }
     /* 上下フェード */
     .wheel-picker::before,
@@ -1420,7 +1426,7 @@ and (max-width: 1024px){
 and (orientation: landscape)
 and (max-width: 1024px)
 and (pointer: coarse){
-  
+
   html,
   body{
 
