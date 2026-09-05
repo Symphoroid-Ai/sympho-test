@@ -279,6 +279,9 @@
     </p>
     <div class="btn-group">
       <a href="tune" class="btn lang-text" data-jp="Sympho tune を体験する" data-en="Try Sympho tune">Sympho tune を体験する</a>
+      <a href="voice" class="btn lang-text"data-jp="Symphoroid Voice を聴く"data-en="Listen to Symphoroid Voice">Symphoroid Voice を聴く</a>
+      <a href="vision" class="btn lang-text"data-jp="Symphoroid Vision で作る"data-en="Make on Symphoroid Vision">Symphoroid Vidion で作る</a>
+
     </div>
   </div>
 </header>
@@ -479,7 +482,9 @@ document.querySelectorAll('.btn, .btnHW, #positionBtn, #langToggle').forEach(btn
 // Sympho tune への遷移を 0.25秒 遅延
 // （A. ボタン形式、B. メニュー形式 どちらにも対応）
 // ===============================
-document.querySelectorAll('a[href="tune"], a[href="./tune"], a[href="/tune"]').forEach(link => {
+//document.querySelectorAll('a[href="tune"], a[href="./tune"], a[href="/tune"]').forEach(link => {
+document.querySelectorAll('a[href="tune"], a[href="./tune"], a[href="/tune"], a[href="voice"], a[href="./voice"], a[href="/voice"], a[href="vision"], a[href="./vision"], a[href="/vision"]').forEach(link => {
+
   link.addEventListener("click", function(e) {
     e.preventDefault(); // すぐ画面が切り替わるのを止める
 
