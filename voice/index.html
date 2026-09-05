@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symphoroid Voice</title>
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5766887970921144"
+    crossorigin="anonymous"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body{
+      margin:0;
+      font-family:'Comfortaa','Helvetica Neue','Segoe UI',sans-serif;
+      background:#0d1b2a;
+      color:white;
+    }
+
+    header,section{
+      padding:2em;
+      text-align:center;
+    }
+
+    header{
+      background:#EAEEF6;
+      color:#01BEE3;
+    }
+
+    h1{
+      font-size:clamp(1.5rem,5vw,3rem);
+      margin:0.5em 0;
+    }
+
+    section h2{
+      font-size:clamp(1rem,5vw,1.5rem);
+      margin-bottom:20px;
+    }
+
+    .responsive-img{
+      max-width:600px;
+      width:80%;
+      height:auto;
+      display:block;
+      margin:0 auto;
+    }
+
+    #langToggle{
+      position:absolute;
+      top:1rem;
+      right:1rem;
+      background:#00bcd4;
+      color:white;
+      border:1px solid white;
+      border-radius:5px;
+      padding:.5rem 1rem;
+      z-index:10;
+      cursor:pointer;
+      font-size:1rem;
+      font-weight:400;
+    }
+
+    .btn{
+      min-width:180px;
+      min-height:48px;
+      background:#00bcd4;
+      border:1px solid white;
+      padding:.8em 1.5em;
+      margin:.5em;
+      color:white;
+      font-size:1em;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:600;
+      transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease;
+    }
+
+    .btn:active{
+      transform:scale(1.05);
+      box-shadow:0 0 12px rgba(255,255,255,.6);
+    }
+
+    .btn.pop{
+      animation:popGlow .25s ease forwards;
+    }
+
+    @keyframes popGlow{
+      0%{transform:scale(1);box-shadow:0 0 0 rgba(255,255,255,0)}
+      30%{transform:scale(1.3);box-shadow:0 0 20px rgba(255,255,255,.8),0 0 40px rgba(0,188,212,.5)}
+      60%{transform:scale(1.1);box-shadow:0 0 15px rgba(255,255,255,.6),0 0 30px rgba(0,188,212,.4);background:#00e0ff}
+      100%{transform:scale(1);box-shadow:0 0 0 rgba(255,255,255,0);background:#00bcd4}
+    }
+
+    .hero-sub{
+      opacity:.9;
+      margin-bottom:1.5em;
+    }
+
+    /* =========================
+       Voice carousel
+    ========================= */
+
+    .voice-carousel-wrapper{
+      position:relative;
+      width:100%;
+      max-width:1100px;
+      margin:2rem auto 1rem;
+    }
+
+    .voice-select-grid{
+      width:100%;
+      display:flex;
+      gap:16px;
+      cursor:grab;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:16px 8px 24px;
+      box-sizing:border-box;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      scroll-behavior:smooth;
+    }
+
+    .voice-select-grid::-webkit-scrollbar{
+      display:none;
+    }
+
+    .voice-select-grid.dragging{
+      cursor:grabbing;
+      scroll-behavior:auto;
+    }
+
+    .voice-card{
+      flex:0 0 280px;
+      scroll-snap-align:center;
+      background:rgba(255,255,255,.08);
+      border:2px solid transparent;
+      border-radius:20px;
+      overflow:hidden;
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+      transition:.25s ease;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
+    }
+
+    .voice-card:hover{
+      transform:scale(1.03);
+      box-shadow:0 0 20px rgba(255,255,255,.2);
+    }
+
+    .voice-card.active{
+      border-color:rgba(120,220,255,.9);
+      box-shadow:
+        0 0 18px rgba(120,220,255,.7),
+        0 0 35px rgba(120,220,255,.45);
+      transform:scale(1.04);
+    }
+
+    .voice-card-image{
+      width:100%;
+      aspect-ratio:1/1;
+      object-fit:cover;
+      display:block;
+      background:linear-gradient(135deg,#182d45,#0d1b2a);
+    }
+
+    .voice-card-info{
+      padding:14px 16px 16px;
+      text-align:left;
+    }
+
+    .voice-card-title{
+      font-weight:700;
+      font-size:1rem;
+      line-height:1.4;
+      margin-bottom:6px;
+    }
+
+    .voice-card-description{
+      font-size:.78rem;
+      line-height:1.5;
+      opacity:.72;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .carousel-btn{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:20;
+      width:48px;
+      height:48px;
+      border:none;
+      border-radius:50%;
+      background:rgba(255,255,255,.15);
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+      box-shadow:0 0 15px rgba(255,255,255,.15);
+      transition:.2s;
+    }
+
+    .carousel-btn:hover{
+      transform:translateY(-50%) scale(1.08);
+      box-shadow:0 0 20px rgba(120,200,255,.5);
+    }
+
+    .carousel-btn.left{left:-10px}
+    .carousel-btn.right{right:-10px}
+
+    .voice-selected{
+      width:100%;
+      max-width:900px;
+      margin:1.5rem auto 2rem;
+    }
+
+    .voice-selected-title{
+      font-size:clamp(1.2rem,4vw,1.8rem);
+      font-weight:700;
+      color:#dff6ff;
+      text-shadow:0 0 12px rgba(120,220,255,.35);
+      margin:.5rem 0;
+    }
+
+    .voice-selected-description{
+      max-width:760px;
+      margin:.5rem auto;
+      line-height:1.8;
+      opacity:.82;
+    }
+
+    .voice-status{
+      min-height:1.5em;
+      margin:1rem 0;
+      opacity:.75;
+    }
+
+    /* =========================
+       Video
+    ========================= */
+
+    .video-wrapper{
+      position:relative;
+      width:100%;
+      max-width:800px;
+      aspect-ratio:16/9;
+      margin:2rem auto;
+      overflow:hidden;
+      border-radius:24px;
+      background:#000;
+      box-shadow:0 20px 50px rgba(0,0,0,.45);
+    }
+
+    .video-wrapper iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .empty-video{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:2rem;
+      box-sizing:border-box;
+      background:linear-gradient(135deg,#12263b,#08131f);
+      color:rgba(255,255,255,.75);
+      line-height:1.8;
+    }
+
+    .sns-links{
+      display:flex;
+      justify-content:center;
+      gap:18px;
+      margin:1.5rem 0;
+    }
+
+    .sns-links a{
+      color:#7FDBFF;
+      text-decoration:none;
+      font-size:32px;
+      width:48px;
+      height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(8px);
+    }
+
+    .sns-links a:hover{
+      color:#00bcd4;
+    }
+
+    footer{
+      text-align:center;
+      padding:20px;
+    }
+
+    .footer-links{
+      margin:0 5px;
+      text-decoration:none;
+      color:inherit;
+      font-size:.9rem;
+    }
+
+    .footer-links:hover{
+      text-decoration:underline;
+    }
+
+    .back-home{
+      margin-top:1rem;
+    }
+
+    @media(max-width:768px){
+      header,section{
+        padding:1.5em 1em;
+      }
+
+      .carousel-btn{
+        width:42px;
+        height:42px;
+        font-size:18px;
+      }
+
+      .carousel-btn.left{left:0}
+      .carousel-btn.right{right:0}
+
+      .voice-card{
+        flex-basis:240px;
+      }
+    }
+
+    @media(max-width:480px){
+      .voice-card{
+        flex-basis:220px;
+      }
+
+      .btn{
+        width:min(90vw,320px);
+        min-width:0;
+      }
+
+      .voice-card-info{
+        padding:12px;
+      }
+    }
+
+    /* Mobile landscape: video-focused mode */
+    @media screen and (orientation:landscape) and (max-width:1024px) and (pointer:coarse){
+      html,body{
+        width:100%;
+        min-height:100svh;
+        background:#000;
+        overscroll-behavior:none;
+      }
+
+      body.landscape-video-focus{
+        overflow:hidden;
+      }
+
+      body.landscape-video-focus header,
+      body.landscape-video-focus .voice-intro,
+      body.landscape-video-focus .voice-carousel-wrapper,
+      body.landscape-video-focus .voice-selected,
+      body.landscape-video-focus .back-home,
+      body.landscape-video-focus footer{
+        display:none;
+      }
+
+      body.landscape-video-focus #voiceVideoSection{
+        padding:0;
+        margin:0;
+        min-height:100svh;
+      }
+
+      body.landscape-video-focus .video-wrapper{
+        position:fixed;
+        inset:0;
+        width:100vw;
+        height:100svh;
+        max-width:none;
+        margin:0;
+        border-radius:0;
+        z-index:9999;
+        box-shadow:none;
+      }
+    }
+  </style>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date());
+    gtag('config','G-DC85V6L5MK');
+  </script>
+</head>
+
+<body>
+
+<header>
+  <button id="langToggle" class="btn">English</button>
+
+  <img src="SymphoroidVoice.png"
+       alt="Symphoroid Voice"
+       class="responsive-img"
+       onerror="this.style.display='none';">
+
+  <h1 data-jp="未来へ進むための歌" data-en="Songs to help you move forward">
+    未来へ進むための歌
+  </h1>
+
+  <p class="hero-sub"
+     data-jp="心に寄り添い、明日へ進む力を届ける音楽。"
+     data-en="Music that stays close to your heart and gives you strength to move toward tomorrow.">
+    心に寄り添い、明日へ進む力を届ける音楽。
+  </p>
+</header>
+
+<section class="voice-intro">
+
+  <h2 data-jp="Symphoroid Voice" data-en="Symphoroid Voice">
+    Symphoroid Voice
+  </h2>
+
+  <p data-jp="歌と物語で、あなたの心に寄り添います。"
+     data-en="Songs and stories that stay close to your heart.">
+    歌と物語で、あなたの心に寄り添います。
+  </p>
+
+  <div class="voice-carousel-wrapper">
+
+    <button class="carousel-btn left"
+            aria-label="Previous"
+            onclick="scrollCarousel(-1)">❮</button>
+
+    <div id="voiceList" class="voice-select-grid"></div>
+
+    <button class="carousel-btn right"
+            aria-label="Next"
+            onclick="scrollCarousel(1)">❯</button>
+
+  </div>
+
+</section>
+
+<section id="voiceVideoSection">
+
+  <div class="voice-selected">
+
+    <div id="selectedTitle"
+         class="voice-selected-title"
+         data-jp="曲を選んでください"
+         data-en="Select a song">
+      曲を選んでください
+    </div>
+
+    <p id="selectedDescription"
+       class="voice-selected-description">
+    </p>
+
+    <div id="voiceStatus" class="voice-status"></div>
+
+  </div>
+
+  <div id="videoWrapper" class="video-wrapper">
+    <div class="empty-video"
+         data-jp="上のカルーセルから曲を選択してください。"
+         data-en="Select a song from the carousel above.">
+      上のカルーセルから曲を選択してください。
+    </div>
+  </div>
+
+  <div class="back-home">
+    <button class="btn"
+            onclick="location.href='../'"
+            data-jp="トップページへ戻る"
+            data-en="Back to Home">
+      トップページへ戻る
+    </button>
+  </div>
+
+</section>
+
+<footer>
+
+  <p class="sns-links">
+    <a href="https://www.youtube.com/@symphoroidai" target="_blank" rel="noopener">
+      <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://www.instagram.com/symphoroid_ai" target="_blank" rel="noopener">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank" rel="noopener">
+      <i class="fab fa-tiktok"></i>
+    </a>
+    <a href="https://www.x.com/@SymphoroidAi" target="_blank" rel="noopener">
+      <i class="fab fa-x-twitter"></i>
+    </a>
+  </p>
+
+  <p>&copy; 2025 Symphoroid Voice - powered by Symphoroid Ai</p>
+
+  <br>
+
+  <a href="../terms.html"
+     class="footer-links"
+     data-jp="利用規約"
+     data-en="Terms of Use">
+    利用規約
+  </a>
+
+  |
+
+  <a href="../privacy.html"
+     class="footer-links"
+     data-jp="プライバシーポリシー">
+    プライバシーポリシー
+  </a>
+
+  |
+
+  <a href="../"
+     class="footer-links"
+     data-jp="トップページ"
+     data-en="Home">
+    トップページ
+  </a>
+
+</footer>
+
+<script>
+  let currentLang=localStorage.getItem('lang')||'jp';
+  let voiceSongs=[];
+  let selectedIndex=-1;
+
+  const voiceList=document.getElementById('voiceList');
+
+  function updateLanguage(){
+    document.querySelectorAll('[data-jp]').forEach(el=>{
+      const value=el.getAttribute(`data-${currentLang}`);
+      if(value!==null){
+        if('placeholder' in el) el.placeholder=value;
+        else el.textContent=value;
+      }
+    });
+
+    document.getElementById('langToggle').textContent=
+      currentLang==='jp'?'English':'日本語';
+
+    if(selectedIndex>=0) updateSelectedSong(false);
+  }
+
+  document.getElementById('langToggle').addEventListener('click',()=>{
+    currentLang=currentLang==='jp'?'en':'jp';
+    localStorage.setItem('lang',currentLang);
+    updateLanguage();
+  });
+
+  function extractVideoId(url){
+    if(!url) return null;
+
+    const match=url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/
+    );
+
+    return match ? match[1] : null;
+  }
+
+  function escapeHtml(value){
+    return String(value??'')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+  function createVoiceList(){
+    voiceList.innerHTML='';
+
+    if(!voiceSongs.length){
+      voiceList.innerHTML=`
+        <div style="width:100%;padding:2rem;opacity:.7;">
+          ${currentLang==='jp'
+            ? 'voice.json に楽曲を追加すると、ここに表示されます。'
+            : 'Add songs to voice.json to display them here.'}
+        </div>`;
+      return;
+    }
+
+    voiceSongs.forEach((song,index)=>{
+      const card=document.createElement('div');
+      card.className='voice-card';
+      card.dataset.index=index;
+
+      const image=song.image||'';
+      const title=escapeHtml(song.title||'Untitled');
+      const description=escapeHtml(song.description||'');
+
+      card.innerHTML=`
+        <img class="voice-card-image"
+             src="${escapeHtml(image)}"
+             alt="${title}"
+             loading="lazy"
+             onerror="this.style.visibility='hidden';">
+        <div class="voice-card-info">
+          <div class="voice-card-title">${title}</div>
+          <div class="voice-card-description">${description}</div>
+        </div>
+      `;
+
+      card.addEventListener('click',()=>{
+        selectSong(index,true);
+      });
+
+      voiceList.appendChild(card);
+    });
+
+    if(selectedIndex>=0 && selectedIndex<voiceSongs.length){
+      setActiveCard(selectedIndex);
+    }
+  }
+
+  function setActiveCard(index){
+    voiceList.querySelectorAll('.voice-card').forEach(card=>{
+      card.classList.toggle(
+        'active',
+        Number(card.dataset.index)===index
+      );
+    });
+  }
+
+  function updateSelectedSong(scrollToVideo=true){
+    const song=voiceSongs[selectedIndex];
+    if(!song) return;
+
+    const title=song.title||'Untitled';
+    const description=song.description||'';
+
+    document.getElementById('selectedTitle').textContent=title;
+    document.getElementById('selectedDescription').textContent=description;
+
+    const status=document.getElementById('voiceStatus');
+    const videoId=extractVideoId(song.youtube);
+
+    if(videoId){
+      status.textContent=
+        currentLang==='jp'
+          ? 'Music Video'
+          : 'Music Video';
+    }else{
+      status.textContent=
+        currentLang==='jp'
+          ? 'YouTube動画が設定されていません。'
+          : 'No YouTube video has been configured.';
+    }
+
+    if(scrollToVideo){
+      document.getElementById('voiceVideoSection').scrollIntoView({
+        behavior:'smooth',
+        block:'start'
+      });
+    }
+  }
+
+  function selectSong(index,scrollToVideo=true){
+    if(index<0 || index>=voiceSongs.length) return;
+
+    selectedIndex=index;
+    setActiveCard(index);
+    updateSelectedSong(scrollToVideo);
+    loadVideo(voiceSongs[index]);
+  }
+
+  function loadVideo(song){
+    const wrapper=document.getElementById('videoWrapper');
+    const videoId=extractVideoId(song.youtube);
+
+    if(!videoId){
+      wrapper.innerHTML=`
+        <div class="empty-video">
+          ${currentLang==='jp'
+            ? 'この楽曲にはYouTube動画がまだ登録されていません。'
+            : 'A YouTube video has not been registered for this song yet.'}
+        </div>`;
+      return;
+    }
+
+    wrapper.innerHTML=`
+      <iframe
+        src="https://www.youtube.com/embed/${videoId}?playsinline=1&rel=0"
+        title="${escapeHtml(song.title||'Symphoroid Voice')}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        playsinline>
+      </iframe>`;
+  }
+
+  function scrollCarousel(direction){
+    voiceList.scrollBy({
+      left:direction*320,
+      behavior:'smooth'
+    });
+  }
+
+  function setupDragScroll(){
+    let isDown=false;
+    let startX=0;
+    let scrollLeft=0;
+
+    voiceList.addEventListener('mousedown',e=>{
+      isDown=true;
+      voiceList.classList.add('dragging');
+      startX=e.pageX-voiceList.offsetLeft;
+      scrollLeft=voiceList.scrollLeft;
+    });
+
+    voiceList.addEventListener('mouseleave',()=>{
+      isDown=false;
+      voiceList.classList.remove('dragging');
+    });
+
+    voiceList.addEventListener('mouseup',()=>{
+      isDown=false;
+      voiceList.classList.remove('dragging');
+    });
+
+    voiceList.addEventListener('mousemove',e=>{
+      if(!isDown) return;
+      e.preventDefault();
+
+      const x=e.pageX-voiceList.offsetLeft;
+      voiceList.scrollLeft=scrollLeft-(x-startX)*1.5;
+    });
+  }
+
+  function setupLandscapeVideoFocus(){
+    const apply=()=>{
+      const isMobile=/iPhone|iPad|Android/i.test(navigator.userAgent);
+      const isLandscape=window.matchMedia('(orientation: landscape)').matches;
+
+      document.body.classList.toggle(
+        'landscape-video-focus',
+        isMobile && isLandscape && selectedIndex>=0 && !!extractVideoId(voiceSongs[selectedIndex]?.youtube)
+      );
+    };
+
+    apply();
+    window.addEventListener('resize',apply);
+    window.addEventListener('orientationchange',()=>{
+      setTimeout(apply,250);
+    });
+
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize',apply);
+    }
+  }
+
+  async function loadVoiceData(){
+    try{
+      const response=await fetch('voice.json',{cache:'no-store'});
+      if(!response.ok) throw new Error('voice.json could not be loaded.');
+
+      const data=await response.json();
+
+      if(!Array.isArray(data)){
+        throw new Error('voice.json must contain an array.');
+      }
+
+      voiceSongs=data;
+      createVoiceList();
+    }catch(error){
+      console.error(error);
+
+      voiceSongs=[];
+      voiceList.innerHTML=`
+        <div style="width:100%;padding:2rem;opacity:.75;">
+          ${currentLang==='jp'
+            ? '楽曲データを読み込めませんでした。voice.json を確認してください。'
+            : 'Could not load the song data. Please check voice.json.'}
+        </div>`;
+    }
+  }
+
+  document.querySelectorAll('.btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      btn.classList.remove('pop');
+      void btn.offsetWidth;
+      btn.classList.add('pop');
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded',async()=>{
+    updateLanguage();
+    setupDragScroll();
+    setupLandscapeVideoFocus();
+    await loadVoiceData();
+
+    /* 最初の曲を自動選択したい場合は下記を有効化
+    if(voiceSongs.length) selectSong(0,false);
+    */
+  });
+</script>
+
+</body>
+</html>
