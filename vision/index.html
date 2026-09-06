@@ -10162,7 +10162,9 @@ function getExportCandidates(){
 
 function getPreferredExportFormat(){
     const candidates=getExportCandidates();
-    return candidates.length ? candidates[0] : null;
+    if(!candidates.length)return null;
+    const plainMp4=candidates.find(item=>item.mime==="video/mp4");
+    return plainMp4 || candidates[0];
 }
 
 function updateExportUI(show){
@@ -10412,6 +10414,13 @@ document
                             }
                         );
 
+                    if(!blob.size){
+                        exportInProgress=false;
+                        cancelAnimationFrame(exportProgressRAF);
+                        status("動画データを正常に作成できませんでした。");
+                        return;
+                    }
+
                     const url=
                         URL.createObjectURL(
                             blob
@@ -10459,7 +10468,7 @@ document
 
             audio.currentTime=0;
 
-            recorder.start();
+            recorder.start(1000);
             startExportProgress();
 
             await audio.play();
