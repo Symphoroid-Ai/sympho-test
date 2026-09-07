@@ -1931,6 +1931,86 @@ body.advanced-mode .mode-switch button{background:#00e0ff!important;}
   }
 }
 </style>
+<style id="symphone-vision-footer">
+.site-footer{
+  width:100%;
+  box-sizing:border-box;
+  text-align:center;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:#0d1b2a;
+  border-top:1px solid rgba(0,224,255,.16);
+  color:rgba(255,255,255,.72);
+  font-size:12px;
+  line-height:1.6;
+}
+.site-footer .sns-links{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  margin:0 0 8px;
+}
+.site-footer .sns-links a{
+  width:48px;
+  height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  color:#7FDBFF;
+  text-decoration:none;
+  font-size:32px;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:color .2s ease, transform .2s ease, background-color .2s ease;
+}
+.site-footer .sns-links a:hover{
+  color:#00bcd4;
+  transform:translateY(-1px);
+  background:rgba(255,255,255,0.12);
+}
+.site-footer .sns-links i{
+    font-family:"Font Awesome 6 Brands"!important;
+    font-style:normal;
+}
+.site-footer-copy{
+  margin:0;
+  color:rgba(255,255,255,.55);
+}
+.site-footer .footer-links{
+  margin:0 5px;
+  text-decoration:none;
+  color:inherit;
+  font-size:.9rem;
+}
+.site-footer .footer-links:hover{
+  text-decoration:underline;
+}
+@media(min-width:601px){
+  .site-footer{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:9000;
+  }
+  body{
+    box-sizing:border-box;
+    padding-bottom:92px;
+  }
+}
+@media(max-width:600px){
+  .site-footer{
+    position:static;
+    margin-top:0;
+    padding:15px 12px calc(15px + env(safe-area-inset-bottom));
+    font-size:11px;
+  }
+  .site-footer .sns-links{gap:18px;}
+  .site-footer .sns-links a{width:48px;height:48px;font-size:32px;}
+}
+</style><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
 
@@ -2742,7 +2822,29 @@ class="playhead">
 </section>
 
 </div>
-
+<footer id="siteFooter" class="site-footer">
+  <p class="sns-links">
+    <a href="https://www.youtube.com/@symphoroidai" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://www.instagram.com/symphoroid_ai" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+      <i class="fab fa-tiktok"></i>
+    </a>
+    <a href="https://www.x.com/@SymphoroidAi" target="_blank" rel="noopener noreferrer" aria-label="X">
+      <i class="fab fa-x-twitter"></i>
+    </a>
+  </p>
+  <p class="site-footer-copy">&copy; 2025 Sympho Vision - powered by Symphoroid Ai</p>
+  <br>
+  <a href="../terms.html" class="footer-links" data-jp="利用規約" data-en="Terms of Use">利用規約</a>
+  |
+  <a href="../privacy.html" class="footer-links" data-jp="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
+  |
+  <a href="../" class="footer-links" data-jp="トップページ" data-en="Home">トップページ</a>
+</footer>
 <script>
 
 /* ==================================================
