@@ -1970,10 +1970,6 @@ body.advanced-mode .mode-switch button{background:#00e0ff!important;}
   transform:translateY(-1px);
   background:rgba(255,255,255,0.12);
 }
-.site-footer .sns-links i{
-    font-family:"Font Awesome 6 Brands"!important;
-    font-style:normal;
-}
 .site-footer-copy{
   margin:0;
   color:rgba(255,255,255,.55);
@@ -1986,6 +1982,10 @@ body.advanced-mode .mode-switch button{background:#00e0ff!important;}
 }
 .site-footer .footer-links:hover{
   text-decoration:underline;
+}
+.site-footer .sns-links i{
+  font-family:"Font Awesome 6 Brands"!important;
+  font-style:normal;
 }
 @media(min-width:601px){
   .site-footer{
@@ -2018,6 +2018,9 @@ body.advanced-mode .mode-switch button{background:#00e0ff!important;}
    全画面表示し、編集UIとフッターを一時的に非表示にする。
 ================================================== */
 @media(max-width:600px) and (orientation:landscape){
+  .site-footer{
+    display:none !important;
+  }
   html,
   body{
     width:100%;
@@ -11653,14 +11656,20 @@ document.addEventListener("click",function(e){
     if(!mobileQuery)return;
 
     const applyLandscapeMode=function(){
-        const isMobile=/iPhone|iPad|Android/i.test(navigator.userAgent);
-        const isLandscape=window.matchMedia("(orientation: landscape)").matches;
+        const ua=navigator.userAgent||"";
+        const isIOS=/iPhone|iPad|iPod/i.test(ua);
+        const isAndroid=/Android/i.test(ua);
+        const isMobile=isIOS || isAndroid || (navigator.maxTouchPoints>1 && Math.min(window.innerWidth,window.innerHeight)<=600);
+        const width=window.visualViewport ? window.visualViewport.width : window.innerWidth;
+        const height=window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        const isLandscape=width>height;
         const active=isMobile && mobileQuery.matches && isLandscape;
+
         document.body.classList.toggle("landscape-video-focus",active);
 
         if(active){
             requestAnimationFrame(function(){
-                window.scrollTo({top:1,left:0,behavior:"instant"});
+                window.scrollTo({top:0,left:0,behavior:"instant"});
             });
         }
     };
@@ -11668,7 +11677,8 @@ document.addEventListener("click",function(e){
     applyLandscapeMode();
 
     window.addEventListener("orientationchange",function(){
-        window.setTimeout(applyLandscapeMode,250);
+        window.setTimeout(applyLandscapeMode,150);
+        window.setTimeout(applyLandscapeMode,500);
     });
     window.addEventListener("resize",applyLandscapeMode);
 
