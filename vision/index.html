@@ -2010,6 +2010,88 @@ body.advanced-mode .mode-switch button{background:#00e0ff!important;}
   .site-footer .sns-links{gap:18px;}
   .site-footer .sns-links a{width:48px;height:48px;font-size:32px;}
 }
+
+
+/* ==================================================
+   IPHONE LANDSCAPE MV FOCUS
+   Tune / Voice と同じ考え方で、横向き時はMVプレビューを
+   全画面表示し、編集UIとフッターを一時的に非表示にする。
+================================================== */
+@media(max-width:600px) and (orientation:landscape){
+  html,
+  body{
+    width:100%;
+    min-height:100svh;
+    margin:0;
+    padding:0 !important;
+    background:#000;
+    overflow:auto;
+    overscroll-behavior:none;
+    -webkit-text-size-adjust:100%;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  body.landscape-video-focus header,
+  body.landscape-video-focus .mode-switch,
+  body.landscape-video-focus .editor,
+  body.landscape-video-focus .mobile-workspace,
+  body.landscape-video-focus .site-footer{
+    opacity:0 !important;
+    pointer-events:none !important;
+    visibility:hidden !important;
+    height:0 !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+  }
+
+  body.landscape-video-focus .preview{
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    width:100vw !important;
+    height:100svh !important;
+    min-height:100svh !important;
+    max-height:100svh !important;
+    margin:0 !important;
+    padding:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:#000 !important;
+    border:0 !important;
+    box-shadow:none !important;
+    overflow:hidden !important;
+    z-index:9999 !important;
+  }
+
+  body.landscape-video-focus .canvas-wrap{
+    position:relative !important;
+    width:100vw !important;
+    height:auto !important;
+    aspect-ratio:16 / 9 !important;
+    max-width:100vw !important;
+    max-height:100svh !important;
+    margin:0 !important;
+    padding:0 !important;
+    flex:0 0 auto !important;
+    background:#000 !important;
+    overflow:hidden !important;
+  }
+
+  body.landscape-video-focus .canvas-wrap canvas{
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    max-width:none !important;
+    max-height:none !important;
+    object-fit:contain !important;
+  }
+
+  body.landscape-video-focus .preview-transport{
+    display:none !important;
+  }
+}
+
 </style><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
@@ -11559,5 +11641,42 @@ document.addEventListener("click",function(e){
   window.setTimeout(function(){button.classList.remove("st-button-flash");},260);
 });
 </script>
+
+<script>
+/* ==================================================
+   IPHONE LANDSCAPE MV FOCUS
+   横向き時だけMVプレビューを全画面化し、縦向きへ戻すと
+   自動的に通常UIへ復帰する。PCには適用しない。
+================================================== */
+(function setupLandscapeVideoFocus(){
+    const mobileQuery=window.matchMedia && window.matchMedia("(max-width:600px)");
+    if(!mobileQuery)return;
+
+    const applyLandscapeMode=function(){
+        const isMobile=/iPhone|iPad|Android/i.test(navigator.userAgent);
+        const isLandscape=window.matchMedia("(orientation: landscape)").matches;
+        const active=isMobile && mobileQuery.matches && isLandscape;
+        document.body.classList.toggle("landscape-video-focus",active);
+
+        if(active){
+            requestAnimationFrame(function(){
+                window.scrollTo({top:1,left:0,behavior:"instant"});
+            });
+        }
+    };
+
+    applyLandscapeMode();
+
+    window.addEventListener("orientationchange",function(){
+        window.setTimeout(applyLandscapeMode,250);
+    });
+    window.addEventListener("resize",applyLandscapeMode);
+
+    if(window.visualViewport){
+        window.visualViewport.addEventListener("resize",applyLandscapeMode);
+    }
+})();
+</script>
+
 </body>
 </html>
