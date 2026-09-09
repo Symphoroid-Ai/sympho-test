@@ -2096,6 +2096,101 @@ body.landscape-video-focus .preview-transport{
 }
 
 </style><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style id="vision-shared-language-ui">
+/* ==================================================
+   SHARED LANGUAGE / IPHONE TOP CONTROLS
+   Match the common site language setting used by index / tune / voice.
+   On narrow screens the controls occupy a dedicated top row instead of
+   floating over page content.
+================================================== */
+@media(max-width:600px){
+  header{
+    display:flex !important;
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    width:100% !important;
+    height:calc(56px + env(safe-area-inset-top)) !important;
+    min-height:0 !important;
+    box-sizing:border-box !important;
+    padding:calc(6px + env(safe-area-inset-top)) 8px 6px !important;
+    margin:0 !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    background:rgba(8,21,34,.96) !important;
+    border:0 !important;
+    border-bottom:1px solid rgba(0,224,255,.18) !important;
+    box-shadow:0 4px 16px rgba(0,0,0,.18) !important;
+    pointer-events:none !important;
+    z-index:10000 !important;
+  }
+
+  header h1{display:none !important;}
+
+  #langToggle{
+    display:block !important;
+    position:relative !important;
+    top:auto !important;
+    right:auto !important;
+    left:auto !important;
+    transform:none !important;
+    width:auto !important;
+    min-width:78px !important;
+    min-height:37px !important;
+    height:37px !important;
+    margin:0 !important;
+    padding:6px 12px !important;
+    box-sizing:border-box !important;
+    font-size:14px !important;
+    line-height:1.2 !important;
+    white-space:nowrap !important;
+    pointer-events:auto !important;
+    z-index:10002 !important;
+  }
+
+  .mode-switch{
+    position:fixed !important;
+    top:calc(6px + env(safe-area-inset-top)) !important;
+    left:8px !important;
+    right:94px !important;
+    width:auto !important;
+    max-width:none !important;
+    height:44px !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:7px !important;
+    z-index:10001 !important;
+  }
+
+  .mode-switch-label{font-size:11px !important;}
+  .mode-switch button{
+    min-width:0 !important;
+    width:auto !important;
+    max-width:100% !important;
+    min-height:34px !important;
+    padding:6px 10px !important;
+    white-space:nowrap !important;
+  }
+
+  /* Keep the first content below the dedicated control row. */
+  body{
+    padding-top:calc(56px + env(safe-area-inset-top)) !important;
+    box-sizing:border-box !important;
+  }
+}
+
+/* Landscape MV focus still hides the whole top control row. */
+body.landscape-video-focus header{
+  display:none !important;
+}
+</style>
 </head>
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
 
@@ -11463,12 +11558,12 @@ document.addEventListener("change",function(e){
     const button=document.getElementById("langToggle");
     if(!button)return;
 
-    // iPhoneではheader自体を非表示にするため、言語ボタンをheaderの外へ移動する。
-    if(button.parentElement!==document.body){
-        document.body.appendChild(button);
+    // Top / tune / voice / vision use the same shared language setting.
+    // Migrate the old Vision-only key once, but always prefer the shared key.
+    let currentLang=localStorage.getItem("lang") || localStorage.getItem("svLang") || "jp";
+    if(!localStorage.getItem("lang") && localStorage.getItem("svLang")){
+        localStorage.setItem("lang",currentLang);
     }
-
-    let currentLang=localStorage.getItem("svLang")||"jp";
 
     /* Complete UI dictionary. Dynamic messages are also translated by
        MutationObserver, so analysis/export/playback text follows the switch. */
@@ -11625,7 +11720,7 @@ document.addEventListener("change",function(e){
     });
     button.addEventListener("click",function(){
         currentLang=currentLang==="jp"?"en":"jp";
-        localStorage.setItem("svLang",currentLang);
+        localStorage.setItem("lang",currentLang);
         update();
     });
     update();
