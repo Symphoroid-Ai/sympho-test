@@ -58,7 +58,9 @@
       padding:.5rem 1rem;
       z-index:10;
       cursor:pointer;
-      font-size:1rem;
+      font-size: 1rem;
+      min-width: unset;
+      min-height: unset;
       font-weight:400;
     }
 
@@ -398,7 +400,7 @@
         box-shadow:none;
       }
     }
-            /* iPhone / narrow screens: keep language control in one consistent fixed position */
+/* iPhone / narrow screens: keep language control in one consistent fixed position */
     @media (max-width: 600px) {
       #langToggle {
         position: fixed !important;
