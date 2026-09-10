@@ -238,7 +238,9 @@
     }
         /* iPhone / narrow screens: keep language control in one consistent fixed position */
     @media (max-width: 600px) {
-
+      .header-content {
+        top: 55% !important;
+      }      
       #langToggle {
         position: fixed !important;
         top: calc(10px + env(safe-area-inset-top)) !important;
