@@ -398,6 +398,27 @@
         box-shadow:none;
       }
     }
+            /* iPhone / narrow screens: keep language control in one consistent fixed position */
+    @media (max-width: 600px) {
+      #langToggle {
+        position: fixed !important;
+        top: calc(10px + env(safe-area-inset-top)) !important;
+        right: 10px !important;
+        left: auto !important;
+        bottom: auto !important;
+        width: auto !important;
+        min-width: 78px !important;
+        min-height: 37px !important;
+        height: 37px !important;
+        padding: 6px 12px !important;
+        box-sizing: border-box !important;
+        font-size: 14px !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        z-index: 10002 !important;
+      }
+    }
+
   </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
