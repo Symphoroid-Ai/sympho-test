@@ -238,6 +238,10 @@
     }
         /* iPhone / narrow screens: keep language control in one consistent fixed position */
     @media (max-width: 600px) {
+      .header-content {
+        top: 55% !important;
+      }
+
       .header-content h1 {
         font-size: 6vw !important;
         letter-spacing: 0.06em !important;
@@ -251,9 +255,13 @@
         bottom: auto !important;
         width: auto !important;
         min-width: 78px !important;
+        max-width: 92px !important;
         min-height: 37px !important;
         height: 37px !important;
         padding: 6px 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         box-sizing: border-box !important;
         font-size: 14px !important;
         line-height: 1.2 !important;
