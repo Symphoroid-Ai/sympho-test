@@ -666,7 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       margin:0px auto 20px;
 
-      scroll-snap-type:x mandatory;
+      scroll-snap-type:x proximity;
 
       -webkit-overflow-scrolling:touch;
 
@@ -4057,6 +4057,19 @@ function toggleUrlInput(mode){
 
 document.querySelectorAll(".video-select-grid")
 .forEach(carousel => {
+
+// PC: マウスホイールでカルーセルを横方向へスクロール
+  carousel.addEventListener("wheel", e => {
+    if (carousel.scrollWidth <= carousel.clientWidth) return;
+
+    // 縦方向のホイール操作を横スクロールへ変換
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault();
+
+      // スクロール量を増幅
+      carousel.scrollLeft += e.deltaY * 3;
+    }
+  }, { passive: false });
 
   let isDown = false;
   let startX;
