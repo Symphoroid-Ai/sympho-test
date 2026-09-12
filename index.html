@@ -276,6 +276,19 @@
       }
     }
 
+    /* iPhone横向き：タイトルと右上の言語ボタンが重ならないよう調整 */
+    @media (max-width: 600px) and (orientation: landscape) {
+      .header-content h1 {
+        font-size: 5vw !important;
+        letter-spacing: 0.04em !important;
+      }
+
+      #langToggle {
+        top: 1rem !important;
+        right: 1rem !important;
+      }
+    }
+
   </style>
   
   <!-- Google tag (gtag.js) -->
