@@ -236,18 +236,37 @@
       font-size: 8vw;
       }
     }
-        /* iPhone / narrow screens: keep language control in one consistent fixed position */
+        /* iPhone / narrow screens */
     @media (max-width: 600px) {
+      header {
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow: visible !important;
+      }
+
       .header-content {
-        top: 55% !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 70px 16px 32px !important;
       }
 
       .header-content h1 {
+        width: 100% !important;
         font-size: 7vw !important;
         letter-spacing: 0.05em !important;
+        white-space: nowrap !important;
       }
 
-      /* PCと同じ配置基準にする */
+      .btn-group {
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* PCと同じ右上配置 */
       #langToggle {
         position: absolute !important;
         top: 1rem !important;
