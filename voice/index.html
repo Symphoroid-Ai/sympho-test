@@ -120,7 +120,7 @@
       overflow-y:hidden;
       padding:16px 8px 24px;
       box-sizing:border-box;
-      scroll-snap-type:x mandatory;
+      scroll-snap-type:x proximity;
       -webkit-overflow-scrolling:touch;
       scrollbar-width:none;
       scroll-behavior:smooth;
@@ -741,6 +741,20 @@
     });
   }
 
+  function setupWheelScroll(){
+    voiceList.addEventListener('wheel', e => {
+      if(voiceList.scrollWidth <= voiceList.clientWidth) return;
+
+      // 縦方向のマウスホイールを横スクロールへ変換
+      if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+        e.preventDefault();
+
+        // ホイール操作を大きめに反映
+        voiceList.scrollLeft += e.deltaY * 3;
+      }
+    }, { passive:false });
+  }
+
   function setupDragScroll(){
     let isDown=false;
     let startX=0;
@@ -831,6 +845,7 @@
   document.addEventListener('DOMContentLoaded',async()=>{
     updateLanguage();
     setupDragScroll();
+    setupWheelScroll();
     setupLandscapeVideoFocus();
     await loadVoiceData();
 
