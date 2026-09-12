@@ -239,15 +239,21 @@
         /* iPhone / narrow screens: keep language control in one consistent fixed position */
     @media (max-width: 600px) {
       .header-content {
-        top: 60% !important;
-      }      
+        top: 55% !important;
+      }
+
+      .header-content h1 {
+        font-size: 7vw !important;
+        letter-spacing: 0.05em !important;
+      }
+
+      /* PCと同じ配置基準にする */
       #langToggle {
         position: absolute !important;
         top: 1rem !important;
         right: 1rem !important;
         left: auto !important;
         bottom: auto !important;
-
       }
     }
 
