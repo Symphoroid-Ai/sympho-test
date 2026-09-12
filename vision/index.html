@@ -8324,8 +8324,15 @@ function updateCurrentSectionDisplay(time){
 
     scroll.addEventListener(
         "wheel",
-        manualInput,
-        {passive:true}
+        function(e){
+            manualInput();
+
+            if(Math.abs(e.deltaY)>0){
+                e.preventDefault();
+                scroll.scrollLeft+=e.deltaY;
+            }
+        },
+        {passive:false}
     );
 
     scroll.addEventListener(
@@ -8773,6 +8780,21 @@ function splitSectionAtTime(time){
         return false;
     }
     const section=musicSections[index];
+
+    /* Section分割位置をまたぐ画像クリップも同じ位置で分割する。
+       画像・時間以外の既存設定はそのまま複製して維持する。 */
+    const splitImageClips=[];
+    clips.forEach(function(clip,clipIndex){
+        if(clip.start<time && time<clip.end){
+            const rightClip={...clip,start:time,end:clip.end};
+            clip.end=time;
+            splitImageClips.push({index:clipIndex+1,clip:rightClip});
+        }
+    });
+    splitImageClips.reverse().forEach(function(item){
+        clips.splice(item.index,0,item.clip);
+    });
+
     const right={start:time,end:section.end,energy:section.energy,density:section.density,flux:section.flux,chorusScore:section.chorusScore,type:section.type};
     section.end=time;
     musicSections.splice(index+1,0,right);
@@ -9521,7 +9543,7 @@ const active=[];
             draggingSectionBoundary={index:index,edge:"left"};
             renderSectionEditor();
             div.classList.add("selected");
-            ensureSectionVisible(index,"smooth");
+//            ensureSectionVisible(index,"smooth");
         });
         div.appendChild(leftHandle);
 
@@ -9535,7 +9557,7 @@ const active=[];
             draggingSectionBoundary={index:index,edge:"right"};
             renderSectionEditor();
             div.classList.add("selected");
-            ensureSectionVisible(index,"smooth");
+//            ensureSectionVisible(index,"smooth");
         });
         div.appendChild(rightHandle);
 
@@ -10752,7 +10774,7 @@ document
 
             audio.currentTime=0;
 
-            recorder.start(1000);
+            recorder.start();
             startExportProgress();
 
             await audio.play();
