@@ -277,12 +277,15 @@
     }
 
     /* iPhone横向き：タイトルと右上の言語ボタンが重ならないよう調整 */
-    @media (max-width: 500px) and (orientation: landscape) {
+    /* iPhone横向き */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .header-content {
+        top: 62% !important;
+      }
+
       .header-content h1 {
         font-size: 5vw !important;
         letter-spacing: 0.04em !important;
-        padding-right: 200px !important;
-        box-sizing: border-box !important;
       }
 
       #langToggle {
