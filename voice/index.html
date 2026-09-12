@@ -743,16 +743,19 @@
 
   function setupWheelScroll(){
     voiceList.addEventListener('wheel', e => {
+      // 横スクロール可能でない場合は何もしない
       if(voiceList.scrollWidth <= voiceList.clientWidth) return;
 
-      // 縦方向のマウスホイールを横スクロールへ変換
+      // 縦ホイールを横スクロールに変換
       if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
         e.preventDefault();
+        e.stopPropagation();
 
-        // ホイール操作を大きめに反映
         voiceList.scrollLeft += e.deltaY * 3;
       }
-    }, { passive:false });
+    }, {
+      passive: false
+    });
   }
 
   function setupDragScroll(){
