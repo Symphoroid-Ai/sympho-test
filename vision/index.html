@@ -2098,68 +2098,46 @@ body.landscape-video-focus .preview-transport{
 </style><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style id="vision-shared-language-ui">
-/* Shared language / iPhone top controls.
-   On narrow screens both controls live in the same normal top-control row. */
+/* ==================================================
+   SHARED LANGUAGE / IPHONE TOP CONTROLS
+   Match the common site language setting used by index / tune / voice.
+   On narrow screens the controls occupy a dedicated top row instead of
+   floating over page content.
+================================================== */
 @media(max-width:600px){
   header{
-    display:none !important;
-  }
-
-  body{
-    padding-top:calc(58px + env(safe-area-inset-top)) !important;
-    box-sizing:border-box !important;
-  }
-
-  .mode-switch{
+    display:flex !important;
     position:fixed !important;
     top:0 !important;
     left:0 !important;
     right:0 !important;
     width:100% !important;
-    height:calc(58px + env(safe-area-inset-top)) !important;
+    height:calc(56px + env(safe-area-inset-top)) !important;
     min-height:0 !important;
-    margin:0 !important;
-    padding:calc(6px + env(safe-area-inset-top)) 8px 6px !important;
     box-sizing:border-box !important;
-    display:grid !important;
-    grid-template-columns:auto minmax(0,1fr) auto !important;
+    padding:calc(6px + env(safe-area-inset-top)) 8px 6px !important;
+    margin:0 !important;
     align-items:center !important;
-    gap:8px !important;
+    justify-content:flex-end !important;
     background:rgba(8,21,34,.96) !important;
+    border:0 !important;
     border-bottom:1px solid rgba(0,224,255,.18) !important;
     box-shadow:0 4px 16px rgba(0,0,0,.18) !important;
-    z-index:10001 !important;
+    pointer-events:none !important;
+    z-index:10000 !important;
   }
 
-  .mode-switch-label{
-    font-size:11px !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
-  }
-
-  .mode-switch button{
-    min-width:0 !important;
-    width:100% !important;
-    max-width:none !important;
-    min-height:37px !important;
-    margin:0 !important;
-    padding:6px 10px !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
-  }
+  header h1{display:none !important;}
 
   #langToggle{
     display:block !important;
-    position:static !important;
+    position:relative !important;
     top:auto !important;
     right:auto !important;
     left:auto !important;
     transform:none !important;
     width:auto !important;
     min-width:78px !important;
-    max-width:none !important;
     min-height:37px !important;
     height:37px !important;
     margin:0 !important;
@@ -2170,29 +2148,46 @@ body.landscape-video-focus .preview-transport{
     white-space:nowrap !important;
     pointer-events:auto !important;
     z-index:10002 !important;
-    grid-column:3 !important;
-    grid-row:1 !important;
   }
 
-  /* The language button is moved beside the mode controls by the small
-     mobile-only DOM adjustment below; it is not a floating overlay. */
-}
-
-@media(max-width:380px){
   .mode-switch{
-    grid-template-columns:auto minmax(0,1fr) auto !important;
-    gap:5px !important;
-    padding-left:5px !important;
-    padding-right:5px !important;
+    position:fixed !important;
+    top:calc(6px + env(safe-area-inset-top)) !important;
+    left:8px !important;
+    right:94px !important;
+    width:auto !important;
+    max-width:none !important;
+    height:44px !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:7px !important;
+    z-index:10001 !important;
   }
-  .mode-switch-label{font-size:10px !important;}
-  .mode-switch button{padding-left:7px !important;padding-right:7px !important;font-size:11px !important;}
-  #langToggle{min-width:70px !important;padding-left:8px !important;padding-right:8px !important;font-size:12px !important;}
+
+  .mode-switch-label{font-size:11px !important;}
+  .mode-switch button{
+    min-width:0 !important;
+    width:auto !important;
+    max-width:100% !important;
+    min-height:34px !important;
+    padding:6px 10px !important;
+    white-space:nowrap !important;
+  }
+
+  /* Keep the first content below the dedicated control row. */
+  body{
+    padding-top:calc(56px + env(safe-area-inset-top)) !important;
+    box-sizing:border-box !important;
+  }
 }
 
 /* Landscape MV focus still hides the whole top control row. */
-body.landscape-video-focus header,
-body.landscape-video-focus .mode-switch{
+body.landscape-video-focus header{
   display:none !important;
 }
 </style>
@@ -3008,6 +3003,7 @@ class="playhead">
 
 </div>
 <footer id="siteFooter" class="site-footer">
+<!--    
   <p class="sns-links">
     <a href="https://www.youtube.com/@symphoroidai" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
       <i class="fab fa-youtube"></i>
@@ -3022,6 +3018,7 @@ class="playhead">
       <i class="fab fa-x-twitter"></i>
     </a>
   </p>
+  -->
   <p class="site-footer-copy">&copy; 2025 Sympho Vision - powered by Symphoroid Ai</p>
   <br>
   <a href="../terms.html" class="footer-links" data-jp="利用規約" data-en="Terms of Use">利用規約</a>
@@ -11559,17 +11556,6 @@ document.addEventListener("change",function(e){
    LANGUAGE SWITCH
    Sympho tune style: Japanese / English
 ================================================== */
-(function setupMobileLanguagePlacement(){
-    if(!window.matchMedia || !window.matchMedia("(max-width:600px)").matches)return;
-    const move=function(){
-        const button=document.getElementById("langToggle");
-        const mode=document.querySelector(".mode-switch");
-        if(button && mode && button.parentElement!==mode) mode.appendChild(button);
-    };
-    move();
-    window.addEventListener("resize",move);
-})();
-
 (function initLanguageSwitch(){
     const button=document.getElementById("langToggle");
     if(!button)return;
