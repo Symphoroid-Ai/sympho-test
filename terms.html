@@ -1,112 +1,350 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>利用規約<br>Terms of Use</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   利用規約 | Terms of Use - Symphoroid Ai
+  </title>
+  <meta content="利用規約 - Symphoroid Ai" name="description"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&amp;display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
   <style>
-    body {
-      font-family: 'Comfortaa', 'Helvetica Neue', sans-serif;
-      background-color: #0d1b2a;
-      color: #fff;
-      margin: 0;
-      padding: 2rem;
-      line-height: 1.8;
-    }
-
-    h1, h2 {
-      text-align: center;
-      overflow-wrap: break-word;
-      word-break: break-word;
-      text-shadow: 0 0 5px black;
-      color: #00bcd4;
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 100%;
-    }
-
-    h1 {
-      font-size: clamp(1.8rem, 5vw, 2.5rem);
-      margin-bottom: 2rem;
-    }
-
-    h2 {
-      font-size: clamp(1.2rem, 4vw, 1.6rem);
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-    }
-
-    section {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    p {
-      margin-bottom: 1rem;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.9rem;
-      margin-top: 3rem;
-      color: #aaa;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 1rem;
-      }
-    }
+   :root{
+  --bg:#0d1b2a;
+  --panel:rgba(255,255,255,.055);
+  --panel-strong:rgba(0,30,60,.48);
+  --accent:#00bcd4;
+  --text:#fff;
+  --muted:#aaa;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  padding:0;
+  font-family:'Comfortaa','Helvetica Neue',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.85;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+header{
+  padding:70px 20px 48px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(0,188,212,.14),transparent 45%),
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent);
+}
+h1,h2,h3{
+  color:var(--accent);
+  text-shadow:0 0 5px rgba(0,0,0,.8);
+  overflow-wrap:anywhere;
+}
+h1{font-size:clamp(1.8rem,5vw,2.5rem);margin:0 0 10px}
+h2{font-size:clamp(1.25rem,4vw,1.7rem);margin:0 0 18px}
+h3{font-size:1.08rem;margin:0 0 10px}
+header p{max-width:760px;margin:0 auto;color:#e8edf2}
+#langToggle{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:1000;
+  min-width:78px;
+  min-height:37px;
+  padding:6px 12px;
+  border:1px solid var(--accent);
+  border-radius:999px;
+  background:rgba(13,27,42,.82);
+  color:var(--accent);
+  font-family:inherit;
+  cursor:pointer;
+}
+nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px 18px;
+  padding:14px 12px;
+  background:rgba(0,0,0,.22);
+  border-top:1px solid rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+nav a{color:#dce9f1;font-size:.92rem}
+main{max-width:980px;margin:0 auto;padding:42px 20px 70px}
+section{
+  background:var(--panel);
+  border-radius:10px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.section-lead{margin-top:-4px;color:#d8e0e7}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  margin-top:22px;
+}
+.card{
+  background:var(--panel-strong);
+  border:1px solid rgba(0,188,212,.22);
+  border-radius:10px;
+  padding:22px;
+}
+.card p:last-child{margin-bottom:0}
+.step{
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:16px;
+  align-items:start;
+  margin:20px 0;
+}
+.step-num{
+  width:42px;height:42px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid var(--accent);
+  color:var(--accent);
+}
+.step-content p{margin-top:4px}
+ul{padding-left:1.4rem}
+li{margin:.45rem 0}
+details{
+  background:var(--panel);
+  border-radius:8px;
+  margin:12px 0;
+  padding:0 18px;
+}
+summary{
+  cursor:pointer;
+  padding:16px 0;
+  color:#fff;
+  font-weight:600;
+}
+details p{padding:0 0 16px;margin:0}
+.cta{
+  text-align:center;
+  background:var(--panel-strong);
+  border:1px solid rgba(0,188,212,.2);
+}
+.btn{
+  display:inline-block;
+  margin:6px;
+  padding:10px 18px;
+  border:1px solid var(--accent);
+  border-radius:999px;
+  background:rgba(0,188,212,.08);
+  color:var(--accent);
+}
+.btn:hover{background:rgba(0,188,212,.16);text-decoration:none}
+footer{
+  text-align:center;
+  padding:28px 20px 42px;
+  color:var(--muted);
+  font-size:.88rem;
+}
+.footer-links{color:#cfd8df}
+@media(max-width:760px){
+  .cards{grid-template-columns:1fr}
+  section{padding:22px 18px}
+  main{padding:32px 14px 55px}
+}
+@media(max-width:600px){
+  header{padding:65px 16px 36px}
+  nav{gap:7px 12px}
+  nav a{font-size:.82rem}
+  .step{grid-template-columns:40px 1fr;gap:12px}
+  .step-num{width:36px;height:36px}
+}
   </style>
-</head>
-<body>
-  <h1>利用規約<br>Terms of Use</h1>
+  <script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5766887970921144">
+  </script>
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK">
+  </script>
+  <script>
+   window.dataLayer=window.dataLayer||[];
+function gtag(){
+  dataLayer.push(arguments)}
+gtag('js',new Date());
+gtag('config','G-DC85V6L5MK');
+  </script>
+ </head>
+ <body>
+  <button aria-label="Switch to English" id="langToggle">
+   English
+  </button>
+  <header>
+   <h1 data-en="Terms of Use" data-jp="利用規約">
+    利用規約
+   </h1>
+  </header>
+<nav>
+  <a href="index.html" class="lang-text"
+     data-jp="トップ"
+     data-en="Home">トップ</a>
 
-  <section>
-    <h2>1. サービスの提供<br>Service Provision</h2>
-    <p>
-      本サイトは、癒しの音楽体験をオンラインで提供します。サービスの内容や機能は、予告なく変更または終了する場合があります。<br><br>
-      This site provides healing music experiences online. The content and features of the service may be changed or discontinued without notice.
+  <a href="tune" class="lang-text"
+     data-jp="Sympho tune"
+     data-en="Sympho tune">Sympho tune</a>
+
+  <a href="voice" class="lang-text"
+     data-jp="Symphoroid Voice"
+     data-en="Symphoroid Voice">Symphoroid Voice</a>
+
+  <a href="vision" class="lang-text"
+     data-jp="Sympho Vision"
+     data-en="Sympho Vision">Sympho Vision</a>
+
+  <a href="about.html" class="lang-text"
+     data-jp="About"
+     data-en="About">About</a>
+
+  <a href="howto.html" class="lang-text"
+     data-jp="使い方"
+     data-en="How to">使い方</a>
+
+  <a href="faq.html" class="lang-text"
+     data-jp="よくある質問"
+     data-en="FAQ">よくある質問</a>
+
+  <a href="privacy.html" class="lang-text"
+     data-jp="プライバシーポリシー"
+     data-en="Privacy Policy">プライバシーポリシー</a>
+
+  <a href="terms.html" class="lang-text"
+     data-jp="利用規約"
+     data-en="Terms">利用規約</a>
+
+  <a href="contact.html" class="lang-text"
+     data-jp="お問い合わせ"
+     data-en="Contact">お問い合わせ</a>
+</nav>
+<!--  
+  <nav>
+   <a data-en="Home" data-jp="トップ" href="index.html">
+    トップ
+   </a>
+   <a data-en="Web App" data-jp="Webアプリ" href="tune">
+    Webアプリ
+   </a>
+   <a data-en="About" data-jp="About" href="about.html">
+    About
+   </a>
+   <a data-en="How to Use" data-jp="使い方" href="howto.html">
+    使い方
+   </a>
+   <a data-en="FAQ" data-jp="FAQ" href="faq.html">
+    FAQ
+   </a>
+  </nav>
+--> 
+  <main>
+   <section>
+    <h2 data-en="Service Provision" data-jp="サービスの提供">
+     サービスの提供
+    </h2>
+    <p data-en="Symphoroid Ai provides digital content and web services related to music and visual media. Service content and specifications may be changed or discontinued without prior notice." data-jp="Symphoroid Ai は、音楽・映像などのデジタルコンテンツおよびWebサービスを提供します。サービスの内容や仕様は、予告なく変更・停止する場合があります。">
+     Symphoroid Ai は、音楽・映像などのデジタルコンテンツおよびWebサービスを提供します。サービスの内容や仕様は、予告なく変更・停止する場合があります。
     </p>
-  </section>
-
-  <section>
-    <h2>2. 著作権について<br>Copyright</h2>
-    <p>
-      当サイトのコンテンツ（音楽・画像・文章など）の著作権はSymphoroid Aiに帰属します。無断転載・使用は禁止されています。<br><br>
-      All content on this site (music, images, text) is copyrighted by Symphoroid Ai. Unauthorized use or reproduction is prohibited.
+   </section>
+   <section>
+    <h2 data-en="Copyright" data-jp="著作権">
+     著作権
+    </h2>
+    <p data-en="Copyright and other rights to music, images, videos, text, logos, and other content created or published by Symphoroid Ai belong to this site or the respective rights holders." data-jp="Symphoroid Ai が制作・公開する音楽、画像、動画、文章、ロゴなどのコンテンツに関する著作権その他の権利は、当サイトまたは正当な権利者に帰属します。">
+     Symphoroid Ai が制作・公開する音楽、画像、動画、文章、ロゴなどのコンテンツに関する著作権その他の権利は、当サイトまたは正当な権利者に帰属します。
     </p>
-  </section>
-
-  <section>
-    <h2>3. 免責事項<br>Disclaimer</h2>
-    <p>
-      本サイトの利用によって生じたいかなる損害に対しても、当方は一切の責任を負いません。<br><br>
-      We shall not be liable for any damages arising from the use of this site.
+    <p data-en="Unless permitted by law, unauthorized reproduction, modification, redistribution, sale, or other use is prohibited." data-jp="法令で認められる場合を除き、無断での転載、複製、改変、再配布、販売などを禁止します。">
+     法令で認められる場合を除き、無断での転載、複製、改変、再配布、販売などを禁止します。
     </p>
-  </section>
-
-  <section>
-    <h2>4. 利用規約の変更<br>Changes to Terms</h2>
-    <p>
-      本利用規約は予告なく変更される場合があります。変更内容は本ページまたはその他適切な方法で通知します。<br><br>
-      These terms may be updated without notice. Changes will be announced on this page or by other appropriate means.
+   </section>
+   <section>
+    <h2 data-en="Disclaimer" data-jp="免責事項">
+     免責事項
+    </h2>
+    <p data-en="This site and its services are provided on an as-is basis. Symphoroid Ai may not be liable for damages arising from use of the site or its services." data-jp="当サイトおよび各サービスは、現状有姿で提供されます。サービスの利用によって生じた損害について、当サイトが責任を負わない場合があります。">
+     当サイトおよび各サービスは、現状有姿で提供されます。サービスの利用によって生じた損害について、当サイトが責任を負わない場合があります。
     </p>
-  </section>
-
-  <section>
-    <h2>5. 第三者サービスについて<br>Third-Party Services</h2>
-    <p>
-      本サイトでは、Google AdSense（広告配信）および Google Analytics（アクセス解析）などの第三者サービスを利用しています。これらのサービスでは Cookie を使用し、ユーザーの端末情報や閲覧履歴などが収集される場合があります。詳細はプライバシーポリシーをご参照ください。<br><br>
-      This site uses third-party services such as Google AdSense (advertising) and Google Analytics (analytics). These services may use cookies to collect data such as device information and browsing history. For details, please refer to the Privacy Policy.
+    <p data-en="The effects of music vary by individual, and no specific effect is guaranteed." data-jp="音楽による効果には個人差があり、特定の効果を保証するものではありません。">
+     音楽による効果には個人差があり、特定の効果を保証するものではありません。
     </p>
-  </section>
+   </section>
+   <section>
+    <h2 data-en="Changes to These Terms" data-jp="利用規約の変更">
+     利用規約の変更
+    </h2>
+    <p data-en="These terms may be changed when necessary. Revised terms take effect when they are posted on this site." data-jp="本規約は、必要に応じて変更することがあります。変更後の規約は、当サイト上に掲載した時点から適用されます。">
+     本規約は、必要に応じて変更することがあります。変更後の規約は、当サイト上に掲載した時点から適用されます。
+    </p>
+   </section>
+   <section>
+    <h2 data-en="Third-Party Services" data-jp="第三者サービス">
+     第三者サービス
+    </h2>
+    <p data-en="This site uses third-party services such as Google AdSense, Google Analytics, and YouTube. The respective terms and policies of those providers apply to their services." data-jp="当サイトでは、Google AdSense、Google Analytics、YouTube などの第三者サービスを利用しています。これらのサービスについては、それぞれの提供元の規約・ポリシーが適用されます。">
+     当サイトでは、Google AdSense、Google Analytics、YouTube などの第三者サービスを利用しています。これらのサービスについては、それぞれの提供元の規約・ポリシーが適用されます。
+    </p>
+   </section>
+  </main>
+<footer>
+  <p>&copy; 2025 Symphoroid Ai. All rights reserved.</p>
+  <p>
+    <a class="footer-links" href="privacy.html" data-jp="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
+    &nbsp;|&nbsp;
+    <a class="footer-links" href="terms.html" data-jp="利用規約" data-en="Terms of Use">利用規約</a>
+    &nbsp;|&nbsp;
+    <a class="footer-links" href="contact.html" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
+  </p>
+</footer>
 
+<!--
   <footer>
+   <p>
     &copy; 2025 Symphoroid Ai. All rights reserved.
+   </p>
+   <p>
+    <a class="footer-links" data-en="Privacy" data-jp="プライバシー" href="privacy.html">
+     プライバシー
+    </a>
+    &nbsp;|&nbsp;
+    <a class="footer-links" data-en="Terms" data-jp="利用規約" href="terms.html">
+     利用規約
+    </a>
+    &nbsp;|&nbsp;
+    <a class="footer-links" data-en="Contact" data-jp="お問い合わせ" href="contact.html">
+     お問い合わせ
+    </a>
+   </p>
   </footer>
-</body>
+-->
+
+  <script>
+   (function(){
+  const KEY="lang";
+  let lang=localStorage.getItem(KEY)||"jp";
+  function updateLanguage(){
+    document.documentElement.lang=lang==="en"?"en":"ja";
+    document.querySelectorAll("[data-jp][data-en]").forEach(el=>el.textContent=lang==="en"?el.dataset.en:el.dataset.jp);
+    const b=document.getElementById("langToggle");
+    if(b){
+      b.textContent=lang==="en"?"日本語":"English";
+      b.setAttribute("aria-label",lang==="en"?"日本語に切り替える":"Switch to English");
+    }
+}
+document.addEventListener("DOMContentLoaded",()=>{
+  updateLanguage();
+  document.getElementById("langToggle").addEventListener("click",()=>{
+    lang=lang==="jp"?"en":"jp";
+    localStorage.setItem(KEY,lang);
+    updateLanguage();
+  }
+);
+}
+);
+}
+)();
+  </script>
+ </body>
 </html>

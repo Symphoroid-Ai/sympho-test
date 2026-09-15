@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>よくある質問 | Symphoroid Ai FAQ</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5766887970921144" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DC85V6L5MK"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-DC85V6L5MK');
+</script>
+
+<style>
+:root{
+  --bg:#0d1b2a;
+  --panel:rgba(255,255,255,.055);
+  --panel-strong:rgba(0,30,60,.48);
+  --accent:#00bcd4;
+  --text:#fff;
+  --muted:#aaa;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  padding:0;
+  font-family:'Comfortaa','Helvetica Neue',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.85;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+header{
+  padding:70px 20px 48px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(0,188,212,.14),transparent 45%),
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent);
+}
+h1,h2,h3{
+  color:var(--accent);
+  text-shadow:0 0 5px rgba(0,0,0,.8);
+  overflow-wrap:anywhere;
+}
+h1{font-size:clamp(1.8rem,5vw,2.5rem);margin:0 0 10px}
+h2{font-size:clamp(1.25rem,4vw,1.7rem);margin:0 0 18px}
+h3{font-size:1.08rem;margin:0 0 10px}
+header p{max-width:760px;margin:0 auto;color:#e8edf2}
+#langToggle{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:1000;
+  min-width:78px;
+  min-height:37px;
+  padding:6px 12px;
+  border:1px solid var(--accent);
+  border-radius:999px;
+  background:rgba(13,27,42,.82);
+  color:var(--accent);
+  font-family:inherit;
+  cursor:pointer;
+}
+nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px 18px;
+  padding:14px 12px;
+  background:rgba(0,0,0,.22);
+  border-top:1px solid rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+nav a{color:#dce9f1;font-size:.92rem}
+main{max-width:980px;margin:0 auto;padding:42px 20px 70px}
+section{
+  background:var(--panel);
+  border-radius:10px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.section-lead{margin-top:-4px;color:#d8e0e7}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  margin-top:22px;
+}
+.card{
+  background:var(--panel-strong);
+  border:1px solid rgba(0,188,212,.22);
+  border-radius:10px;
+  padding:22px;
+}
+.card p:last-child{margin-bottom:0}
+.step{
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:16px;
+  align-items:start;
+  margin:20px 0;
+}
+.step-num{
+  width:42px;height:42px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid var(--accent);
+  color:var(--accent);
+}
+.step-content p{margin-top:4px}
+ul{padding-left:1.4rem}
+li{margin:.45rem 0}
+details{
+  background:var(--panel);
+  border-radius:8px;
+  margin:12px 0;
+  padding:0 18px;
+}
+summary{
+  cursor:pointer;
+  padding:16px 0;
+  color:#fff;
+  font-weight:600;
+}
+details p{padding:0 0 16px;margin:0}
+.cta{
+  text-align:center;
+  background:var(--panel-strong);
+  border:1px solid rgba(0,188,212,.2);
+}
+.btn{
+  display:inline-block;
+  margin:6px;
+  padding:10px 18px;
+  border:1px solid var(--accent);
+  border-radius:999px;
+  background:rgba(0,188,212,.08);
+  color:var(--accent);
+}
+.btn:hover{background:rgba(0,188,212,.16);text-decoration:none}
+footer{
+  text-align:center;
+  padding:28px 20px 42px;
+  color:var(--muted);
+  font-size:.88rem;
+}
+.footer-links{color:#cfd8df}
+@media(max-width:760px){
+  .cards{grid-template-columns:1fr}
+  section{padding:22px 18px}
+  main{padding:32px 14px 55px}
+}
+@media(max-width:600px){
+  header{padding:65px 16px 36px}
+  nav{gap:7px 12px}
+  nav a{font-size:.82rem}
+  .step{grid-template-columns:40px 1fr;gap:12px}
+  .step-num{width:36px;height:36px}
+}
+</style>
+</head>
+<body>
+<button id="langToggle">English</button>
+<header>
+  <h1 data-jp="よくある質問" data-en="Frequently Asked Questions">よくある質問</h1>
+  <p data-jp="Symphoroid Aiのサービスについて、よくある疑問をまとめています。" data-en="Answers to common questions about Symphoroid Ai and its services.">Symphoroid Aiのサービスについて、よくある疑問をまとめています。</p>
+</header>
+
+<nav>
+  <a href="index.html" class="lang-text"
+     data-jp="トップ"
+     data-en="Home">トップ</a>
+
+  <a href="tune" class="lang-text"
+     data-jp="Sympho tune"
+     data-en="Sympho tune">Sympho tune</a>
+
+  <a href="voice" class="lang-text"
+     data-jp="Symphoroid Voice"
+     data-en="Symphoroid Voice">Symphoroid Voice</a>
+
+  <a href="vision" class="lang-text"
+     data-jp="Sympho Vision"
+     data-en="Sympho Vision">Sympho Vision</a>
+
+  <a href="about.html" class="lang-text"
+     data-jp="About"
+     data-en="About">About</a>
+
+  <a href="howto.html" class="lang-text"
+     data-jp="使い方"
+     data-en="How to">使い方</a>
+
+  <a href="faq.html" class="lang-text"
+     data-jp="よくある質問"
+     data-en="FAQ">よくある質問</a>
+
+  <a href="privacy.html" class="lang-text"
+     data-jp="プライバシーポリシー"
+     data-en="Privacy Policy">プライバシーポリシー</a>
+
+  <a href="terms.html" class="lang-text"
+     data-jp="利用規約"
+     data-en="Terms">利用規約</a>
+
+  <a href="contact.html" class="lang-text"
+     data-jp="お問い合わせ"
+     data-en="Contact">お問い合わせ</a>
+</nav>
+
+<!--
+<nav>
+  <a href="index.html" data-jp="トップ" data-en="Home">トップ</a>
+  <a href="tune" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
+  <a href="about.html" data-jp="About" data-en="About">About</a>
+  <a href="howto.html" data-jp="使い方" data-en="How to Use">使い方</a>
+  <a href="faq.html" data-jp="FAQ" data-en="FAQ">FAQ</a>
+  <a href="privacy.html" data-jp="プライバシー" data-en="Privacy">プライバシー</a>
+  <a href="terms.html" data-jp="利用規約" data-en="Terms">利用規約</a>
+  <a href="contact.html" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
+</nav>
+-->
+<main>
+<section>
+  <h2 data-jp="Symphoroid Aiについて" data-en="About Symphoroid Ai">Symphoroid Aiについて</h2>
+  <details><summary data-jp="Symphoroid Aiは何を提供していますか？" data-en="What does Symphoroid Ai provide?">Symphoroid Aiは何を提供していますか？</summary><p data-jp="癒しの音楽を中心に、音楽を楽しむためのSympho tune、歌と物語を届けるSymphoroid Voice、音楽から映像を作るSympho Visionを提供しています。" data-en="Symphoroid Ai offers Sympho tune for music experiences, Symphoroid Voice for songs and stories, and Sympho Vision for creating visuals from music.">癒しの音楽を中心に、音楽を楽しむためのSympho tune、歌と物語を届けるSymphoroid Voice、音楽から映像を作るSympho Visionを提供しています。</p></details>
+  <details><summary data-jp="スマートフォンでも利用できますか？" data-en="Can I use the services on a smartphone?">スマートフォンでも利用できますか？</summary><p data-jp="各サービスはWebブラウザから利用できます。画面サイズやブラウザによって表示や操作感が異なる場合があります。" data-en="The services are available through a web browser. Layout and interaction can vary depending on the screen size and browser.">各サービスはWebブラウザから利用できます。画面サイズやブラウザによって表示や操作感が異なる場合があります。</p></details>
+</section>
+
+<section>
+  <h2 data-jp="Sympho tune" data-en="Sympho tune">Sympho tune</h2>
+  <details><summary data-jp="Sympho Choiceではどのように音楽が選ばれますか？" data-en="How does Sympho Choice select music?">Sympho Choiceではどのように音楽が選ばれますか？</summary><p data-jp="選択した気分のカテゴリーに登録された動画の中から、ランダムに1本が選ばれます。" data-en="One video is selected at random from the videos registered under the selected mood category.">選択した気分のカテゴリーに登録された動画の中から、ランダムに1本が選ばれます。</p></details>
+  <details><summary data-jp="Sympho Loopはどのような動画に使えますか？" data-en="What videos can I use with Sympho Loop?">Sympho Loopはどのような動画に使えますか？</summary><p data-jp="YouTube動画のURLを設定して利用します。Symphoroid Aiの音楽に限定した機能ではありません。" data-en="You use it by setting a YouTube video URL. It is not limited to Symphoroid Ai music.">YouTube動画のURLを設定して利用します。Symphoroid Aiの音楽に限定した機能ではありません。</p></details>
+  <details><summary data-jp="Sympho Focusの基本的な使い方は？" data-en="How does Sympho Focus work?">Sympho Focusの基本的な使い方は？</summary><p data-jp="集中時間と休憩時間を設定し、タイマーを使って集中と休憩の切り替えを管理します。" data-en="Set focus and break durations and use the timer to manage transitions between focused work and breaks.">集中時間と休憩時間を設定し、タイマーを使って集中と休憩の切り替えを管理します。</p></details>
+</section>
+
+<section>
+  <h2 data-jp="Symphoroid Voice" data-en="Symphoroid Voice">Symphoroid Voice</h2>
+  <details><summary data-jp="曲を選択するにはどうすればよいですか？" data-en="How do I select a song?">曲を選択するにはどうすればよいですか？</summary><p data-jp="ページ上部の曲一覧から、聴きたい曲を選択してください。選択すると下の動画エリアに曲が表示されます。" data-en="Select a song from the song list near the top of the page. The selected song will appear in the video area below.">ページ上部の曲一覧から、聴きたい曲を選択してください。選択すると下の動画エリアに曲が表示されます。</p></details>
+  <details><summary data-jp="曲が再生できない場合は？" data-en="What if a song cannot be played?">曲が再生できない場合は？</summary><p data-jp="YouTube側の公開設定、埋め込み設定、動画の削除などにより再生できない場合があります。別の曲を選択してお試しください。" data-en="Playback can be affected by YouTube privacy settings, embedding restrictions, or video availability. Try selecting another song.">YouTube側の公開設定、埋め込み設定、動画の削除などにより再生できない場合があります。別の曲を選択してお試しください。</p></details>
+</section>
+
+<section>
+  <h2 data-jp="Sympho Vision" data-en="Sympho Vision">Sympho Vision</h2>
+  <details><summary data-jp="どのような音源に対応していますか？" data-en="Which audio formats are supported?">どのような音源に対応していますか？</summary><p data-jp="現在の画面では MP3 / WAV / M4A / AAC / OGG などの音源を選択できます。実際の読み込み・解析可否はブラウザの対応状況にも左右されます。" data-en="The current interface accepts formats including MP3, WAV, M4A, AAC, and OGG. Actual loading and analysis also depend on browser support.">現在の画面では MP3 / WAV / M4A / AAC / OGG などの音源を選択できます。実際の読み込み・解析可否はブラウザの対応状況にも左右されます。</p></details>
+  <details><summary data-jp="MVは自動で完成しますか？" data-en="Is the MV created automatically?">MVは自動で完成しますか？</summary><p data-jp="音源解析をもとに、画像配置やCamera演出、エフェクトなどを自動生成できます。完成後はプレビューで確認し、必要に応じて編集してから書き出せます。" data-en="Image placement, camera direction, and effects can be generated automatically from the audio analysis. After creation, you can preview, edit if needed, and export the result.">音源解析をもとに、画像配置やCamera演出、エフェクトなどを自動生成できます。完成後はプレビューで確認し、必要に応じて編集してから書き出せます。</p></details>
+  <details><summary data-jp="動画の書き出しができない場合は？" data-en="What if video export is unavailable?">動画の書き出しができない場合は？</summary><p data-jp="動画録画・書き出しはブラウザの対応状況に影響されます。ブラウザが動画録画に対応していない場合は、書き出しを利用できないことがあります。" data-en="Video recording and export depend on browser support. If the browser does not support video recording, export may not be available.">動画録画・書き出しはブラウザの対応状況に影響されます。ブラウザが動画録画に対応していない場合は、書き出しを利用できないことがあります。</p></details>
+</section>
+
+<section>
+  <h2 data-jp="音楽・画像・YouTubeについて" data-en="Music, Images, and YouTube">音楽・画像・YouTubeについて</h2>
+  <details><summary data-jp="Sympho Visionで使う画像に制限はありますか？" data-en="Are there restrictions on images used in Sympho Vision?">Sympho Visionで使う画像に制限はありますか？</summary><p data-jp="自分が利用する権利を持つ画像、または利用条件を確認した画像を使用してください。第三者の著作物を利用する場合は、各権利者やサービスの利用条件に従ってください。" data-en="Use images you have the right to use, or images whose license permits your intended use. Follow the terms of the relevant rights holder or service when using third-party works.">自分が利用する権利を持つ画像、または利用条件を確認した画像を使用してください。第三者の著作物を利用する場合は、各権利者やサービスの利用条件に従ってください。</p></details>
+  <details><summary data-jp="YouTube動画そのものをSymphoroid Aiが保存していますか？" data-en="Does Symphoroid Ai store the YouTube videos themselves?">YouTube動画そのものをSymphoroid Aiが保存していますか？</summary><p data-jp="Sympho tuneやVoiceではYouTubeの動画を埋め込んで再生します。YouTube動画の配信・公開状態はYouTube側の仕組みに依存します。" data-en="Sympho tune and Voice play YouTube videos through embedded playback. The availability and delivery of those videos depend on YouTube.">Sympho tuneやVoiceではYouTubeの動画を埋め込んで再生します。YouTube動画の配信・公開状態はYouTube側の仕組みに依存します。</p></details>
+</section>
+
+<section>
+  <h2 data-jp="プライバシー・お問い合わせ" data-en="Privacy and Contact">プライバシー・お問い合わせ</h2>
+  <details><summary data-jp="アクセス解析や広告は利用していますか？" data-en="Do you use analytics or advertising?">アクセス解析や広告は利用していますか？</summary><p data-jp="本サイトではGoogle Analyticsによるアクセス解析やGoogle AdSenseなどの第三者サービスを利用しています。Cookieなどの取り扱いについてはプライバシーポリシーをご確認ください。" data-en="The site uses third-party services such as Google Analytics and Google AdSense. See the Privacy Policy for information about cookies and related data handling.">本サイトではGoogle Analyticsによるアクセス解析やGoogle AdSenseなどの第三者サービスを利用しています。Cookieなどの取り扱いについてはプライバシーポリシーをご確認ください。</p></details>
+  <details><summary data-jp="質問や不具合を報告したい場合は？" data-en="How can I report a question or problem?">質問や不具合を報告したい場合は？</summary><p data-jp="お問い合わせページからご連絡ください。利用しているサービス名、操作した内容、表示されたエラーメッセージなどを添えていただくと確認しやすくなります。" data-en="Please use the Contact page. Including the service name, what you were doing, and any displayed error message will make it easier to investigate.">お問い合わせページからご連絡ください。利用しているサービス名、操作した内容、表示されたエラーメッセージなどを添えていただくと確認しやすくなります。</p></details>
+</section>
+
+<section class="cta">
+  <a class="btn" href="howto.html" data-jp="使い方を見る" data-en="How to Use">使い方を見る</a>
+  <a class="btn" href="contact.html" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
+</section>
+</main>
+
+<footer>
+  <p>&copy; 2025 Symphoroid Ai. All rights reserved.</p>
+  <p>
+    <a class="footer-links" href="privacy.html" data-jp="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
+    &nbsp;|&nbsp;
+    <a class="footer-links" href="terms.html" data-jp="利用規約" data-en="Terms of Use">利用規約</a>
+    &nbsp;|&nbsp;
+    <a class="footer-links" href="contact.html" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
+  </p>
+</footer>
+
+
+<script>
+(function(){
+  const toggle=document.getElementById('langToggle');
+  let lang=localStorage.getItem('lang')||'jp';
+
+  function applyLanguage(){
+    document.documentElement.lang=lang==='jp'?'ja':'en';
+    document.querySelectorAll('[data-jp][data-en]').forEach(el=>{
+      el.textContent=lang==='jp'?el.dataset.jp:el.dataset.en;
+    });
+    if(toggle){
+      toggle.textContent=lang==='jp'?'English':'日本語';
+      toggle.setAttribute('aria-label',lang==='jp'?'Switch to English':'日本語に切り替える');
+    }
+  }
+
+  toggle?.addEventListener('click',()=>{
+    lang=lang==='jp'?'en':'jp';
+    localStorage.setItem('lang',lang);
+    applyLanguage();
+  });
+
+  applyLanguage();
+})();
+</script>
+
+</body>
+</html>
