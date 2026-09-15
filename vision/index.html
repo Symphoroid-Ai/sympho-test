@@ -2242,7 +2242,32 @@ body.landscape-video-focus header{
     right: 8px !important;
   }
 }
+/* ========================================
+   Language Button - Mobile Header Position
+   ======================================== */
+@media (max-width: 600px) {
+  #langToggle {
+    position: absolute !important;
+    top: calc(8px + env(safe-area-inset-top)) !important;
+    right: 12px !important;
+    left: auto !important;
+    bottom: auto !important;
 
+    width: auto !important;
+    min-width: 78px !important;
+    min-height: 37px !important;
+    height: 37px !important;
+
+    padding: 6px 12px !important;
+    margin: 0 !important;
+
+    box-sizing: border-box !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+
+    z-index: 10002 !important;
+  }
+}
 </style>
 </head>
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
