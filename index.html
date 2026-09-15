@@ -27,7 +27,7 @@
       object-fit: cover;
       z-index: -1;
     }
-
+/*
     #langToggle {
       position: absolute;
       top: 1rem;
@@ -41,8 +41,33 @@
       cursor: pointer;
       font-size: 1rem;
     }
+*/
 
-     header {
+    #langToggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+
+      min-width: 78px;
+      min-height: 37px;
+      padding: 6px 12px;
+
+      border: 1px solid #00bcd4;
+      border-radius: 999px;
+      background: rgba(13, 27, 42, 0.82);
+      color: #00bcd4;
+
+      font-family: 'Comfortaa', 'Helvetica Neue', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.2;
+
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    header {
       position: relative;
       height: 60vh;
       min-height: 400px;
@@ -157,11 +182,33 @@
     }
 
     nav a {
+        margin: 0 1rem;
+        color: inherit;
+        text-decoration: none;
+        transition: text-decoration 0.2s ease;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
+    }    
+/*
+    nav a {
       margin: 0 1rem;
       color: #ccc;
       text-decoration: underline;
     }
+*/
+    .about-link {
+        display: inline-block;
+        margin-top: 10px;
+        color: inherit;
+        text-decoration: none;
+        transition: text-decoration 0.2s ease;
+    }
 
+    .about-link:hover {
+        text-decoration: underline;
+    }
     footer {
       text-align: center;
       padding: 2rem;
@@ -294,6 +341,42 @@
       }
     }
 
+    /* ===== Language Button : Common Design ===== */
+    #langToggle {
+      position: absolute !important;
+      top: 1rem !important;
+      right: 1rem !important;
+      z-index: 1000 !important;
+
+      min-width: 78px !important;
+      min-height: 37px !important;
+      padding: 6px 12px !important;
+
+      border: 1px solid #00bcd4 !important;
+      border-radius: 999px !important;
+      background: rgba(13, 27, 42, 0.82) !important;
+      color: #00bcd4 !important;
+
+      font-family: 'Comfortaa', 'Helvetica Neue', sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      line-height: 1.2 !important;
+
+      cursor: pointer !important;
+      box-sizing: border-box;
+    }
+
+    /* 言語ボタンだけクリック時の色・発光アニメーションを無効化 */
+    #langToggle:active,
+    #langToggle.pop {
+      background: rgba(13, 27, 42, 0.82) !important;
+      color: #00bcd4 !important;
+      border-color: #00bcd4 !important;
+      transform: none !important;
+      box-shadow: none !important;
+      animation: none !important;
+    }
+    
   </style>
   
   <!-- Google tag (gtag.js) -->
@@ -344,19 +427,66 @@
   </div>
 </header>
 
-  <!-- ナビゲーション -->
+<!-- ナビゲーション -->
+<nav>
+  <a href="tune" class="lang-text"
+     data-jp="Sympho tune"
+     data-en="Sympho tune">Sympho tune</a>
+
+  <a href="voice" class="lang-text"
+     data-jp="Symphoroid Voice"
+     data-en="Symphoroid Voice">Symphoroid Voice</a>
+
+  <a href="vision" class="lang-text"
+     data-jp="Sympho Vision"
+     data-en="Sympho Vision">Sympho Vision</a>
+
+  <a href="about.html" class="lang-text"
+     data-jp="About"
+     data-en="About">About</a>
+
+  <a href="howto.html" class="lang-text"
+     data-jp="使い方"
+     data-en="How to">使い方</a>
+
+  <a href="faq.html" class="lang-text"
+     data-jp="よくある質問"
+     data-en="FAQ">よくある質問</a>
+
+  <a href="privacy.html" class="lang-text"
+     data-jp="プライバシーポリシー"
+     data-en="Privacy Policy">プライバシーポリシー</a>
+
+  <a href="terms.html" class="lang-text"
+     data-jp="利用規約"
+     data-en="Terms">利用規約</a>
+
+  <a href="contact.html" class="lang-text"
+     data-jp="お問い合わせ"
+     data-en="Contact">お問い合わせ</a>
+</nav>
+
+  <!-- ナビゲーション 
   <nav>
     <a href="tune" class="lang-text" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
     <a href="privacy.html" class="lang-text" data-jp="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
     <a href="terms.html" class="lang-text" data-jp="利用規約" data-en="Terms">利用規約</a>
     <a href="contact.html" class="lang-text" data-jp="お問い合わせ" data-en="Contact">お問い合わせ</a>
   </nav>
-
+-->
   <!-- 紹介 -->
   <section>
     <h2 class="lang-text" data-jp="Symphoroid Ai について" data-en="About Symphoroid Ai">Symphoroid Ai について</h2>
     <p class="lang-text" data-jp="Symphoroid Ai は、癒しの音楽をテーマに活動するバーチャルアーティストです。ピアノとバイオリンの音色を中心に、星空のように静かで優しい音楽を届けています。YouTube・Instagram・TikTok・Xなどで活動中。" data-en="symphoroid Ai is a virtual artist focused on healing music. Delivering gentle piano and violin melodies inspired by the night sky. Active on YouTube, Instagram, TikTok, and X.">
     </p>
+    <a
+      href="about.html"
+      class="lang-text about-link"
+      data-jp="詳しく見る"
+      data-en="Learn more"
+    >
+      詳しく見る
+    </a>    
   </section>
 
   <!-- SNSリンク -->
