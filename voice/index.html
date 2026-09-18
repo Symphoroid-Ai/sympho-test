@@ -322,14 +322,59 @@
       text-decoration:underline;
     }
     
+
     .footer-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .footer-services,
+    .footer-info {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px 18px;
-      margin-bottom: 16px;
+      align-items: center;
     }
 
+    .footer-services a,
+    .footer-info a {
+      color: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .footer-services a:hover,
+    .footer-info a:hover {
+      text-decoration: underline;
+    }
+
+    /* ナビ項目の区切り */
+    .footer-services a:not(:last-child)::after,
+    .footer-info a:not(:last-child)::after {
+      content: "｜";
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    /* スマートフォン */
+    @media (max-width: 600px) {
+      .footer-nav {
+        gap: 10px;
+      }
+
+      .footer-services,
+      .footer-info {
+        gap: 6px 0;
+      }
+
+      .footer-services a:not(:last-child)::after,
+      .footer-info a:not(:last-child)::after {
+        margin: 0 7px;
+      }
+    }
     .footer-nav a {
       color: inherit;
       text-decoration: none;
@@ -558,9 +603,9 @@
 
   <div id="videoWrapper" class="video-wrapper">
     <div class="empty-video"
-         data-jp="上のカルーセルから曲を選択してください。"
-         data-en="Select a song from the carousel above.">
-      上のカルーセルから曲を選択してください。
+         data-jp="上のカードから曲を選択してください。"
+         data-en="Select a song from the card above.">
+      上のカードから曲を選択してください。
     </div>
   </div>
 <!--
@@ -620,7 +665,7 @@
      data-en="Home">
     トップページ
   </a>
--->
+
   <nav class="footer-nav">
     <a href="../index.html"
        data-jp="トップ"
@@ -664,7 +709,64 @@
   </nav>
 
   <p>
-    © 2025 Sympho tune - powered by Symphoroid Ai
+    © 2026 Symphoroid Voice - powered by Symphoroid Ai
+  </p>
+</footer>
+-->
+
+<footer>
+  <nav class="footer-nav">
+
+    <!-- サービスナビ -->
+    <div class="footer-services">
+      <a href="../index.html"
+         data-jp="トップ"
+         data-en="Home">トップ</a>
+
+      <a href="../tune/"
+         data-jp="Sympho tune"
+         data-en="Sympho tune">Sympho tune</a>
+
+      <a href="../voice/"
+         data-jp="Symphoroid Voice"
+         data-en="Symphoroid Voice">Symphoroid Voice</a>
+
+      <a href="../vision/"
+         data-jp="Sympho Vision"
+         data-en="Sympho Vision">Sympho Vision</a>
+    </div>
+
+    <!-- 情報ナビ -->
+    <div class="footer-info">
+      <a href="../about.html"
+         data-jp="About"
+         data-en="About">About</a>
+
+      <a href="../howto.html"
+         data-jp="使い方"
+         data-en="How to Use">使い方</a>
+
+      <a href="../faq.html"
+         data-jp="よくある質問"
+         data-en="FAQ">よくある質問</a>
+
+      <a href="../privacy.html"
+         data-jp="プライバシーポリシー"
+         data-en="Privacy Policy">プライバシーポリシー</a>
+
+      <a href="../terms.html"
+         data-jp="利用規約"
+         data-en="Terms of Use">利用規約</a>
+
+      <a href="../contact.html"
+         data-jp="お問い合わせ"
+         data-en="Contact">お問い合わせ</a>
+    </div>
+
+  </nav>
+
+  <p>
+    © 2026 Symphoroid Voice - powered by Symphoroid Ai
   </p>
 </footer>
 
