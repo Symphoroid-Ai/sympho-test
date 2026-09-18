@@ -175,7 +175,7 @@
       padding: 2rem;
       background: rgba(0,0,0,0.4);
     }
-
+/*
     nav {
       text-align: center;
       margin-bottom: 1rem;
@@ -190,7 +190,28 @@
 
     nav a:hover {
         text-decoration: underline;
-    }    
+    } 
+*/
+    nav {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    nav a {
+      color: inherit;
+      text-decoration: none;
+      transition: text-decoration 0.2s ease;
+    }
+
+    nav a:not(:last-child)::after {
+      content: "｜";
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
 /*
     nav a {
       margin: 0 1rem;
@@ -427,7 +448,7 @@
   </div>
 </header>
 
-<!-- ナビゲーション -->
+<!-- ナビゲーション 
 <nav>
   <a href="tune" class="lang-text"
      data-jp="Sympho tune"
@@ -465,7 +486,54 @@
      data-jp="お問い合わせ"
      data-en="Contact">お問い合わせ</a>
 </nav>
+-->
 
+<nav>
+  <a href="tune"
+     class="lang-text"
+     data-jp="Sympho tune"
+     data-en="Sympho tune">Sympho tune</a>
+
+  <a href="voice"
+     class="lang-text"
+     data-jp="Symphoroid Voice"
+     data-en="Symphoroid Voice">Symphoroid Voice</a>
+
+  <a href="vision"
+     class="lang-text"
+     data-jp="Sympho Vision"
+     data-en="Sympho Vision">Sympho Vision</a>
+
+  <a href="about.html"
+     class="lang-text"
+     data-jp="About"
+     data-en="About">About</a>
+
+  <a href="howto.html"
+     class="lang-text"
+     data-jp="使い方"
+     data-en="How to Use">使い方</a>
+
+  <a href="faq.html"
+     class="lang-text"
+     data-jp="よくある質問"
+     data-en="FAQ">よくある質問</a>
+
+  <a href="privacy.html"
+     class="lang-text"
+     data-jp="プライバシーポリシー"
+     data-en="Privacy Policy">プライバシーポリシー</a>
+
+  <a href="terms.html"
+     class="lang-text"
+     data-jp="利用規約"
+     data-en="Terms of Use">利用規約</a>
+
+  <a href="contact.html"
+     class="lang-text"
+     data-jp="お問い合わせ"
+     data-en="Contact">お問い合わせ</a>
+</nav>
   <!-- ナビゲーション 
   <nav>
     <a href="tune" class="lang-text" data-jp="Webアプリ" data-en="Web App">Webアプリ</a>
