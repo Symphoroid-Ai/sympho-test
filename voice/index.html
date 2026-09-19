@@ -789,7 +789,11 @@
     document.getElementById('langToggle').textContent=
       currentLang==='jp'?'English':'日本語';
 
-    if(selectedIndex>=0) updateSelectedSong(false);
+    createVoiceList();
+
+    if(selectedIndex>=0){
+      updateSelectedSong(false);
+    }
   }
 
   document.getElementById('langToggle').addEventListener('click',()=>{
