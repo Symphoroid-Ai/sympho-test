@@ -836,8 +836,17 @@
       card.dataset.index=index;
 
       const image=song.image||'';
-      const title=escapeHtml(song.title||'Untitled');
-      const description=escapeHtml(song.description||'');
+
+      const titleData=song.title||{};
+      const descriptionData=song.description||{};
+
+      const title=escapeHtml(
+        titleData[currentLang] || titleData.jp || 'Untitled'
+      );
+
+      const description=escapeHtml(
+        descriptionData[currentLang] || descriptionData.jp || ''
+      );
 
       card.innerHTML=`
         <img class="voice-card-image"
@@ -876,8 +885,18 @@
     const song=voiceSongs[selectedIndex];
     if(!song) return;
 
-    const title=song.title||'Untitled';
-    const description=song.description||'';
+    const titleData=song.title||{};
+    const descriptionData=song.description||'';
+
+    const title=
+      titleData[currentLang] ||
+      titleData.jp ||
+      'Untitled';
+
+    const description=
+      typeof descriptionData==='object'
+        ? (descriptionData[currentLang] || descriptionData.jp || '')
+        : descriptionData;
 
     document.getElementById('selectedTitle').textContent=title;
     document.getElementById('selectedDescription').textContent=description;
@@ -931,7 +950,12 @@
     wrapper.innerHTML=`
       <iframe
         src="https://www.youtube.com/embed/${videoId}?playsinline=1&rel=0"
-        title="${escapeHtml(song.title||'Symphoroid Voice')}"
+        const titleData=song.title||{};
+        const videoTitle=
+          titleData[currentLang] ||
+          titleData.jp ||
+          'Symphoroid Voice';        
+        title="${escapeHtml(videoTitle)}"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
         playsinline>
