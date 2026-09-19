@@ -1,44 +1,86 @@
 [
   {
-    "title": "ColorS｜人生に、そっと色を灯す歌",
+    "title": {
+      "jp": "ColorS｜人生に、そっと色を灯す歌",
+      "en": "ColorS | A Song to Gently Bring Color to Life"
+    },
     "image": "images/song01.PNG",
     "youtube": "https://youtu.be/xS236D41E58",
-    "description": "頑張る人の未来が、色とりどりでありますように。"
+    "description": {
+      "jp": "頑張る人の未来が、色とりどりでありますように。",
+      "en": "May the future of those who keep going be filled with many colors."
+    }
   },
   {
-    "title": "Colors-Break The Silence-",
+    "title": {
+      "jp": "Colors-Break The Silence-",
+      "en": "Colors - Break The Silence -"
+    },
     "image": "images/song02.PNG",
     "youtube": "https://youtu.be/OzxZG_Hl63o",
-    "description": "その叫びが、きっとあなたの色になる。"
+    "description": {
+      "jp": "その叫びが、きっとあなたの色になる。",
+      "en": "That cry will surely become your own color."
+    }
   },
   {
-    "title": "Albert ｜想いを、力に変える歌",
+    "title": {
+      "jp": "Albert ｜想いを、力に変える歌",
+      "en": "Albert | A Song That Turns Feelings into Strength"
+    },
     "image": "images/song03.PNG",
     "youtube": "https://youtu.be/HN-mk6IB2O4",
-    "description": "その想いが、きっとあなたの進む力になる。"
+    "description": {
+      "jp": "その想いが、きっとあなたの進む力になる。",
+      "en": "Those feelings will surely become the strength to move forward."
+    }
   },
   {
-    "title": "四色問題 ｜心の色を、探す歌",
+    "title": {
+      "jp": "四色問題 ｜心の色を、探す歌",
+      "en": "Four Color Problem | A Song to Find the Colors Within"
+    },
     "image": "images/song04.PNG",
     "youtube": "https://youtu.be/HXbB4zCaRXs",
-    "description": "別れのあとも、心はまだ色を探している。"
+    "description": {
+      "jp": "別れのあとも、心はまだ色を探している。",
+      "en": "Even after goodbye, the heart is still searching for its colors."
+    }
   },
   {
-    "title": "瞬間中心｜見えない軸が、今を動かす歌",
+    "title": {
+      "jp": "瞬間中心｜見えない軸が、今を動かす歌",
+      "en": "Instant Center | A Song About the Invisible Axis That Moves Us"
+    },
     "image": "images/song05.PNG",
     "youtube": "https://youtu.be/YM4IaXv7CcQ",
-    "description": "その瞬間が、あなたを動かす軸になる。"
+    "description": {
+      "jp": "その瞬間が、あなたを動かす軸になる。",
+      "en": "That moment can become the axis that moves you forward."
+    }
   },
   {
-    "title": "Roche limit｜大切な距離を探す歌",
+    "title": {
+      "jp": "Roche limit｜大切な距離を探す歌",
+      "en": "Roche Limit | A Song About Finding the Distance That Matters"
+    },
     "image": "images/song06.PNG",
     "youtube": "https://youtu.be/Sq0YYm9GT5U",
-    "description": "叶わなくても、守りたい距離がある。"
-  },      
+    "description": {
+      "jp": "叶わなくても、守りたい距離がある。",
+      "en": "Even when it cannot be fulfilled, there is a distance worth protecting."
+    }
+  },
   {
-    "title": "FFT｜心の揺れを、見つめる歌",
+    "title": {
+      "jp": "FFT｜心の揺れを、見つめる歌",
+      "en": "FFT | A Song to Look Within the Heart"
+    },
     "image": "images/song07.PNG",
     "youtube": "https://youtu.be/8MAQy02C868",
-    "description": "心の揺れを見つめた先に、答えが見える。"
+    "description": {
+      "jp": "心の揺れを見つめた先に、答えが見える。",
+      "en": "By facing the movement within your heart, you may find the answer."
+    }
   }
 ]
