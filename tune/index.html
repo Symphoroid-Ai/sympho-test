@@ -827,6 +827,24 @@ document.addEventListener("DOMContentLoaded", () => {
       display:block;
     }
 
+    .video-card-info{
+      padding:12px 14px 14px;
+      text-align:left;
+    }
+
+    .video-card-title{
+      font-size:16px;
+      font-weight:600;
+      line-height:1.4;
+      margin-bottom:6px;
+    }
+
+    .video-card-description{
+      font-size:13px;
+      line-height:1.5;
+      opacity:.75;
+    }
+    
   .mode-buttons{
 
     display:flex;
@@ -2425,176 +2443,9 @@ body.landscape-video-focus
 
 <script>
 
-const presetVideos = [
-		
-{ url: 	"https://youtu.be/rHSAzjo4EBo",	},
-{ url: 	"https://youtu.be/voSwa5JAYfk",	},
-{ url: 	"https://youtu.be/Su-82Bh9WCA",	},
-{ url: 	"https://youtu.be/qcZTe4RlUaE",	},
-{ url: 	"https://youtu.be/PRhxPiucwFE",	},
-{ url: 	"https://youtu.be/SWNTo7kJRUQ",	},
-{ url: 	"https://youtu.be/smGKm6QLIXk",	},
-{ url: 	"https://youtu.be/WAnHw3B9xW4",	},
-{ url: 	"https://youtu.be/8MK09clTW4c",	},
-{ url: 	"https://youtu.be/hJBNFtCgqIc",	},
-{ url: 	"https://youtu.be/9Lt3L9Nd920",	},
-{ url: 	"https://youtu.be/sihHol-T93E",	},
-{ url: 	"https://youtu.be/9WcPqO-yXo8",	},
-{ url: 	"https://youtu.be/GFTTCqFhC-U",	},
-{ url: 	"https://youtu.be/B-L-4z4iUC4",	},
-{ url: 	"https://youtu.be/IHooG6syRAE",	},
-{ url: 	"https://youtu.be/QgziKb5akL8",	},
-{ url: 	"https://youtu.be/26Uj9QqVPt8",	},
-{ url: 	"https://youtu.be/0Wb1VtL5kXI",	},
-{ url: 	"https://youtu.be/vm_tydPkfKs",	},
-{ url: 	"https://youtu.be/BRoXbycub0Y",	},
-{ url: 	"https://youtu.be/uoWCz1fteXA",	},
-{ url: 	"https://youtu.be/KJ1v29Cpa9s",	},
-{ url: 	"https://youtu.be/zfZ6XGF-Shw",	},
-{ url: 	"https://youtu.be/CAheVrZrW70",	},
-{ url: 	"https://youtu.be/Z0ZRt8oJC9s",	},
-{ url: 	"https://youtu.be/rxWeR2Fy0Yg",	},
-{ url: 	"https://youtu.be/8ScrdIRt3yY",	},
-{ url: 	"https://youtu.be/Q-Y8Hr-tJCM",	},
-{ url: 	"https://youtu.be/ia5E-0pSXzM",	},
-{ url: 	"https://youtu.be/0hNtvAeIpkw",	},
-{ url: 	"https://youtu.be/bR0h-52ENGo",	},
-{ url: 	"https://youtu.be/FRwGnjycxUs",	},
-{ url: 	"https://youtu.be/8p6-y2e6iKU",	},
-{ url: 	"https://youtu.be/29oPJr2NHWc",	},
-{ url: 	"https://youtu.be/ckoNS4CqPUU",	},
-{ url: 	"https://youtu.be/m9-JXQKRUZw",	},
-{ url: 	"https://youtu.be/5rcWWDd8Aho",	},
-{ url: 	"https://youtu.be/vXDZ9l9HRBo",	},
-{ url: 	"https://youtu.be/w9FEg4Qhw-0",	},
-{ url: 	"https://youtu.be/hTXgKsee-Tk",	},
-{ url: 	"https://youtu.be/s3P7IRnX28Q",	},
-{ url: 	"https://youtu.be/gYA1EumqJxQ",	},
-{ url: 	"https://youtu.be/5xcy1lXNaXQ",	},
-{ url: 	"https://youtu.be/66VmiiviWpw",	},
-{ url: 	"https://youtu.be/iLmc5nj_Ndg",	},
-{ url: 	"https://youtu.be/Y7Yc2zg6qxQ",	},
-{ url: 	"https://youtu.be/kvhlJHJ3ZWE",	},
-{ url: 	"https://youtu.be/pdKhf2VujLs",	},
-{ url: 	"https://youtu.be/Pu8wqo9M_DE",	},
-{ url: 	"https://youtu.be/iCSYXmihJP0",	},
-{ url: 	"https://youtu.be/V8nIGNlt_bI",	},
-{ url: 	"https://youtu.be/utEtROkG3Ac",	},
-{ url: 	"https://youtu.be/Rq8CIOrq8zk",	},
-{ url: 	"https://youtu.be/hBgbDICR480",	},
-{ url: 	"https://youtu.be/KyaQS2LdYhw",	},
-{ url: 	"https://youtu.be/UYtXC0b1oE0",	},
-{ url: 	"https://youtu.be/CbCy34dYeKE",	},
-{ url: 	"https://youtu.be/Y954UcyBH0k",	},
-{ url: 	"https://youtu.be/CLznHs6quuY",	},
-{ url: 	"https://youtu.be/7OqFvfZ1wCE",	},
-{ url: 	"https://youtu.be/yEUGShSnQsg",	},
-{ url: 	"https://youtu.be/uyCBlGmJUCM",	},
-{ url: 	"https://youtu.be/PrOhILKjTWw",	},
-{ url: 	"https://youtu.be/w2lvfApzZBE",	},
-{ url: 	"https://youtu.be/o-XeuclzBwA",	},
-{ url: 	"https://youtu.be/Sdw3xz5bYPI",	},
-{ url: 	"https://youtu.be/cyFRz97cum8",	},
-{ url: 	"https://youtu.be/4iikWioI4I8",	},
-{ url: 	"https://youtu.be/B9-KznhnLJA",	},
-{ url: 	"https://youtu.be/n_38txYNroA",	},
-{ url: 	"https://youtu.be/MbNsLEPFn7k",	},
-{ url: 	"https://youtu.be/UAR28OpnHs4",	},
-{ url: 	"https://youtu.be/-WMo1Jns5Bs",	},
-{ url: 	"https://youtu.be/gYQugsjTDEg",	},
-{ url: 	"https://youtu.be/-hnvAHNU1yo",	},
-{ url: 	"https://youtu.be/4TCdeo2Tf5g",	},
-{ url: 	"https://youtu.be/oEHpxpdgmu4",	},
-{ url: 	"https://youtu.be/whF8MFjUhAM",	},
-{ url: 	"https://youtu.be/BaYraiX13P4",	},
-{ url: 	"https://youtu.be/uibtXLOllUg",	},
-{ url: 	"https://youtu.be/M-mPIkY2bys",	},
-{ url: 	"https://youtu.be/SjWy28WizRc",	},
-{ url: 	"https://youtu.be/ycZlMjVSGR8",	},
-{ url: 	"https://youtu.be/zSjUGy9okN4",	},
-{ url: 	"https://youtu.be/JxhRH_4cj7Y",	},
-{ url: 	"https://youtu.be/gJA0jD1yiTs",	},
-{ url: 	"https://youtu.be/GNgxaSRgsTE",	},
-{ url: 	"https://youtu.be/UHDfDNILu2I",	},
-{ url: 	"https://youtu.be/4QYccSC6_yA",	},
-{ url: 	"https://youtu.be/sdZC7HXbyp8",	},
-{ url: 	"https://youtu.be/YgjnsTpBPKw",	},
-{ url: 	"https://youtu.be/tAR8G7gs6g8",	},
-{ url: 	"https://youtu.be/z335IviVLG8",	},
-{ url: 	"https://youtu.be/UN8oQaPiGO4",	},
-{ url: 	"https://youtu.be/EK_9u4NRr40",	},
-{ url: 	"https://youtu.be/joVHItCJUGU",	},
-{ url: 	"https://youtu.be/2eRBUUc6OaU",	},
-{ url: 	"https://youtu.be/T2zLRO1Uwq8",	},
-{ url: 	"https://youtu.be/-XxZe-oF2-4",	},
-{ url: 	"https://youtu.be/mP5VROJCccE",	},
-{ url: 	"https://youtu.be/YuKHHv21Xg4",	},
-{ url: 	"https://youtu.be/pTdIDysaP4I",	},
-{ url: 	"https://youtu.be/mTF80bH5Q2c",	},
-{ url: 	"https://youtu.be/XTWBzWDzBw0",	},
-{ url: 	"https://youtu.be/PHjRDBjglFs",	},
-{ url: 	"https://youtu.be/xIgnaNOv7uw",	},
-{ url: 	"https://youtu.be/d5AJw_PUTik",	},
-{ url: 	"https://youtu.be/A_-vQzzLBzs",	},
-{ url: 	"https://youtu.be/BdjndTLRRsI",	},
-{ url: 	"https://youtu.be/3QRSikseO3w",	},
-{ url: 	"https://youtu.be/6ocuge79WMk",	},
-{ url: 	"https://youtu.be/qRF_P6Cqe6E",	},
-{ url: 	"https://youtu.be/_h7K743P_bM",	},
-{ url: 	"https://youtu.be/t_xuW6lze1c",	},
-{ url: 	"https://youtu.be/Ndx2P4yYDwQ",	},
-{ url: 	"https://youtu.be/S2HYNlNs6XU",	},
-{ url: 	"https://youtu.be/x_OemJx_Llc",	},
-{ url: 	"https://youtu.be/EKDdsmrQyPw",	},
-{ url: 	"https://youtu.be/P_eeRitrhS0",	},
-{ url: 	"https://youtu.be/mduCNGCKE0I",	},
-{ url: 	"https://youtu.be/UNYo3YL_D8E",	},
-{ url: 	"https://youtu.be/8mf3sbXttlU",	},
-{ url: 	"https://youtu.be/1yiiLjvfMj4"	},
-{ url: 	"https://youtu.be/84gz3P3GlfM",	},
-{ url: 	"https://youtu.be/5fz_mVzXqEY",	},
-{ url: 	"https://youtu.be/N-Ve_wH301Q",	},
-{ url: 	"https://youtu.be/Usqa2M4inQY",	},
-{ url: 	"https://youtu.be/hP60cIiu8aw",	},
-{ url: 	"https://youtu.be/PojIW3iHeOg",	},
-{ url: 	"https://youtu.be/gNadpPsowm8",	},
-{ url: 	"https://youtu.be/q4eKqfJl8Mc",	},
-{ url: 	"https://youtu.be/kr_Lh86c868",	},
-{ url: 	"https://youtu.be/xUZCGhqhyAc",	},
-{ url: 	"https://youtu.be/GBdcUJGDFKk"	},
-{ url: 	"https://youtu.be/O9NChb9F0DY",	},
-{ url: 	"https://youtu.be/pkWjfyvcUV8",	},
-{ url: 	"https://youtu.be/vLhB3D8jNVA",	},
-{ url: 	"https://youtu.be/MUGl-cU-CkY",	},
-{ url: 	"https://youtu.be/zbiCn2AvN5c",	},
-{ url: 	"https://youtu.be/Lb-oV59uqYM",	},
-{ url: 	"https://youtu.be/GtOIxWTzSQ4"	},
-{ url: 	"https://youtu.be/6lbenlZyQlI",	},
-{ url: 	"https://youtu.be/ibWAszeK3F8",	},
-{ url: 	"https://youtu.be/_FmmMDOsDWw"	},
-{ url: 	"https://youtu.be/Z91MOVeiZpY",	},
-{ url: 	"https://youtu.be/2anOY1CZbzA"	},
-{ url: 	"https://youtu.be/heV-4uIat4c"	},
-{ url: 	"https://youtu.be/a4rwQ-irNmQ"	},
-{ url: 	"https://youtu.be/pbzfx5fFMQQ"	},
-{ url: 	"https://youtu.be/idisp0-baEU"	},
-{ url: 	"https://youtu.be/ko5d5HDBej0"	},
-{ url: 	"https://youtu.be/Y9y94a1RtVQ"	},
-{ url: 	"https://youtu.be/2I-cAM_5FfU"	},
-{ url: 	"https://youtu.be/CCNy7gpeCvU"	},
-{ url: 	"https://youtu.be/n-6VnhX72rI"	},
-{ url: 	"https://youtu.be/pz5pZ6sIbCo"	},
-{ url: 	"https://youtu.be/qM0obBFTBTA"	},
-{ url: 	"https://youtu.be/bPnlCHA_9oU"	},
-{ url: 	"https://youtu.be/VI90E4RMX_c"	},
-{ url: 	"https://youtu.be/j84QkYX_rWI"	},
-{ url: 	"https://youtu.be/4Lei3RH_zDk"	},
-{ url: 	"https://youtu.be/FWGycABvVUc"	},
-{ url: 	"https://youtu.be/mK0X8fRag_c"	},
-{ url: 	"https://youtu.be/u5fPOs2s7AE"	},
-{ url: 	"https://youtu.be/0KU5Z6Uw9Gw"	}
 
-];
+
+let tuneVideos = []
 
 const positions = [
   "top-left",
@@ -2748,10 +2599,29 @@ document.addEventListener("DOMContentLoaded", () => {
   createWheelPicker("focus_duration_settings", 1, 180, 25);
   createWheelPicker("focus_breakDuration_settings", 1, 60, 5);
 
-  createVideoList("loop");
-  createVideoList("focus");
+  fetch("tune.json")
+  .then(res =>
+    res.ok
+      ? res.json()
+      : Promise.reject(new Error("読み込み失敗"))
+  )
+  .then(data => {
 
-  restoreSavedSettings();
+    tuneVideos = Array.isArray(data.videos)
+      ? data.videos
+      : [];
+
+    createVideoList("loop");
+    createVideoList("focus");
+
+    restoreSavedSettings();
+
+  })
+  .catch(err => {
+
+    alert("動画一覧の読み込みエラー: " + err.message);
+
+  });
 
   checkYTApiReady();
 
@@ -2774,7 +2644,7 @@ document.getElementById("langToggle")
     currentLang === 'jp' ? "English" : "日本語";
 
 });
-
+/*
 function updateLanguage(){
 
   document.querySelectorAll("[data-jp]")
@@ -2799,6 +2669,36 @@ function updateLanguage(){
   updateModeUI("focus");
 
 }
+*/
+
+function updateLanguage(){
+
+  document.querySelectorAll("[data-jp]")
+  .forEach(el => {
+
+    if("placeholder" in el){
+
+      el.placeholder =
+        el.getAttribute(`data-${currentLang}`);
+
+    }
+    else{
+
+      el.textContent =
+        el.getAttribute(`data-${currentLang}`);
+
+    }
+
+  });
+
+  updateModeUI("loop");
+  updateModeUI("focus");
+
+  createVideoList("loop");
+  createVideoList("focus");
+
+}
+
 function updateModeUI(mode){
 
   const state = appStates[mode];
@@ -4143,7 +4043,7 @@ function scrollCarousel(mode, direction){
   });
 
 }
-
+/*
 function createVideoList(mode){
 
   const area =
@@ -4151,7 +4051,7 @@ function createVideoList(mode){
 
   area.innerHTML = "";
 
-  presetVideos.forEach(video => {
+  tuneVideos.forEach(video => {
 
     const id =
       extractVideoId(video.url);
@@ -4190,6 +4090,94 @@ function createVideoList(mode){
 
       document.querySelector(`#${mode} .video-wrapper`)
       ?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+    };
+
+    area.appendChild(card);
+
+  });
+
+}
+*/
+
+function createVideoList(mode){
+
+  const area =
+    document.getElementById(`${mode}_videoList`);
+
+  area.innerHTML = "";
+
+  tuneVideos.forEach(video => {
+
+    const id =
+      extractVideoId(video.url);
+
+    const card =
+      document.createElement("div");
+
+    card.className = "video-card";
+
+    const titleData =
+      video.title || {};
+
+    const descriptionData =
+      video.description || {};
+
+    const title =
+      titleData[currentLang] ||
+      titleData.jp ||
+      "Untitled";
+
+    const description =
+      descriptionData[currentLang] ||
+      descriptionData.jp ||
+      "";
+
+    card.innerHTML = `
+
+      <img
+        src="https://img.youtube.com/vi/${id}/hqdefault.jpg"
+        alt="${escapeHtml(title)}">
+
+      <div class="video-card-info">
+
+        <div class="video-card-title">
+          ${escapeHtml(title)}
+        </div>
+
+        <div class="video-card-description">
+          ${escapeHtml(description)}
+        </div>
+
+      </div>
+
+    `;
+
+    card.onclick = () => {
+
+      area.querySelectorAll(".video-card")
+        .forEach(c =>
+          c.classList.remove("active")
+        );
+
+      card.classList.add("active");
+
+      getEl(mode, "ytUrl").value =
+        video.url;
+
+      localStorage.setItem(
+        `${mode}_selectedVideo`,
+        video.url
+      );
+
+      loadVideo(mode);
+
+      document.querySelector(
+        `#${mode} .video-wrapper`
+      )?.scrollIntoView({
         behavior: "smooth",
         block: "center"
       });
