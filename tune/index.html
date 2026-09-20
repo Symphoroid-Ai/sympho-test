@@ -2285,6 +2285,106 @@ body.landscape-video-focus
 
 </div>
 
+
+<footer>
+<!--
+  <p class="sns-links">
+
+    <a href="https://www.youtube.com/@symphoroidai" target="_blank">
+      <i class="fab fa-youtube"></i>
+    </a>
+
+    <a href="https://www.instagram.com/symphoroid_ai" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+
+    <a href="https://www.tiktok.com/@symphoroid.ai" target="_blank">
+      <i class="fab fa-tiktok"></i>
+    </a>
+
+    <a href="https://www.x.com/@SymphoroidAi" target="_blank">
+      <i class="fab fa-x-twitter"></i>
+    </a>
+
+  </p>
+
+  <p>&copy; 2025 Sympho tune - powered by Symphoroid Ai</p>
+
+  <br>
+
+  <a href="../terms.html"
+    class="footer-links"
+    data-jp="利用規約"
+    data-en="Terms of Use">
+    利用規約
+  </a>
+
+  |
+
+  <a href="../privacy.html"
+    class="footer-links"
+    data-jp="プライバシーポリシー"
+    data-en="Privacy Policy">
+    プライバシーポリシー
+  </a>
+
+  |
+
+  <a href="../"
+    class="footer-links"
+    data-jp="トップページ"
+    data-en="Home">
+    トップページ
+  </a>
+
+<footer>
+  <nav class="footer-nav">
+    <a href="../index.html"
+       data-jp="トップ"
+       data-en="Home">トップ</a>
+
+    <a href="../tune/"
+       data-jp="Sympho tune"
+       data-en="Sympho tune">Sympho tune</a>
+
+    <a href="../voice/"
+       data-jp="Symphoroid Voice"
+       data-en="Symphoroid Voice">Symphoroid Voice</a>
+
+    <a href="../vision/"
+       data-jp="Sympho Vision"
+       data-en="Sympho Vision">Sympho Vision</a>
+
+    <a href="../about.html"
+       data-jp="About"
+       data-en="About">About</a>
+
+    <a href="../howto.html"
+       data-jp="使い方"
+       data-en="How to Use">使い方</a>
+
+    <a href="../faq.html"
+       data-jp="よくある質問"
+       data-en="FAQ">よくある質問</a>
+
+    <a href="../privacy.html"
+       data-jp="プライバシーポリシー"
+       data-en="Privacy Policy">プライバシーポリシー</a>
+
+    <a href="../terms.html"
+       data-jp="利用規約"
+       data-en="Terms">利用規約</a>
+
+    <a href="../contact.html"
+       data-jp="お問い合わせ"
+       data-en="Contact">お問い合わせ</a>
+  </nav>
+
+  <p>
+    © 2025 Sympho tune - powered by Symphoroid Ai
+  </p>
+</footer>
+-->
 <footer>
   <nav class="footer-nav">
 
@@ -2544,6 +2644,32 @@ document.getElementById("langToggle")
     currentLang === 'jp' ? "English" : "日本語";
 
 });
+/*
+function updateLanguage(){
+
+  document.querySelectorAll("[data-jp]")
+  .forEach(el => {
+
+    if("placeholder" in el){
+
+      el.placeholder =
+        el.getAttribute(`data-${currentLang}`);
+
+    }
+    else{
+
+      el.textContent =
+        el.getAttribute(`data-${currentLang}`);
+
+    }
+
+  });
+
+  updateModeUI("loop");
+  updateModeUI("focus");
+
+}
+*/
 
 function updateLanguage(){
 
@@ -2648,8 +2774,10 @@ function updateModeUI(mode){
       + labels[state.positionIndex];
 
   });
-}
 
+
+
+}
 function showSection(section){
 
   // 表示切替
@@ -3657,6 +3785,22 @@ function playRandomVideo(mood){
 
 }
 
+/*
+document.querySelectorAll('.btn')
+.forEach(btn => {
+
+  btn.addEventListener('click', () => {
+
+    btn.classList.remove('pop');
+
+    void btn.offsetWidth;
+
+    btn.classList.add('pop');
+
+  });
+
+});
+*/
 document.querySelectorAll('.btn:not(#langToggle)')
 .forEach(btn => {
 
@@ -3726,6 +3870,7 @@ function createWheelPicker(id, min, max, defaultValue){
     });
 
   }
+
 
   function scrollToValue(value){
 
@@ -3898,6 +4043,65 @@ function scrollCarousel(mode, direction){
   });
 
 }
+/*
+function createVideoList(mode){
+
+  const area =
+    document.getElementById(`${mode}_videoList`);
+
+  area.innerHTML = "";
+
+  tuneVideos.forEach(video => {
+
+    const id =
+      extractVideoId(video.url);
+
+    const card =
+      document.createElement("div");
+
+    card.className = "video-card";
+
+    card.innerHTML = `
+
+      <img
+        src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+
+      </div>
+
+    `;
+    card.onclick = () => {
+
+      area.querySelectorAll(".video-card")
+      .forEach(c =>
+        c.classList.remove("active")
+      );
+
+      card.classList.add("active");
+
+      getEl(mode, "ytUrl").value =
+        video.url;
+
+      localStorage.setItem(
+        `${mode}_selectedVideo`,
+        video.url
+      );
+
+      loadVideo(mode);
+
+      document.querySelector(`#${mode} .video-wrapper`)
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+    };
+
+    area.appendChild(card);
+
+  });
+
+}
+*/
 
 function createVideoList(mode){
 
