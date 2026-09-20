@@ -74,6 +74,11 @@ nav{
   border-bottom:1px solid rgba(255,255,255,.05);
 }
 nav a{color:#dce9f1;font-size:.92rem}
+nav a:not(:last-child)::after {
+    content: "｜";
+    margin-left: 1.6rem;
+    color: rgba(255, 255, 255, 0.7);
+}
 main{max-width:980px;margin:0 auto;padding:42px 20px 70px}
 section{
   background:var(--panel);
