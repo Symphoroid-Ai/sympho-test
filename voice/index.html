@@ -601,6 +601,14 @@
 
     <div id="voiceStatus" class="voice-status"></div>
 
+    <div id="videoWrapper" class="video-wrapper">
+      <div class="empty-video">
+        曲を選択すると動画が表示されます。
+      </div>
+    </div>
+
+  </div>
+
   </div>
 
 
@@ -869,7 +877,7 @@
         allowfullscreen
         playsinline>
       </iframe>`;
-
+    }
   function scrollCarousel(direction){
     voiceList.scrollBy({
       left:direction*320,
