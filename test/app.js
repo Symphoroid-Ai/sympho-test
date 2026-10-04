@@ -198,9 +198,5 @@ const savedUrl = localStorage.getItem("pocketWeb.lastUrl");
 if (savedUrl) {
   urlInput.value = savedUrl;
 }
-if ("serviceWorker" in navigator && window.isSecureContext) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(console.warn);
-  });
-}
+
 })();
