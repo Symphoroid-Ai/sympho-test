@@ -178,7 +178,12 @@ pocketButton.addEventListener("click", () => {
     enterPocketMode();
   }
 });
-
+  
+urlForm.addEventListener("submit", event => {
+  event.preventDefault();
+  loadUrl();
+});
+  
 lockOverlay.hidden = true;
 lockOverlay.setAttribute("aria-hidden", "true");
 pocketButton.textContent = "ポケットモード";
