@@ -1,0 +1,9 @@
+{
+  "name": "Pocket Web",
+  "short_name": "Pocket Web",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "lang": "ja"
+}
