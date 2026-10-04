@@ -84,17 +84,27 @@ async function releaseWakeLock() {
 }
 async function enterPocketMode() {
   if (pocketMode) return;
+
   pocketMode = true;
+
   lockOverlay.hidden = false;
+  lockOverlay.style.display = "grid";
   lockOverlay.setAttribute("aria-hidden", "false");
+
   pocketButton.textContent = "ポケットモード中";
+
   await requestWakeLock();
 }
 async function exitPocketMode() {
   pocketMode = false;
+
+  // ロック画面を確実に非表示
   lockOverlay.hidden = true;
   lockOverlay.setAttribute("aria-hidden", "true");
+  lockOverlay.style.display = "none";
+
   pocketButton.textContent = "ポケットモード";
+
   stopHold();
   await releaseWakeLock();
 }
