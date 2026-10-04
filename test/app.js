@@ -11,7 +11,7 @@ const pocketButton = document.getElementById("pocketButton");
 const lockOverlay = document.getElementById("lockOverlay");
 const unlockProgress = document.getElementById("unlockProgress");
 let wakeLock = null;
-let pocketMode = true;
+let pocketMode = false;
 let holdTimer = null;
 let holdStart = 0;
 function normalizeUrl(value) {
@@ -170,11 +170,19 @@ lockOverlay.addEventListener("pointercancel", cancelHold, {
 lockOverlay.addEventListener("contextmenu", event => {
   event.preventDefault();
 });
-/* 初期状態：ポケットモードON */
-lockOverlay.hidden = false;
-lockOverlay.setAttribute("aria-hidden", "false");
-pocketButton.textContent = "ポケットモード中";
-requestWakeLock();
+
+pocketButton.addEventListener("click", () => {
+  if (pocketMode) {
+    exitPocketMode();
+  } else {
+    enterPocketMode();
+  }
+});
+
+lockOverlay.hidden = true;
+lockOverlay.setAttribute("aria-hidden", "true");
+pocketButton.textContent = "ポケットモード";
+  
 /* Wake Lock再取得 */
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible" && pocketMode) {
