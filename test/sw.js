@@ -1,4 +1,4 @@
-const CACHE_NAME = "pocket-web-mvp-v2";
+const CACHE_NAME = "pocket-web-mvp-v3";
 const APP_SHELL = ["./", "./index.html", "./style.css", "./app.js", "./manifest.webmanifest"];
 
 self.addEventListener("install", event => {
