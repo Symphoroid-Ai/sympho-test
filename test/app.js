@@ -182,17 +182,7 @@ lockOverlay.addEventListener("contextmenu", event => {
   event.preventDefault();
 });
 
-pocketButton.addEventListener("click", () => {
-  if (!pocketMode) enterPocketMode();
-});
-urlForm.addEventListener("submit", event => {
-  event.preventDefault();
-  if (!pocketMode) loadUrl();
-});
-lockOverlay.addEventListener("pointerdown", startHold, {passive:false});
-lockOverlay.addEventListener("pointerup", stopHold, {passive:false});
-lockOverlay.addEventListener("pointercancel", stopHold, {passive:false});
-lockOverlay.addEventListener("pointerleave", stopHold, {passive:false});
+  
 lockOverlay.addEventListener("contextmenu", event => event.preventDefault());
 
 document.addEventListener("visibilitychange", () => {
