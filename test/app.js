@@ -113,14 +113,22 @@ function stopHold() {
 
 function startHold(event) {
   if (!pocketMode) return;
+
   event.preventDefault();
+
   stopHold();
   holdStart = performance.now();
 
   const update = () => {
     if (!holdStart) return;
-    const progress = Math.min((performance.now() - holdStart) / UNLOCK_MS, 1);
+
+    const progress = Math.min(
+      (performance.now() - holdStart) / UNLOCK_MS,
+      1
+    );
+
     unlockProgress.style.width = (progress * 100) + "%";
+
     if (progress >= 1) {
       stopHold();
       exitPocketMode();
@@ -128,8 +136,51 @@ function startHold(event) {
       holdTimer = requestAnimationFrame(update);
     }
   };
+
   holdTimer = requestAnimationFrame(update);
 }
+
+function cancelHold(event) {
+  if (event) event.preventDefault();
+  stopHold();
+}
+
+// iPhone / iPad 用
+lockOverlay.addEventListener("touchstart", startHold, {
+  passive: false
+});
+
+lockOverlay.addEventListener("touchmove", event => {
+  if (!pocketMode) return;
+  event.preventDefault();
+}, {
+  passive: false
+});
+
+lockOverlay.addEventListener("touchend", cancelHold, {
+  passive: false
+});
+
+lockOverlay.addEventListener("touchcancel", cancelHold, {
+  passive: false
+});
+
+// PC用
+lockOverlay.addEventListener("pointerdown", startHold, {
+  passive: false
+});
+
+lockOverlay.addEventListener("pointerup", cancelHold, {
+  passive: false
+});
+
+lockOverlay.addEventListener("pointercancel", cancelHold, {
+  passive: false
+});
+
+lockOverlay.addEventListener("contextmenu", event => {
+  event.preventDefault();
+});
 
 pocketButton.addEventListener("click", () => {
   if (!pocketMode) enterPocketMode();
