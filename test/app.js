@@ -1,6 +1,6 @@
 (() => {
 "use strict";
-const UNLOCK_MS = 3000;
+const UNLOCK_MS = 2000;
 const urlForm = document.getElementById("urlForm");
 const urlInput = document.getElementById("urlInput");
 const webFrame = document.getElementById("webFrame");
