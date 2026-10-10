@@ -2319,7 +2319,7 @@ body.landscape-video-focus header{
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
 
 <header>
-<h1>Sympho Vision5</h1>
+<h1>Sympho Vision6</h1>
 <button id="langToggle" type="button" aria-label="Language switch">English</button>
 </header>
 
@@ -3336,6 +3336,7 @@ let audioContext=null;
 let analyser=null;
 let sourceNode=null;
 let audioSourceElement=null;
+let recordGain=null;
 let recordDestination=null;
 let freq=null;
 
@@ -6880,8 +6881,12 @@ function initAudio(){
 
             freq=new Uint8Array(analyser.frequencyBinCount);
             recordDestination=audioContext.createMediaStreamDestination();
+            recordGain=audioContext.createGain();
+            recordGain.gain.value=1;
             analyser.connect(audioContext.destination);
-            analyser.connect(recordDestination);
+            // Isolate the recorder audio branch so it can be muted at startup.
+            analyser.connect(recordGain);
+            recordGain.connect(recordDestination);
         }
 
         // Audio element is replaced when the user selects another track.
@@ -8213,11 +8218,10 @@ document
 .getElementById("pause")
 .addEventListener(
     "click",
-    async function(){
+    function(){
 
-        // Stop every playback mode and suspend the Web Audio graph as well.
-        // iOS Safari may continue emitting a short queued audio buffer after
-        // HTMLMediaElement.pause(); suspending the context flushes that output.
+        // Pause the media element without suspending AudioContext. On iOS,
+        // repeatedly suspending/resuming the context can produce audio glitches.
         sectionPreviewActive=false;
         sectionPreviewStopTime=null;
         playing=false;
@@ -8225,9 +8229,6 @@ document
 
         if(audio){
             try{audio.pause();}catch(e){}
-        }
-        if(audioContext && audioContext.state==="running"){
-            try{await audioContext.suspend();}catch(e){console.warn("AudioContext suspend on pause failed:",e);}
         }
 
         if(typeof updatePlayhead==="function")updatePlayhead();
@@ -11002,6 +11003,7 @@ document
             recorder.onstop=
                 function(){
                     try{
+                        if(recordGain)recordGain.gain.value=1;
                         if(exportCancelled){
                             chunks=[];
                             exportInProgress=false;
@@ -11105,10 +11107,6 @@ document
                 playing=false;
                 setTimelinePlaybackScrollMode(false);
                 try{audio.pause();}catch(e){}
-                if(audioContext && audioContext.state==="running"){
-                    try{await audioContext.suspend();}catch(e){console.warn("AudioContext suspend before export failed:",e);}
-                }
-
                 if(Math.abs(Number(audio.currentTime)||0) > 0.01){
                     const seekReady=new Promise(function(resolve){
                         let settled=false;
@@ -11134,7 +11132,11 @@ document
                 if(audioContext && audioContext.state==="suspended"){
                     await audioContext.resume();
                 }
-                await new Promise(function(resolve){setTimeout(resolve,250);});
+                // Mute only the recorder branch until the fresh playback advances.
+                if(recordGain && audioContext){
+                    try{recordGain.gain.cancelScheduledValues(audioContext.currentTime);recordGain.gain.setValueAtTime(0,audioContext.currentTime);}catch(e){recordGain.gain.value=0;}
+                }
+                await new Promise(function(resolve){setTimeout(resolve,150);});
 
                 // iPhone Safari: periodic chunks help avoid an empty final Blob.
                 // PC: retain the single-session recording mode to preserve valid timestamps.
@@ -11144,9 +11146,31 @@ document
                     recorder.start();
                 }
                 try{
-                    // Start audio only after recording has begun from a clean, paused state.
+                    // Record begins muted; unmute only after fresh playback moves past zero.
                     await audio.play();
+                    if(recordGain && audioContext){
+                        await new Promise(function(resolve){
+                            let settled=false;
+                            let startTimeout=null;
+                            const cleanup=function(){
+                                if(settled)return;
+                                settled=true;
+                                audio.removeEventListener("timeupdate",checkStart);
+                                if(startTimeout!==null)clearTimeout(startTimeout);
+                                try{
+                                    recordGain.gain.cancelScheduledValues(audioContext.currentTime);
+                                    recordGain.gain.setValueAtTime(1,audioContext.currentTime);
+                                }catch(e){recordGain.gain.value=1;}
+                                resolve();
+                            };
+                            const checkStart=function(){if(audio.currentTime>=0.08)cleanup();};
+                            startTimeout=setTimeout(cleanup,700);
+                            audio.addEventListener("timeupdate",checkStart);
+                            checkStart();
+                        });
+                    }
                 }catch(playError){
+                    if(recordGain)recordGain.gain.value=1;
                     if(recorder && recorder.state!=="inactive"){
                         try{recorder.stop();}catch(e){}
                     }
