@@ -2319,7 +2319,7 @@ body.landscape-video-focus header{
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
 
 <header>
-<h1>Sympho Vision2</h1>
+<h1>Sympho Vision3</h1>
 <button id="langToggle" type="button" aria-label="Language switch">English</button>
 </header>
 
@@ -11088,9 +11088,14 @@ document
 
                 audio.currentTime=0;
 
-                // Emit chunks periodically instead of relying only on the final
-                // stop event; this is more resilient to mobile Safari recorder quirks.
-                recorder.start(1000);
+                // iPhone Safari: periodic chunks help avoid an empty final Blob.
+                // PC: retain the original single-session recording mode to avoid
+                // abnormal WebM duration/timestamp metadata caused by timeslices.
+                if(isIOSExportDevice()){
+                    recorder.start(1000);
+                }else{
+                    recorder.start();
+                }
                 try{
                     await audio.play();
                 }catch(playError){
