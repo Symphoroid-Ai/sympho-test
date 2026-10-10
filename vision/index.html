@@ -2319,7 +2319,7 @@ body.landscape-video-focus header{
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
 
 <header>
-<h1>Sympho Vision3</h1>
+<h1>Sympho Vision4</h1>
 <button id="langToggle" type="button" aria-label="Language switch">English</button>
 </header>
 
@@ -8215,11 +8215,20 @@ document
     "click",
     function(){
 
-        if(audio)
-            audio.pause();
+        // Stop every playback-related mode, including Section preview.
+        // On iOS, leaving the preview boundary active can cause stale
+        // timeupdate handling after pause and make playback feel repetitive.
+        sectionPreviewActive=false;
+        sectionPreviewStopTime=null;
+
+        if(audio){
+            try{audio.pause();}catch(e){}
+        }
 
         playing=false;
         setTimelinePlaybackScrollMode(false);
+        if(typeof updatePlayhead==="function")updatePlayhead();
+        if(typeof draw==="function")draw();
 
         status("一時停止");
 
@@ -11086,17 +11095,46 @@ document
                     }
                 };
 
-                audio.currentTime=0;
+                // Stop normal/Section playback and finish seeking to the exact
+                // beginning before MediaRecorder starts collecting audio. iOS
+                // Safari can otherwise include a short tail from the previous
+                // playback position in the first recorded chunk.
+                sectionPreviewActive=false;
+                sectionPreviewStopTime=null;
+                playing=false;
+                setTimelinePlaybackScrollMode(false);
+                try{audio.pause();}catch(e){}
+
+                if(Math.abs(Number(audio.currentTime)||0) > 0.01){
+                    const seekReady=new Promise(function(resolve){
+                        let settled=false;
+                        const done=function(){
+                            if(settled)return;
+                            settled=true;
+                            audio.removeEventListener("seeked",done);
+                            clearTimeout(timeoutId);
+                            resolve();
+                        };
+                        const timeoutId=setTimeout(done,700);
+                        audio.addEventListener("seeked",done,{once:true});
+                        try{audio.currentTime=0;}catch(e){done();}
+                    });
+                    await seekReady;
+                }else{
+                    try{audio.currentTime=0;}catch(e){}
+                }
+                // Let Safari apply the seek and flush any previously queued audio.
+                await new Promise(function(resolve){setTimeout(resolve,120);});
 
                 // iPhone Safari: periodic chunks help avoid an empty final Blob.
-                // PC: retain the original single-session recording mode to avoid
-                // abnormal WebM duration/timestamp metadata caused by timeslices.
+                // PC: retain the single-session recording mode to preserve valid timestamps.
                 if(isIOSExportDevice()){
                     recorder.start(1000);
                 }else{
                     recorder.start();
                 }
                 try{
+                    // Start audio only after recording has begun from a clean, paused state.
                     await audio.play();
                 }catch(playError){
                     if(recorder && recorder.state!=="inactive"){
