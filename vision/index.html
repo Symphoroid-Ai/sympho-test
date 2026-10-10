@@ -10768,9 +10768,56 @@ function updateExportPipelineInfo(){
 }
 
 let exportInProgress=false,exportCancelled=false,exportProgressRAF=0;
+let pendingExportFile=null;
+function isIOSExportDevice(){
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+}
+function setupIOSExportShareButton(){
+    const actions=document.querySelector("#exportProgressModal .export-progress-actions");
+    if(!actions || document.getElementById("saveShareExportBtn"))return;
+    const btn=document.createElement("button");
+    btn.id="saveShareExportBtn";
+    btn.type="button";
+    btn.className="primary";
+    btn.style.display="none";
+    btn.style.marginRight="8px";
+    btn.textContent="動画を保存・共有";
+    actions.insertBefore(btn,actions.firstChild);
+    btn.addEventListener("click",async function(){
+        if(!pendingExportFile)return;
+        const t=window.svT||((jp,en)=>jp);
+        try{
+            if(navigator.share && navigator.canShare && navigator.canShare({files:[pendingExportFile]})){
+                await navigator.share({files:[pendingExportFile],title:"Sympho Vision MV"});
+                return;
+            }
+            const fallbackUrl=URL.createObjectURL(pendingExportFile);
+            const link=document.createElement("a");
+            link.href=fallbackUrl;
+            link.download=pendingExportFile.name;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(()=>URL.revokeObjectURL(fallbackUrl),60000);
+            exportProgressMeta.textContent=t(
+                "共有機能に対応していないため、ダウンロード操作を試みました。保存されない場合はSafariで再度お試しください。",
+                "File sharing is not supported here, so a download was attempted. If it is not saved, try Safari."
+            );
+        }catch(error){
+            if(error && error.name==="AbortError")return;
+            console.error("MV share error:",error);
+            exportProgressMeta.textContent=t(
+                "共有を開始できませんでした。もう一度お試しください。",
+                "Could not open sharing. Please try again."
+            );
+        }
+    });
+}
+document.addEventListener("DOMContentLoaded",setupIOSExportShareButton);
 function phase58fmt(x){x=Math.max(0,+x||0);return Math.floor(x/60)+":"+String(Math.floor(x%60)).padStart(2,"0")}
 function phase58tick(){if(!exportInProgress)return;const c=audio?.currentTime||0,d=audio?.duration||0,p=d?Math.min(100,c/d*100):0;const t=window.svT||((jp,en)=>jp);exportProgressFill.style.width=p+"%";exportProgressTime.textContent=phase58fmt(c)+" / "+phase58fmt(d);exportProgressPercent.textContent=Math.floor(p)+"%";exportProgressMeta.textContent=t("残り 約","About ")+phase58fmt(Math.max(0,d-c));exportProgressRAF=requestAnimationFrame(phase58tick)}
-function startExportProgress(){const t=window.svT||((jp,en)=>jp);exportInProgress=true;exportCancelled=false;updateExportPipelineInfo();exportProgressModal.classList.add("show");exportProgressTitle.textContent=t("MVを書き出しています","Exporting MV");exportProgressState.textContent=getExportPipelineInfo().mode==="fast"?t("高速レンダリング中…","High-speed rendering…"):t("映像と音楽を同期して記録しています…","Recording synchronized video and audio…");cancelExportBtn.textContent=t("キャンセル","Cancel");phase58tick()}
+function startExportProgress(){const t=window.svT||((jp,en)=>jp);pendingExportFile=null;const saveShareBtn=document.getElementById("saveShareExportBtn");if(saveShareBtn)saveShareBtn.style.display="none";exportInProgress=true;exportCancelled=false;updateExportPipelineInfo();exportProgressModal.classList.add("show");exportProgressTitle.textContent=t("MVを書き出しています","Exporting MV");exportProgressState.textContent=getExportPipelineInfo().mode==="fast"?t("高速レンダリング中…","High-speed rendering…"):t("映像と音楽を同期して記録しています…","Recording synchronized video and audio…");cancelExportBtn.textContent=t("キャンセル","Cancel");phase58tick()}
 function finishExportProgress(msg){
     exportInProgress=false;cancelAnimationFrame(exportProgressRAF);
     const t=window.svT||((jp,en)=>jp);
@@ -10960,28 +11007,47 @@ document
                             blob
                         );
 
-                    const link=
-                        document.createElement("a");
-
-                    link.href=url;
-
                     const actualMime=(recorder && recorder.mimeType) || mimeType;
                     const actualExt=/^video\/mp4/i.test(actualMime) ? "mp4" :
                         (/^video\/webm/i.test(actualMime) ? "webm" :
                         ((exportFormat && exportFormat.ext) || "webm"));
 
+                    const link=
+                        document.createElement("a");
+
+                    link.href=url;
+
                     link.download=
                         "sympho-mv."+actualExt;
 
-                    link.click();
+                    const iosDevice=isIOSExportDevice();
+                    if(iosDevice){
+                        pendingExportFile=new File(
+                            [blob],
+                            "sympho-mv."+actualExt,
+                            {type:actualMime || blob.type || "application/octet-stream"}
+                        );
+                        setupIOSExportShareButton();
+                        const saveShareBtn=document.getElementById("saveShareExportBtn");
+                        if(saveShareBtn){
+                            saveShareBtn.style.display="inline-block";
+                            saveShareBtn.textContent=(window.svT||((jp,en)=>jp))("動画を保存・共有","Save / Share Video");
+                        }
+                        exportProgressMeta.textContent=(window.svT||((jp,en)=>jp))(
+                            "下の「動画を保存・共有」をタップし、共有画面で「ファイルに保存」を選んでください。",
+                            "Tap ‘Save / Share Video’ below, then choose ‘Save to Files’ in the share sheet."
+                        );
+                    }else{
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                    }
 
                     setTimeout(
                         function(){
-
                             URL.revokeObjectURL(url);
-
                         },
-                        3000
+                        10000
                     );
 
                     exportInProgress=false;
