@@ -9,7 +9,7 @@ initial-scale=1,
 maximum-scale=1,
 user-scalable=no">
 
-<title>Sympho Vision1</title>
+<title>Sympho Vision</title>
 
 <style>
 
@@ -2319,7 +2319,7 @@ body.landscape-video-focus header{
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
 
 <header>
-<h1>Sympho Vision1</h1>
+<h1>Sympho Vision2</h1>
 <button id="langToggle" type="button" aria-label="Language switch">English</button>
 </header>
 
@@ -3335,6 +3335,7 @@ let audioURL=null;
 let audioContext=null;
 let analyser=null;
 let sourceNode=null;
+let audioSourceElement=null;
 let recordDestination=null;
 let freq=null;
 
@@ -6859,9 +6860,6 @@ function cameraValues(t){
 
 function initAudio(){
 
-    if(audioContext)
-        return true;
-
     if(!audio)
         return false;
 
@@ -6872,40 +6870,40 @@ function initAudio(){
     if(!AC)
         return false;
 
-    audioContext=
-        new AC();
+    try{
+        if(!audioContext){
+            audioContext=new AC();
 
-    analyser=
-        audioContext.createAnalyser();
+            analyser=audioContext.createAnalyser();
+            analyser.fftSize=1024;
+            analyser.smoothingTimeConstant=.75;
 
-    analyser.fftSize=1024;
+            freq=new Uint8Array(analyser.frequencyBinCount);
+            recordDestination=audioContext.createMediaStreamDestination();
+            analyser.connect(audioContext.destination);
+            analyser.connect(recordDestination);
+        }
 
-    analyser.smoothingTimeConstant=.75;
+        // Audio element is replaced when the user selects another track.
+        // Reusing the old AudioContext without reconnecting would leave the new
+        // track silent and the visualizer without frequency data after reset.
+        if(sourceNode && audioSourceElement!==audio){
+            try{sourceNode.disconnect();}catch(e){}
+            sourceNode=null;
+            audioSourceElement=null;
+        }
 
-    freq=
-        new Uint8Array(
-            analyser.frequencyBinCount
-        );
+        if(!sourceNode){
+            sourceNode=audioContext.createMediaElementSource(audio);
+            sourceNode.connect(analyser);
+            audioSourceElement=audio;
+        }
 
-    sourceNode=
-        audioContext.createMediaElementSource(
-            audio
-        );
-
-    recordDestination=
-        audioContext.createMediaStreamDestination();
-
-    sourceNode.connect(analyser);
-
-    analyser.connect(
-        audioContext.destination
-    );
-
-    analyser.connect(
-        recordDestination
-    );
-
-    return true;
+        return true;
+    }catch(error){
+        console.error("Audio graph initialization error:",error);
+        return false;
+    }
 
 }
 
@@ -10837,7 +10835,7 @@ function finishExportProgress(msg){
 document.addEventListener("DOMContentLoaded",()=>{
     const phase58Modal=document.getElementById("exportProgressModal");
     if(phase58Modal)phase58Modal.classList.remove("show");
-    cancelExportBtn.addEventListener("click",()=>{if(!exportInProgress){exportProgressModal.classList.remove("show");return}exportCancelled=true;exportInProgress=false;cancelAnimationFrame(exportProgressRAF);try{audio.pause()}catch(e){};if(recorder?.state!=="inactive")try{recorder.stop()}catch(e){};finishExportProgress("途中までのMVは保存しません。")});
+    cancelExportBtn.addEventListener("click",()=>{if(!exportInProgress){exportProgressModal.classList.remove("show");return}exportCancelled=true;exportInProgress=false;cancelAnimationFrame(exportProgressRAF);try{audio.pause();audio.currentTime=0}catch(e){};if(recorder?.state!=="inactive")try{recorder.stop()}catch(e){};playing=false;setTimelinePlaybackScrollMode(false);try{draw()}catch(e){};finishExportProgress("途中までのMVは保存しません。素材と編集内容は保持されます。")});
 });
 
 /* ==================================================
@@ -11006,8 +11004,15 @@ document
 
                         if(!blob.size){
                             status("動画データを正常に作成できませんでした。");
-                            finishExportProgress("動画データを作成できませんでした。素材を確認して、もう一度お試しください。");
-                            exportProgressMeta.textContent="動画データが空のため、保存できませんでした。";
+                            finishExportProgress("動画データが空のため、保存できませんでした。音源と映像の状態を確認して、もう一度お試しください。");
+                            exportProgressTitle.textContent=(window.svT||((jp,en)=>jp))("書き出し失敗","Export failed");
+                            exportProgressMeta.textContent=(window.svT||((jp,en)=>jp))("動画データが空のため、保存できませんでした。","The video data was empty, so it could not be saved.");
+                            if(audio){
+                                try{audio.pause();audio.currentTime=0;}catch(e){}
+                            }
+                            playing=false;
+                            setTimelinePlaybackScrollMode(false);
+                            draw();
                             return;
                         }
 
@@ -11058,11 +11063,23 @@ document
                             );
                         }
                         status("MVを書き出しました。");
+                        if(audio){
+                            try{audio.pause();audio.currentTime=0;}catch(e){}
+                        }
+                        playing=false;
+                        setTimelinePlaybackScrollMode(false);
+                        draw();
                     }catch(error){
                         console.error("MV export completion error:",error);
                         status("動画の保存準備でエラーが発生しました: "+(error && error.message ? error.message : "unknown error"));
                         finishExportProgress("動画の保存準備でエラーが発生しました。もう一度お試しください。");
-                        exportProgressMeta.textContent="動画データは完成していても、保存準備に失敗した可能性があります。再読み込み前に画面の状態をご確認ください。";
+                        exportProgressMeta.textContent="動画データは完成していても、保存準備に失敗した可能性があります。プロジェクト素材は保持し、プレビューを先頭へ戻します。";
+                        if(audio){
+                            try{audio.pause();audio.currentTime=0;}catch(e){}
+                        }
+                        playing=false;
+                        setTimelinePlaybackScrollMode(false);
+                        try{draw();}catch(drawError){console.error("Preview restore error:",drawError);}
                     }finally{
                         exportInProgress=false;
                         cancelAnimationFrame(exportProgressRAF);
@@ -11071,9 +11088,17 @@ document
 
                 audio.currentTime=0;
 
-                await audio.play();
-
-                recorder.start();
+                // Emit chunks periodically instead of relying only on the final
+                // stop event; this is more resilient to mobile Safari recorder quirks.
+                recorder.start(1000);
+                try{
+                    await audio.play();
+                }catch(playError){
+                    if(recorder && recorder.state!=="inactive"){
+                        try{recorder.stop();}catch(e){}
+                    }
+                    throw playError;
+                }
                 startExportProgress();
 
                 playing=true;
