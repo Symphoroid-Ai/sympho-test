@@ -10769,6 +10769,9 @@ function updateExportPipelineInfo(){
 
 let exportInProgress=false,exportCancelled=false,exportProgressRAF=0;
 let pendingExportFile=null;
+let pendingExportBlob=null;
+let pendingExportName="sympho-mv.webm";
+let pendingExportMime="video/webm";
 function isIOSExportDevice(){
     return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
         (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
@@ -10785,9 +10788,14 @@ function setupIOSExportShareButton(){
     btn.textContent="動画を保存・共有";
     actions.insertBefore(btn,actions.firstChild);
     btn.addEventListener("click",async function(){
-        if(!pendingExportFile)return;
+        if(!pendingExportBlob)return;
         const t=window.svT||((jp,en)=>jp);
         try{
+            pendingExportFile=new File(
+                [pendingExportBlob],
+                pendingExportName,
+                {type:pendingExportMime || pendingExportBlob.type || "application/octet-stream"}
+            );
             if(navigator.share && navigator.canShare && navigator.canShare({files:[pendingExportFile]})){
                 await navigator.share({files:[pendingExportFile],title:"Sympho Vision MV"});
                 return;
@@ -10817,7 +10825,7 @@ function setupIOSExportShareButton(){
 document.addEventListener("DOMContentLoaded",setupIOSExportShareButton);
 function phase58fmt(x){x=Math.max(0,+x||0);return Math.floor(x/60)+":"+String(Math.floor(x%60)).padStart(2,"0")}
 function phase58tick(){if(!exportInProgress)return;const c=audio?.currentTime||0,d=audio?.duration||0,p=d?Math.min(100,c/d*100):0;const t=window.svT||((jp,en)=>jp);exportProgressFill.style.width=p+"%";exportProgressTime.textContent=phase58fmt(c)+" / "+phase58fmt(d);exportProgressPercent.textContent=Math.floor(p)+"%";exportProgressMeta.textContent=t("残り 約","About ")+phase58fmt(Math.max(0,d-c));exportProgressRAF=requestAnimationFrame(phase58tick)}
-function startExportProgress(){const t=window.svT||((jp,en)=>jp);pendingExportFile=null;const saveShareBtn=document.getElementById("saveShareExportBtn");if(saveShareBtn)saveShareBtn.style.display="none";exportInProgress=true;exportCancelled=false;updateExportPipelineInfo();exportProgressModal.classList.add("show");exportProgressTitle.textContent=t("MVを書き出しています","Exporting MV");exportProgressState.textContent=getExportPipelineInfo().mode==="fast"?t("高速レンダリング中…","High-speed rendering…"):t("映像と音楽を同期して記録しています…","Recording synchronized video and audio…");cancelExportBtn.textContent=t("キャンセル","Cancel");phase58tick()}
+function startExportProgress(){const t=window.svT||((jp,en)=>jp);pendingExportFile=null;pendingExportBlob=null;const saveShareBtn=document.getElementById("saveShareExportBtn");if(saveShareBtn)saveShareBtn.style.display="none";exportInProgress=true;exportCancelled=false;updateExportPipelineInfo();exportProgressModal.classList.add("show");exportProgressTitle.textContent=t("MVを書き出しています","Exporting MV");exportProgressState.textContent=getExportPipelineInfo().mode==="fast"?t("高速レンダリング中…","High-speed rendering…"):t("映像と音楽を同期して記録しています…","Recording synchronized video and audio…");cancelExportBtn.textContent=t("キャンセル","Cancel");phase58tick()}
 function finishExportProgress(msg){
     exportInProgress=false;cancelAnimationFrame(exportProgressRAF);
     const t=window.svT||((jp,en)=>jp);
@@ -10984,86 +10992,81 @@ document
 
             recorder.onstop=
                 function(){
+                    try{
+                        if(exportCancelled){
+                            chunks=[];
+                            exportInProgress=false;
+                            cancelAnimationFrame(exportProgressRAF);
+                            return;
+                        }
 
-                    if(exportCancelled){ chunks=[]; return; }
+                        const actualMime=(recorder && recorder.mimeType) || mimeType;
+                        const blob=new Blob(chunks,{type:actualMime});
+                        chunks=[];
 
-                const blob=
-                        new Blob(
-                            chunks,
-                            {
-                                type:(recorder && recorder.mimeType) || mimeType
+                        if(!blob.size){
+                            status("動画データを正常に作成できませんでした。");
+                            finishExportProgress("動画データを作成できませんでした。素材を確認して、もう一度お試しください。");
+                            exportProgressMeta.textContent="動画データが空のため、保存できませんでした。";
+                            return;
+                        }
+
+                        const actualExt=/^video\/mp4/i.test(actualMime) ? "mp4" :
+                            (/^video\/webm/i.test(actualMime) ? "webm" :
+                            ((exportFormat && exportFormat.ext) || "webm"));
+                        const fileName="sympho-mv."+actualExt;
+
+                        if(isIOSExportDevice()){
+                            // iPhoneではstopイベント内でFileを生成せず、Blobを保持する。
+                            // File生成や共有APIの例外で完了処理全体が止まるのを防ぐ。
+                            pendingExportBlob=blob;
+                            pendingExportName=fileName;
+                            pendingExportMime=actualMime || blob.type || "application/octet-stream";
+                            pendingExportFile=null;
+                            setupIOSExportShareButton();
+                            const saveShareBtn=document.getElementById("saveShareExportBtn");
+                            if(saveShareBtn){
+                                saveShareBtn.style.display="inline-block";
+                                saveShareBtn.textContent=(window.svT||((jp,en)=>jp))("動画を保存・共有","Save / Share Video");
                             }
-                        );
+                        }else{
+                            const url=URL.createObjectURL(blob);
+                            const link=document.createElement("a");
+                            link.href=url;
+                            link.download=fileName;
+                            document.body.appendChild(link);
+                            link.click();
+                            link.remove();
+                            setTimeout(function(){URL.revokeObjectURL(url);},10000);
+                        }
 
-                    if(!blob.size){
+                        const doneFill=document.getElementById("exportProgressFill");
+                        const donePercent=document.getElementById("exportProgressPercent");
+                        const doneTime=document.getElementById("exportProgressTime");
+                        if(doneFill)doneFill.style.width="100%";
+                        if(donePercent)donePercent.textContent="100%";
+                        if(audio && doneTime)doneTime.textContent=phase58fmt(audio.duration)+" / "+phase58fmt(audio.duration);
+
+                        finishExportProgress((window.svT||((jp,en)=>jp))(
+                            "MVを書き出しました。動画ファイルの準備が完了しました。",
+                            "MV exported. The video file is ready."
+                        ));
+                        if(isIOSExportDevice()){
+                            exportProgressMeta.textContent=(window.svT||((jp,en)=>jp))(
+                                "下の「動画を保存・共有」をタップし、共有画面で「ファイルに保存」を選んでください。",
+                                "Tap ‘Save / Share Video’ below, then choose ‘Save to Files’ in the share sheet."
+                            );
+                        }
+                        status("MVを書き出しました。");
+                    }catch(error){
+                        console.error("MV export completion error:",error);
+                        status("動画の保存準備でエラーが発生しました: "+(error && error.message ? error.message : "unknown error"));
+                        finishExportProgress("動画の保存準備でエラーが発生しました。もう一度お試しください。");
+                        exportProgressMeta.textContent="動画データは完成していても、保存準備に失敗した可能性があります。再読み込み前に画面の状態をご確認ください。";
+                    }finally{
                         exportInProgress=false;
                         cancelAnimationFrame(exportProgressRAF);
-                        status("動画データを正常に作成できませんでした。");
-                        return;
                     }
-
-                    const url=
-                        URL.createObjectURL(
-                            blob
-                        );
-
-                    const actualMime=(recorder && recorder.mimeType) || mimeType;
-                    const actualExt=/^video\/mp4/i.test(actualMime) ? "mp4" :
-                        (/^video\/webm/i.test(actualMime) ? "webm" :
-                        ((exportFormat && exportFormat.ext) || "webm"));
-
-                    const link=
-                        document.createElement("a");
-
-                    link.href=url;
-
-                    link.download=
-                        "sympho-mv."+actualExt;
-
-                    const iosDevice=isIOSExportDevice();
-                    if(iosDevice){
-                        pendingExportFile=new File(
-                            [blob],
-                            "sympho-mv."+actualExt,
-                            {type:actualMime || blob.type || "application/octet-stream"}
-                        );
-                        setupIOSExportShareButton();
-                        const saveShareBtn=document.getElementById("saveShareExportBtn");
-                        if(saveShareBtn){
-                            saveShareBtn.style.display="inline-block";
-                            saveShareBtn.textContent=(window.svT||((jp,en)=>jp))("動画を保存・共有","Save / Share Video");
-                        }
-                        exportProgressMeta.textContent=(window.svT||((jp,en)=>jp))(
-                            "下の「動画を保存・共有」をタップし、共有画面で「ファイルに保存」を選んでください。",
-                            "Tap ‘Save / Share Video’ below, then choose ‘Save to Files’ in the share sheet."
-                        );
-                    }else{
-                        document.body.appendChild(link);
-                        link.click();
-                        link.remove();
-                    }
-
-                    setTimeout(
-                        function(){
-                            URL.revokeObjectURL(url);
-                        },
-                        10000
-                    );
-
-                    exportInProgress=false;
-                    cancelAnimationFrame(exportProgressRAF);
-                    const doneFill=document.getElementById("exportProgressFill");
-                    const donePercent=document.getElementById("exportProgressPercent");
-                    const doneTime=document.getElementById("exportProgressTime");
-                    if(doneFill)doneFill.style.width="100%";
-                    if(donePercent)donePercent.textContent="100%";
-                    if(audio && doneTime)doneTime.textContent=phase58fmt(audio.duration)+" / "+phase58fmt(audio.duration);
-                    finishExportProgress((window.svT||((jp,en)=>jp))("MVを書き出しました。動画ファイルの準備が完了しました。","MV exported. The video file is ready."));
-
-                    status(
-                        "MVを書き出しました。"
-                    );
-
                 };
 
                 audio.currentTime=0;
