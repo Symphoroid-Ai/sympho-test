@@ -2319,7 +2319,7 @@ body.landscape-video-focus header{
 <body><div id="exportConfirmModal" class="export-progress-modal" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><div class="export-progress-card"><div id="exportConfirmTitle" class="export-progress-title">MVを書き出しますか？</div><div id="exportConfirmMeta" class="export-confirm-meta"></div><div id="exportConfirmNote" class="export-confirm-note">確認後に書き出しを開始します。</div><div class="export-confirm-actions"><button id="cancelExportConfirm" type="button">キャンセル</button><button id="confirmExport" type="button" class="primary">書き出す</button></div></div></div><div id="exportProgressModal" class="export-progress-modal"><div class="export-progress-card"><div id="exportProgressTitle" class="export-progress-title">MVを書き出しています</div><div id="exportProgressState" class="export-progress-state">映像と音楽を記録しています…</div><div class="export-progress-bar"><div id="exportProgressFill" class="export-progress-fill"></div></div><div class="export-progress-row"><span id="exportProgressTime">0:00 / 0:00</span><span id="exportProgressPercent">0%</span></div><div id="exportProgressMeta" class="export-progress-meta">残り時間を計算しています…</div><div id="exportSpeedInfo" class="export-progress-meta">書き出し方式を確認しています…</div><div class="export-progress-actions"> <button id="cancelExportBtn" type="button">キャンセル</button></div></div></div>
 
 <header>
-<h1>Sympho Vision12</h1>
+<h1>Sympho Vision11</h1>
 <button id="langToggle" type="button" aria-label="Language switch">English</button>
 </header>
 
@@ -11157,9 +11157,11 @@ document
                 if(outputGain && audioContext){
                     try{outputGain.gain.cancelScheduledValues(audioContext.currentTime);outputGain.gain.setValueAtTime(0,audioContext.currentTime);}catch(e){outputGain.gain.value=0;}
                 }
-                // Use the exact same reset operation as the normal
-                // 「最初に戻る」 button, and wait for that seek to complete
-                // before creating or starting the recording.
+                try{audio.pause();}catch(e){}
+                // Seek to zero exactly once. Do not assign currentTime=0 again
+                // after "seeked": on iOS, a second redundant seek can start a
+                // new asynchronous seek immediately before play(), allowing a
+                // brief fragment from the previous playhead to leak into capture.
                 if(Math.abs(Number(audio.currentTime)||0) > 0.01){
                     await new Promise(function(resolve,reject){
                         let settled=false;
@@ -11182,10 +11184,8 @@ document
                         },1800);
                         audio.addEventListener("seeked",onSeeked);
                         audio.addEventListener("error",onError);
-                        try{resetPlaybackToStart();}catch(e){finish(false);}
+                        try{audio.currentTime=0;}catch(e){finish(false);}
                     });
-                }else{
-                    resetPlaybackToStart();
                 }
                 if(Math.abs(Number(audio.currentTime)||0)>0.05){
                     throw new Error("音源を先頭位置に戻せませんでした。もう一度書き出してください。");
