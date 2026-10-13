@@ -1579,6 +1579,7 @@ input[type=range]{
 }
 .export-progress-modal{display:none!important;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72)}.export-progress-modal.show{display:flex!important}.export-progress-card{width:min(420px,100%);padding:22px;border:1px solid #333;border-radius:16px;background:#121212}.export-progress-title{font-size:18px;font-weight:700;margin-bottom:8px}.export-progress-state,.export-progress-meta{font-size:13px;color:#bbb;margin-bottom:14px}.export-progress-bar{height:10px;background:#292929;border-radius:999px;overflow:hidden}.export-progress-fill{height:100%;width:0%;background:#fff;transition:width .15s}.export-progress-row{display:flex;justify-content:space-between;margin-top:10px;font-size:13px}.export-progress-actions{text-align:right;margin-top:18px}.export-confirm-meta{font-size:14px;line-height:1.7;margin:12px 0}.export-confirm-note{font-size:12px;color:#bbb;margin:12px 0}.export-confirm-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;width:100%}.export-confirm-actions button{min-height:42px;box-sizing:border-box}.export-confirm-actions #cancelExportConfirm{flex:0 0 32%;width:32%;padding-left:10px;padding-right:10px;white-space:nowrap}.export-confirm-actions #confirmExport{flex:0 0 calc(68% - 10px);width:calc(68% - 10px);min-width:0} @media(max-width:600px){.export-confirm-actions #cancelExportConfirm{flex-basis:32%!important;width:32%!important}.export-confirm-actions #confirmExport{flex-basis:calc(68% - 10px)!important;width:calc(68% - 10px)!important}}
 
+
   
 /* Phase 5.9-D: Section visual explanation */
 .section-visual-summary{
@@ -2692,7 +2693,7 @@ value="0">
 id="record"
 class="primary">
 
-● MV録画開始
+● MV書き出し開始
 
 </button>
 
@@ -2701,6 +2702,8 @@ class="primary">
 ■ 録画停止
 
 </button>
+
+<p id="offlineExportInfo" style="margin-top:10px;font-size:.9em">iPhoneでは、音声の冒頭混入を防ぐためオフラインMP4書き出しを使用します。</p>
 
 </div>
 
@@ -3322,6 +3325,9 @@ let cameraKeys=[];
 let musicSections=[];
 let visualDirections=[];
 let analysisFrames=[];
+// Experimental offline render clock; null during normal preview.
+let offlineRenderTime=null;
+let offlineAudioBuffer=null;
 let waveformPeaks=[];
 let selectedSectionIndex=-1;
 let selectedClipIndex=-1;
@@ -6998,9 +7004,9 @@ function audioBands(){
 
     }
 
-    analyser.getByteFrequencyData(
-        freq
-    );
+    if(offlineRenderTime===null){
+        analyser.getByteFrequencyData(freq);
+    }
 
     let bass=0;
     let mid=0;
@@ -7161,7 +7167,7 @@ function currentBeat(){
     }
 
     const t=
-        audio.currentTime;
+        offlineRenderTime!==null?offlineRenderTime:audio.currentTime;
 
     let nearest=null;
     let distance=Infinity;
@@ -7431,9 +7437,7 @@ function draw(){
 
     
     const t=
-        audio?
-        audio.currentTime:
-        0;
+        offlineRenderTime!==null?offlineRenderTime:(audio?audio.currentTime:0);
 
     const bands=
         audioBands();
@@ -10811,16 +10815,11 @@ function updateExportUI(show){
     if(cta)cta.classList.toggle("visible",!!show);
     if(!info)return;
 
-    if(!window.MediaRecorder || !canvas.captureStream){
-        const t=window.svT||((jp,en)=>jp);
-        info.textContent=t("このブラウザでは現在のブラウザ録画方式に対応していません。","This browser does not support the current recording method.");
-    }else if(format){
-        const t=window.svT||((jp,en)=>jp);
-        info.textContent=t("この環境で検出された書き出し形式: ","Detected export format in this environment: ")+format.label;
-    }else{
-        const t=window.svT||((jp,en)=>jp);
-        info.textContent=t("対応するWebM録画形式を検出できませんでした。","No compatible WebM recording format was detected.");
-    }
+    const t=window.svT||((jp,en)=>jp);
+    info.textContent=t(
+        "オフラインMP4（H.264/AAC）で書き出します。",
+        "Exports offline MP4 (H.264/AAC)."
+    );
 }
 
 window.updateSVExportLanguage=function(){
@@ -10849,14 +10848,14 @@ document.addEventListener("DOMContentLoaded",function(){
    stable MediaRecorder path unless a complete muxing pipeline exists.
 ================================================== */
 const exportPipelineCapabilities={
-    fastMuxPipeline:false
+    fastMuxPipeline:true
 };
 
 function getExportPipelineInfo(){
     return {
-        mode:"safe",
-        label:"安定書き出し（リアルタイム）",
-        detail:"音楽と映像の同期を優先し、MediaRecorderで書き出します。"
+        mode:"offline",
+        label:"オフラインMP4書き出し（リアルタイム再生なし）",
+        detail:"音源をリアルタイム再生せず、映像フレームと音声をMP4にまとめて書き出します。"
     };
 }
 
@@ -10951,9 +10950,10 @@ function getExportFinalConfirmMeta(){
     const count=Array.isArray(images)?images.length:0;
     const format=getPreferredExportFormat();
     const t=window.svT||((jp,en)=>jp);
+    const outputLabel="MP4 (H.264/AAC・オフライン)";
     return t("曲：","Track:")+phase58fmt(d)+"<br>"+
         t("画像：","Images:")+count+t("枚"," images")+"<br>"+
-        t("出力形式：","Export format: ")+(format?format.label:t("確認中","Checking..."));
+        t("出力形式：","Export format: ")+outputLabel;
 }
 function openExportConfirm(){
     const modal=document.getElementById("exportConfirmModal");
@@ -11841,7 +11841,12 @@ function smoothVisualizerValue(previous,next,amount){
 
 function getSmoothedVisualizerBins(count){
     const raw=getVisualizerBins(count);
-    const key="_freqBins_"+count;
+
+    // Offline export must never read the live-preview smoothing cache.
+    // Keep an independent cache so the first exported frame starts from
+    // the decoded audio at t=0, not from the previous preview position.
+    const offline=offlineRenderTime!==null;
+    const key=(offline?"_offlineFreqBins_":"_freqBins_")+count;
     const previous=audioVisualizer[key];
 
     if(!Array.isArray(previous) || previous.length!==count){
@@ -11866,6 +11871,25 @@ function getSmoothedVisualizerBins(count){
  * AnalyserNode.getByteTimeDomainData()から実時間領域波形を取得する。
  */
 function getVisualizerWaveData(count){
+    if(offlineRenderTime!==null && offlineAudioBuffer){
+        const nativeCount=(analyser && analyser.fftSize) || 1024;
+        if(!audioVisualizer.waveData || audioVisualizer.waveData.length!==nativeCount){
+            audioVisualizer.waveData=new Uint8Array(nativeCount);
+        }
+        const data=offlineAudioBuffer.getChannelData(0);
+        const other=offlineAudioBuffer.numberOfChannels>1?offlineAudioBuffer.getChannelData(1):null;
+        const end=Math.floor(offlineRenderTime*offlineAudioBuffer.sampleRate);
+        const start=end-nativeCount;
+        for(let i=0;i<nativeCount;i++){
+            const ix=start+i;
+            let v=ix>=0 && ix<data.length?data[ix]:0;
+            if(other && ix>=0 && ix<other.length)v=(v+other[ix])*.5;
+            audioVisualizer.waveData[i]=Math.max(0,Math.min(255,Math.round(128+v*127)));
+        }
+        const out=new Array(count),step=(nativeCount-1)/Math.max(1,count-1);
+        for(let i=0;i<count;i++)out[i]=(audioVisualizer.waveData[Math.min(nativeCount-1,Math.round(i*step))]-128)/128;
+        return out;
+    }
     if(!analyser || typeof analyser.getByteTimeDomainData!=="function"){
         return new Array(count).fill(0);
     }
@@ -12150,7 +12174,7 @@ document.addEventListener("change",function(e){
       "🖼 画像を複数選択":"🖼 Select Images|🖼 画像を複数選択","画像なし":"No images|画像なし","画像をすべて削除":"Delete All Images|画像をすべて削除","🎵 MP3 / WAV / M4A / AAC / OGG":"🎵 MP3 / WAV / M4A / AAC / OGG","音源なし":"No audio|音源なし","🎵 音源を解析":"🎵 Analyze Audio|🎵 音源を解析","まだ解析していません。":"Not analyzed yet.|まだ解析していません。",
       "音源解析・音楽構造・画像配置・Camera演出をまとめて自動生成します。":"Automatically analyze the audio and music structure, place images, and generate Camera direction.|音源解析・音楽構造・画像配置・Camera演出をまとめて自動生成します。","✨ MVを作る":"✨ Create MV|✨ MVを作る","✨ 音楽構造に合わせて自動配置":"✨ Auto Arrange to Music Structure|✨ 音楽構造に合わせて自動配置","画像切替間隔":"Image Change Interval|画像切替間隔","クロスフェード":"Crossfade|クロスフェード","秒":"sec|秒",
       "パーティクル":"Particles|パーティクル","キラキラ":"Sparkles|キラキラ","光リング":"Light Rings|光リング","グロー":"Glow|グロー","ビートフラッシュ":"Beat Flash|ビートフラッシュ","オーディオビジュアライザー":"Audio Visualizer|オーディオビジュアライザー","種類":"Type|種類","位置":"Position|位置","サイズ":"Size|サイズ","感度":"Sensitivity|感度","最高周波数":"Max Frequency|最高周波数","スムージング":"Smoothing|スムージング","Beat Pulse":"Beat Pulse","Pulse量":"Pulse Amount|Pulse量","エフェクト強度":"Effect Strength|エフェクト強度","全体":"Overall|全体","リング":"Rings|リング","背景ぼかし":"Background Blur|背景ぼかし","背景暗さ":"Background Darkness|背景暗さ",
-      "ズーム":"Zoom|ズーム","左右":"Pan X|左右","上下":"Pan Y|上下","回転":"Rotation|回転","● MV録画開始":"● Start MV Recording|● MV録画開始","■ 録画停止":"■ Stop Recording|■ 録画停止","✨ 音楽構造から自動生成":"✨ Generate from Music Structure|✨ 音楽構造から自動生成","カメラキーフレーム削除":"Delete Camera Keyframes|カメラキーフレーム削除",
+      "ズーム":"Zoom|ズーム","左右":"Pan X|左右","上下":"Pan Y|上下","回転":"Rotation|回転","● MV書き出し開始":"● Start MV Recording|● MV書き出し開始","■ 録画停止":"■ Stop Recording|■ 録画停止","✨ 音楽構造から自動生成":"✨ Generate from Music Structure|✨ 音楽構造から自動生成","カメラキーフレーム削除":"Delete Camera Keyframes|カメラキーフレーム削除",
       "低音 → ズーム・リング":"Low frequencies → Zoom & Rings|低音 → ズーム・リング","中音 → パーティクル":"Mid frequencies → Particles|中音 → パーティクル","高音 → キラキラ":"High frequencies → Sparkles|高音 → キラキラ","強ビート → カメラパンチ":"Strong beats → Camera Punch|強ビート → カメラパンチ","サビ → 映像演出を強化":"Chorus → Stronger Visual Direction|サビ → 映像演出を強化",
       "カメラ追加":"Add Camera|カメラ追加","追従 ON":"Follow ON|追従 ON","追従 OFF":"Follow OFF|追従 OFF","手動操作中":"Manual Control|手動操作中","現在位置":"Current Position|現在位置","適用":"Apply|適用","サビに設定":"Set as Chorus|サビに設定","再生位置で分割":"Split at Playhead|再生位置で分割","セクション追加":"Add Section|セクション追加","削除":"Delete|削除","閉じる":"Close|閉じる",
       "画像を差し替え":"Replace Image|画像を差し替え","← 前と入れ替え":"Swap with Previous|← 前と入れ替え","次と入れ替え →":"Swap with Next →|次と入れ替え →","画像を選択":"Select Image|画像を選択",
@@ -12355,5 +12379,203 @@ document.addEventListener("click",function(e){
 })();
 </script>
 
+
+<script>
+/* PHASE 5.9-F: use verified offline MP4 pipeline for iOS export only.
+   Desktop keeps the existing MediaRecorder path. */
+(function setupIOSOfflineExport(){
+ const $=id=>document.getElementById(id);
+ let muxerPromise=null;
+ function loadMuxer(){
+  if(!muxerPromise)muxerPromise=(async()=>{
+   const M=await import('https://esm.sh/mediabunny@1.61.3');
+   const A=await import('https://esm.sh/@mediabunny/aac-encoder@1.61.3?deps=mediabunny@1.61.3');
+   A.registerAacEncoder();return {M,A};
+  })();
+  return muxerPromise;
+ }
+ function offlineWindowRms(buffer,time){
+  const left=buffer.getChannelData(0),right=buffer.numberOfChannels>1?buffer.getChannelData(1):null;
+  const end=Math.floor(time*buffer.sampleRate),start=end-1024;
+  let sumSquares=0,sampleN=0;
+  for(let j=start;j<end;j++){
+   if(j<0||j>=left.length)continue;
+   let sample=left[j];if(right)sample=(sample+right[j])*.5;
+   sumSquares+=sample*sample;sampleN++;
+  }
+  return sampleN?Math.sqrt(sumSquares/sampleN):0;
+ }
+ function offlineSpectrum(buffer,time){
+  const n=1024,real=new Float32Array(n),imag=new Float32Array(n);
+  const left=buffer.getChannelData(0),right=buffer.numberOfChannels>1?buffer.getChannelData(1):null;
+  // Align the spectrum window with the waveform's past-facing window.
+  // At t=0, samples before the beginning of the audio are zero-padded.
+  const end=Math.floor(time*buffer.sampleRate);
+  const start=end-n;
+  for(let i=0;i<n;i++){
+   const ix=start+i;
+   let sample=ix>=0&&ix<left.length?left[ix]:0;
+   if(right&&ix>=0&&ix<right.length)sample=(sample+right[ix])*.5;
+   real[i]=sample*(.5-.5*Math.cos(2*Math.PI*i/(n-1)));
+  }
+  fft(real,imag);
+  const out=new Uint8Array(n/2);
+  for(let k=0;k<out.length;k++){
+   const mag=Math.sqrt(real[k]*real[k]+imag[k]*imag[k])/n;
+   const db=20*Math.log10(Math.max(1e-8,mag));
+   out[k]=Math.max(0,Math.min(255,Math.round((db+100)/70*255)));
+  }
+  return out;
+ }
+ function hasAnalysisAt(time){
+  if(!analysisFrames.length)return false;
+  // analysisFrames are sorted by time; the nearest frame is sufficient here.
+  return Number.isFinite(analysisFrames[0].time) && time>=0;
+ }
+ function setProgress(percent,elapsed,total,phase){
+  const fill=$('exportProgressFill'),pct=$('exportProgressPercent'),time=$('exportProgressTime'),meta=$('exportProgressMeta');
+  if(fill)fill.style.width=Math.max(0,Math.min(100,percent))+'%';
+  if(pct)pct.textContent=Math.floor(percent)+'%';
+  if(time)time.textContent=phase58fmt(elapsed)+' / '+phase58fmt(total);
+  if(meta)meta.textContent=phase;
+ }
+ async function runOfflineExport(){
+  if(exportInProgress)return;
+  if(!audio||!audioFile||!images.length){status('画像と音源を用意してください。');return;}
+  if(!analysisFrames.length){status('先に音源解析を完了してください。');return;}
+  const button=$('record');
+  if(button)button.disabled=true;
+  let decoded=null,output=null,vsrc=null,asrc=null,oldFreq=null,oldOfflineTime=offlineRenderTime,oldOfflineBuffer=offlineAudioBuffer,oldOutputGain=null,oldSmoothing=null,oldVisualizerSmoothing=null,oldVisualizerWaveData=null,previousTime=Number(audio.currentTime)||0,previousPlaying=playing,blob=null;
+  let didOpenModal=false;
+  try{
+   exportInProgress=true;exportCancelled=false;pendingExportBlob=null;pendingExportFile=null;
+   const saveBtn=$('saveShareExportBtn');if(saveBtn)saveBtn.style.display='none';
+   exportProgressModal.classList.add('show');didOpenModal=true;
+   exportProgressTitle.textContent=(window.svT||((jp,en)=>jp))('MVを書き出しています','Exporting MV');
+   exportProgressState.textContent='MP4ライブラリを読み込んでいます…';
+   cancelExportBtn.textContent=(window.svT||((jp,en)=>jp))('キャンセル','Cancel');
+   setProgress(0,0,Number(audio.duration)||0,'準備中…');
+   const {M}=await loadMuxer();
+   if(exportCancelled)throw new Error('書き出しをキャンセルしました。');
+   decoded=await decodeSelectedAudio();
+   if(!decoded||!decoded.duration)throw new Error('音源をデコードできませんでした。');
+   if(!initAudio())throw new Error('Web Audio APIを利用できません。');
+   oldFreq=freq;oldOutputGain=(outputGain&&outputGain.gain)?outputGain.gain.value:null;
+   const totalDuration=decoded.duration,sampleCount=Math.floor(totalDuration*decoded.sampleRate);
+   const trimmed=audioContext.createBuffer(decoded.numberOfChannels,sampleCount,decoded.sampleRate);
+   for(let c=0;c<decoded.numberOfChannels;c++)trimmed.copyToChannel(decoded.getChannelData(c).subarray(0,sampleCount),c);
+   // Stop playback and mute live output. Export audio is encoded directly from the decoded buffer.
+   playing=false;sectionPreviewActive=false;sectionPreviewStopTime=null;setTimelinePlaybackScrollMode(false);audio.pause();
+   if(outputGain&&audioContext){try{outputGain.gain.cancelScheduledValues(audioContext.currentTime);outputGain.gain.setValueAtTime(0,audioContext.currentTime)}catch(e){outputGain.gain.value=0}}
+   const target=new M.BufferTarget();output=new M.Output({format:new M.Mp4OutputFormat(),target});
+   vsrc=new M.CanvasSource(canvas,{codec:'avc',bitrate:2500000});asrc=new M.AudioBufferSource({codec:'aac',bitrate:160000});
+   output.addVideoTrack(vsrc,{frameRate:30});output.addAudioTrack(asrc);await output.start();
+   exportProgressState.textContent='音声をエンコードしています…';
+   await asrc.add(trimmed);asrc.close();setProgress(10,0,totalDuration,'音声のエンコード完了');
+   const fps=30,totalFrames=Math.ceil(totalDuration*fps);
+   oldSmoothing={smoothBass,smoothMid,smoothHigh,smoothVolume,pulse,lastBeat};
+   // Reset per-bin visualizer smoothing too; otherwise the first offline frames
+   // inherit the last live-preview spectrum instead of starting from t=0.
+   oldVisualizerSmoothing={};
+   oldVisualizerWaveData=audioVisualizer.waveData
+    ? audioVisualizer.waveData.slice()
+    : null;
+   function resetOfflineVisualizerState(){
+    Object.keys(audioVisualizer).forEach(function(key){
+     if(key.indexOf('_freqBins_')===0){
+      if(oldVisualizerSmoothing[key]===undefined){
+       oldVisualizerSmoothing[key]=audioVisualizer[key];
+      }
+      delete audioVisualizer[key];
+     }else if(key.indexOf('_offlineFreqBins_')===0){
+      delete audioVisualizer[key];
+     }
+    });
+    // The waveform buffer is also transient preview state. Clear it for export.
+    audioVisualizer.waveData=null;
+    smoothBass=0;smoothMid=0;smoothHigh=0;smoothVolume=0;
+    pulse=0;lastBeat=-1;
+   }
+   resetOfflineVisualizerState();
+   offlineAudioBuffer=decoded;
+   // The export loop draws each encoded frame itself. Do not pre-draw t=0,
+   // because that would advance shared smoothing/beat state twice before frame 0.
+   // Suppress only the initial low-level visual signal until clear audio onset.
+   // This gate affects visualization only; the encoded audio track is untouched.
+   const initialVisualizerGateThreshold=0.003;
+   let offlineVisualizerGateOpen=false;
+   for(let i=0;i<totalFrames;i++){
+    if(exportCancelled)throw new Error('書き出しをキャンセルしました。');
+    const t=i/fps;offlineRenderTime=t;
+    if(!hasAnalysisAt(t))throw new Error('事前解析データがありません。');
+    const visualizerGateRms=offlineWindowRms(decoded,t);
+    const frameSpectrum=offlineSpectrum(decoded,t);
+    if(!offlineVisualizerGateOpen&&visualizerGateRms>=initialVisualizerGateThreshold)offlineVisualizerGateOpen=true;
+    freq=offlineVisualizerGateOpen?frameSpectrum:new Uint8Array(frameSpectrum.length);
+    draw();
+    await vsrc.add(t,1/fps);
+    if(i%6===5)await new Promise(resolve=>setTimeout(resolve,0));
+    if(i%5===0||i===totalFrames-1){
+     const p=10+((i+1)/totalFrames)*82;
+     setProgress(p,t,totalDuration,`映像を生成中… ${i+1}/${totalFrames} フレーム`);
+    }
+   }
+   if(exportCancelled)throw new Error('書き出しをキャンセルしました。');
+   vsrc.close();exportProgressState.textContent='MP4を確定しています…';setProgress(95,totalDuration,totalDuration,'MP4を確定しています…');
+   await output.finalize();
+   const bytes=target.buffer;if(!bytes||bytes.byteLength<1000)throw new Error('MP4データが生成されませんでした。');
+   blob=new Blob([bytes],{type:'video/mp4'});
+   pendingExportBlob=blob;pendingExportName='sympho-mv.mp4';pendingExportMime='video/mp4';pendingExportFile=null;
+   if(isIOSExportDevice()){
+    setupIOSExportShareButton();const share=$('saveShareExportBtn');if(share){share.style.display='inline-block';share.textContent=(window.svT||((jp,en)=>jp))('動画を保存・共有','Save / Share Video');}
+   }else{
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=pendingExportName;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+   }
+   setProgress(100,totalDuration,totalDuration,`${(blob.size/1024/1024).toFixed(2)} MB`);
+   finishExportProgress('MVを書き出しました。動画ファイルの準備が完了しました。');
+   exportProgressMeta.textContent=isIOSExportDevice()
+    ? '下の「動画を保存・共有」をタップし、共有画面で「ファイルに保存」を選んでください。'
+    : '動画ファイルのダウンロードが開始されます。';
+   status('MVを書き出しました。');
+  }catch(error){
+   console.error('Offline MP4 export failed:',error);
+   if(exportCancelled||((error&&error.message)||'').includes('キャンセル')){
+    exportCancelled=true;exportProgressTitle.textContent='書き出しをキャンセルしました';exportProgressState.textContent='MVは保存されませんでした。';exportProgressMeta.textContent='素材と編集内容は保持されています。';
+   }else{
+    exportProgressTitle.textContent='書き出し失敗';exportProgressState.textContent='生成失敗：'+(error&&error.message?error.message:String(error));exportProgressMeta.textContent='音源と映像の状態を確認して、もう一度お試しください。';status('動画の書き出しに失敗しました: '+(error&&error.message?error.message:String(error)));
+   }
+  }finally{
+   try{vsrc?.close()}catch(e){}try{asrc?.close()}catch(e){}
+   offlineRenderTime=oldOfflineTime;offlineAudioBuffer=oldOfflineBuffer;
+   if(oldSmoothing){smoothBass=oldSmoothing.smoothBass;smoothMid=oldSmoothing.smoothMid;smoothHigh=oldSmoothing.smoothHigh;smoothVolume=oldSmoothing.smoothVolume;pulse=oldSmoothing.pulse;lastBeat=oldSmoothing.lastBeat;}
+   Object.keys(audioVisualizer).forEach(function(key){
+    if(key.indexOf('_offlineFreqBins_')===0)delete audioVisualizer[key];
+   });
+   if(oldVisualizerSmoothing){
+    Object.keys(audioVisualizer).forEach(function(key){if(key.indexOf('_freqBins_')===0)delete audioVisualizer[key];});
+    Object.keys(oldVisualizerSmoothing).forEach(function(key){
+     if(oldVisualizerSmoothing[key]!==undefined)audioVisualizer[key]=oldVisualizerSmoothing[key];
+    });
+   }
+   audioVisualizer.waveData=oldVisualizerWaveData;
+   if(oldFreq)freq=oldFreq;
+   if(audio){try{audio.pause();audio.currentTime=previousTime}catch(e){}}
+   if(outputGain&&audioContext&&oldOutputGain!==null){try{outputGain.gain.cancelScheduledValues(audioContext.currentTime);outputGain.gain.setValueAtTime(oldOutputGain,audioContext.currentTime)}catch(e){outputGain.gain.value=oldOutputGain}}
+   playing=false;try{draw()}catch(e){}
+   exportInProgress=false;cancelAnimationFrame(exportProgressRAF);if(button)button.disabled=false;
+   if(didOpenModal&&exportCancelled){/* keep cancellation details visible in the existing modal */}
+  }
+ }
+ // Use the same offline MP4 pipeline on desktop and iPhone. The capture-phase
+ // handler preserves the existing confirmation dialog and prevents the legacy
+ // MediaRecorder path from producing a short or incomplete file.
+ document.addEventListener('click',function(event){
+  const record=event.target&&event.target.closest?event.target.closest('#record'):null;
+  if(!record||!exportConfirmed)return;
+  event.preventDefault();event.stopImmediatePropagation();exportConfirmed=false;
+  runOfflineExport();
+ },true);
+})();
+</script>
 </body>
 </html>
